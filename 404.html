@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OurCircle - Private Friends Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --primary-dark: #5a0cb3;
+            --secondary: #2575fc;
+            --accent: #ff5e62;
+            --light: #f8f9fa;
+            --dark: #1a1a2e;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --success: #42e695;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --group-color: #8338ec;
+            --border-radius: 16px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.12);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7ff 0%, #f0f2ff 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Private Access Banner */
+        .private-banner {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 0;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1001;
+        }
+
+        .private-banner i {
+            margin-right: 8px;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 40px;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            color: var(--accent);
+            margin-right: 10px;
+        }
+
+        .logo span {
+            color: var(--secondary);
+        }
+
+        .group-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--group-color);
+            background-color: rgba(131, 56, 236, 0.1);
+            padding: 8px 16px;
+            border-radius: 30px;
+            margin-left: 15px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 2px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: var(--shadow);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 200px 0 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(106, 17, 203, 0.05), rgba(37, 117, 252, 0.05));
+            top: -400px;
+            right: -300px;
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 700px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 52px;
+            margin-bottom: 20px;
+            color: var(--dark);
+            line-height: 1.2;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--gray);
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+
+        .private-group-info {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            max-width: 500px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--group-color);
+        }
+
+        .private-group-info h3 {
+            color: var(--group-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .member-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .member {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--light-gray);
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 14px;
+        }
+
+        .member-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: var(--primary);
+            border: 2px solid var(--light-gray);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            background-color: rgba(106, 17, 203, 0.05);
+        }
+
+        .hero-image {
+            position: absolute;
+            right: 0;
+            top: 150px;
+            width: 45%;
+            max-width: 600px;
+            z-index: 1;
+        }
+
+        .hero-image img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Dashboard Preview */
+        .dashboard-preview {
+            padding: 100px 0;
+            background-color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 36px;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .dashboard-card {
+            background-color: #f9fafc;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--light-gray);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .dashboard-card.large {
+            grid-column: span 2;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-header h3 {
+            font-size: 20px;
+            color: var(--dark);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f5f7ff 0%, #f0f2ff 100%);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-top: 4px solid transparent;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: white;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .feature-card p {
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+
+        .feature-status {
+            display: inline-block;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .status-active {
+            background-color: rgba(66, 230, 149, 0.2);
+            color: #1a936f;
+        }
+
+        .status-upcoming {
+            background-color: rgba(255, 209, 102, 0.2);
+            color: #e68c1a;
+        }
+
+        /* Private Access Section */
+        .private-access {
+            padding: 100px 0;
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+        }
+
+        .private-access h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .private-access p {
+            color: #adb5bd;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .access-code {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            max-width: 500px;
+            margin: 0 auto;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .access-code h3 {
+            margin-bottom: 20px;
+            color: var(--success);
+        }
+
+        .code-display {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 12px;
+            font-family: monospace;
+            font-size: 24px;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .invite-link {
+            display: flex;
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .invite-link input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .invite-link button {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 0 25px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #121212;
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .footer-column h3 {
+            font-size: 20px;
+            margin-bottom: 25px;
+            color: white;
+        }
+
+        .footer-links {
+            list-style-type: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #343a40;
+            color: #adb5bd;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .hero-image {
+                position: relative;
+                width: 100%;
+                top: 0;
+                margin-top: 50px;
+            }
+            
+            .hero {
+                padding: 180px 0 60px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-card.large {
+                grid-column: span 1;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 42px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 160px 0 40px;
+                text-align: center;
+            }
+            
+            .hero-content {
+                max-width: 100%;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-title h2 {
+                font-size: 30px;
+            }
+            
+            .user-menu {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Private Access Banner -->
+    <div class="private-banner">
+        <i class="fas fa-lock"></i> PRIVATE ACCESS ONLY - Exclusive platform for <strong>"The Squad"</strong> group members
+    </div>
+
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <i class="fas fa-user-friends"></i>
+                    Our<span>Circle</span>
+                    <div class="group-name">The Squad</div>
+                </div>
+                
+                <div class="nav-links">
+                    <a href="#home" class="active">Home</a>
+                    <a href="#dashboard">Dashboard</a>
+                    <a href="#features">Features</a>
+                    <a href="#members">Members</a>
+                    <a href="#events">Events</a>
+                    <a href="#gallery">Gallery</a>
+                </div>
+                
+                <div class="user-menu">
+                    <div class="user-avatar">JS</div>
+                    <span>John (Admin)</span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Your Private <span>Friends Platform</span></h1>
+                <p>An exclusive, invite-only space for our friend group to share memories, plan events, split expenses, and stay connected with premium features and complete privacy.</p>
+                
+                <div class="private-group-info">
+                    <h3><i class="fas fa-users"></i> Private Group: "The Squad"</h3>
+                    <p>This platform is exclusively for our group. No public sign-ups, no strangers, just our close friends.</p>
+                    
+                    <div class="member-list">
+                        <div class="member">
+                            <div class="member-avatar">JS</div>
+                            <span>John</span>
+                        </div>
+                        <div class="member">
+                            <div class="member-avatar">MS</div>
+                            <span>Mike</span>
+                        </div>
+                        <div class="member">
+                            <div class="member-avatar">SA</div>
+                            <span>Sarah</span>
+                        </div>
+                        <div class="member">
+                            <div class="member-avatar">EJ</div>
+                            <span>Emma</span>
+                        </div>
+                        <div class="member">
+                            <div class="member-avatar">DA</div>
+                            <span>David</span>
+                        </div>
+                        <div class="member">
+                            <div class="member-avatar">+2</div>
+                            <span>More</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" id="goToDashboard">
+                        <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+                    </button>
+                    <button class="btn btn-secondary" id="viewFeatures">
+                        <i class="fas fa-star"></i> Explore Features
+                    </button>
+                </div>
+            </div>
+            
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Friends enjoying time together">
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Preview -->
+    <section class="dashboard-preview" id="dashboard">
+        <div class="container">
+            <div class="section-title">
+                <h2>Group Dashboard</h2>
+                <p>Your central hub for everything happening in our friend group</p>
+            </div>
+            
+            <div class="dashboard-grid">
+                <!-- Upcoming Events -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-calendar-alt" style="color: var(--primary); margin-right: 10px;"></i> Upcoming Events</h3>
+                        <div class="card-icon">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                    </div>
+                    <ul style="list-style-type: none;">
+                        <li style="padding: 10px 0; border-bottom: 1px solid var(--light-gray);">
+                            <strong>Weekend Hike</strong> - Sat, Jun 15
+                        </li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid var(--light-gray);">
+                            <strong>Mike's Birthday</strong> - Fri, Jun 21
+                        </li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid var(--light-gray);">
+                            <strong>Game Night</strong> - Sat, Jun 29
+                        </li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%; margin-top: 20px;">
+                        <i class="fas fa-plus"></i> Add Event
+                    </button>
+                </div>
+                
+                <!-- Recent Expenses -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-receipt" style="color: var(--primary); margin-right: 10px;"></i> Recent Expenses</h3>
+                        <div class="card-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                    </div>
+                    <ul style="list-style-type: none;">
+                        <li style="padding: 10px 0; border-bottom: 1px solid var(--light-gray); display: flex; justify-content: space-between;">
+                            <span>Dinner at Mario's</span>
+                            <span style="color: var(--danger);">-$120.50</span>
+                        </li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid var(--light-gray); display: flex; justify-content: space-between;">
+                            <span>Concert tickets</span>
+                            <span style="color: var(--danger);">-$240.00</span>
+                        </li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid var(--light-gray); display: flex; justify-content: space-between;">
+                            <span>Sarah paid back</span>
+                            <span style="color: var(--success);">+$40.00</span>
+                        </li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%; margin-top: 20px;">
+                        <i class="fas fa-calculator"></i> Settle Up
+                    </button>
+                </div>
+                
+                <!-- Recent Photos -->
+                <div class="dashboard-card large">
+                    <div class="card-header">
+                        <h3><i class="fas fa-images" style="color: var(--primary); margin-right: 10px;"></i> Recent Photos</h3>
+                        <div class="card-icon">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px;">
+                        <div style="background: linear-gradient(45deg, #6a11cb, #2575fc); height: 120px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">
+                            <i class="fas fa-mountain"></i>
+                        </div>
+                        <div style="background: linear-gradient(45deg, #ff5e62, #ff9966); height: 120px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div style="background: linear-gradient(45deg, #42e695, #3bb2b8); height: 120px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">
+                            <i class="fas fa-glass-cheers"></i>
+                        </div>
+                        <div style="background: linear-gradient(45deg, #8338ec, #3a86ff); height: 120px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Exclusive Features for Our Group</h2>
+                <p>Custom tools designed specifically for our friend group's needs</p>
+            </div>
+            
+            <div class="features-grid">
+                <!-- Payments & Settlements -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h3>Private Payments</h3>
+                    <p>Split bills, track expenses, and settle debts within our group. No transaction fees, just between us.</p>
+                    <div class="feature-status status-active">ACTIVE</div>
+                </div>
+                
+                <!-- Media Sharing & Galleries -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-photo-video"></i>
+                    </div>
+                    <h3>Private Photo Galleries</h3>
+                    <p>Share memories in private albums. Unlimited storage for our group photos and videos.</p>
+                    <div class="feature-status status-active">ACTIVE</div>
+                </div>
+                
+                <!-- Location/Maps Integration -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h3>Group Locations</h3>
+                    <p>Share locations for meetups, tag favorite spots, and see where everyone is during trips.</p>
+                    <div class="feature-status status-upcoming">COMING SOON</div>
+                </div>
+                
+                <!-- Recurring Events/Expenses -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-week"></i>
+                    </div>
+                    <h3>Recurring Events</h3>
+                    <p>Automate our regular gatherings (weekly dinners, monthly hikes) and shared subscriptions.</p>
+                    <div class="feature-status status-active">ACTIVE</div>
+                </div>
+                
+                <!-- Calendar & Social Media Sync -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3>Private Calendar Sync</h3>
+                    <p>Sync our group events to personal calendars. No social media integration for maximum privacy.</p>
+                    <div class="feature-status status-active">ACTIVE</div>
+                </div>
+                
+                <!-- Security & Privacy Features -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Maximum Privacy</h3>
+                    <p>End-to-end encryption. No data sharing. No advertising. Just our private group space.</p>
+                    <div class="feature-status status-active">ACTIVE</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Private Access Section -->
+    <section class="private-access">
+        <div class="container">
+            <div class="section-title">
+                <h2>Exclusive Access</h2>
+                <p>This platform is invite-only for our group members</p>
+            </div>
+            
+            <div class="access-code">
+                <h3><i class="fas fa-key"></i> Group Access Code</h3>
+                <p>Share this code with friends in our group to grant them access</p>
+                <div class="code-display">THESQUAD-2024-VIP</div>
+                <button class="btn btn-primary" id="copyCode">
+                    <i class="fas fa-copy"></i> Copy Invite Code
+                </button>
+                
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.2);">
+                    <h4>Direct Invite Link</h4>
+                    <div class="invite-link">
+                        <input type="text" id="inviteLink" value="https://ourcircle.com/join/THESQUAD-2024-VIP" readonly>
+                        <button id="copyLink">
+                            <i class="fas fa-link"></i> Copy
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <div class="logo" style="color: white; margin-bottom: 20px;">
+                        <i class="fas fa-user-friends"></i>
+                        Our<span style="color: var(--success);">Circle</span>
+                    </div>
+                    <p>A private platform exclusively for <strong>"The Squad"</strong> friend group.</p>
+                    <p style="color: #6c757d; margin-top: 10px; font-size: 14px;">
+                        <i class="fas fa-lock"></i> Private • Secure • Ad-Free
+                    </p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Group Dashboard</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#members">Member Directory</a></li>
+                        <li><a href="#events">Event Calendar</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Group Tools</h3>
+                    <ul class="footer-links">
+                        <li><a href="#expenses">Expense Tracker</a></li>
+                        <li><a href="#gallery">Photo Gallery</a></li>
+                        <li><a href="#locations">Shared Locations</a></li>
+                        <li><a href="#polls">Group Polls</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Admin</h3>
+                    <ul class="footer-links">
+                        <li><a href="#settings">Group Settings</a></li>
+                        <li><a href="#invite">Invite Members</a></li>
+                        <li><a href="#privacy">Privacy Controls</a></li>
+                        <li><a href="#support">Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 OurCircle - Private Friends Platform. Access restricted to "The Squad" members only.</p>
+                <p style="font-size: 12px; margin-top: 10px;">Currently active members: 6 | Next event: Weekend Hike on Jun 15</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Private group functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Group data - in real implementation, this would come from a database
+            const groupData = {
+                name: "The Squad",
+                members: [
+                    { name: "John", avatar: "JS", role: "Admin" },
+                    { name: "Mike", avatar: "MS", role: "Member" },
+                    { name: "Sarah", avatar: "SA", role: "Member" },
+                    { name: "Emma", avatar: "EJ", role: "Member" },
+                    { name: "David", avatar: "DA", role: "Member" },
+                    { name: "Lisa", avatar: "LA", role: "Member" }
+                ],
+                accessCode: "THESQUAD-2024-VIP",
+                inviteLink: "https://ourcircle.com/join/THESQUAD-2024-VIP",
+                upcomingEvents: [
+                    { name: "Weekend Hike", date: "Sat, Jun 15" },
+                    { name: "Mike's Birthday", date: "Fri, Jun 21" },
+                    { name: "Game Night", date: "Sat, Jun 29" }
+                ]
+            };
+
+            // Update group name wherever it appears
+            document.querySelectorAll('.group-name').forEach(el => {
+                el.textContent = groupData.name;
+            });
+            
+            // Update private banner
+            document.querySelector('.private-banner strong').textContent = `"${groupData.name}"`;
+
+            // Copy invite code functionality
+            document.getElementById('copyCode').addEventListener('click', function() {
+                navigator.clipboard.writeText(groupData.accessCode).then(() => {
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                    }, 2000);
+                });
+            });
+
+            // Copy invite link functionality
+            document.getElementById('copyLink').addEventListener('click', function() {
+                const inviteLink = document.getElementById('inviteLink').value;
+                navigator.clipboard.writeText(inviteLink).then(() => {
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-check"></i> Copied';
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                    }, 2000);
+                });
+            });
+
+            // Dashboard navigation
+            document.getElementById('goToDashboard').addEventListener('click', function() {
+                alert(`Redirecting to ${groupData.name} Dashboard...\n\nIn a real implementation, this would take you to the authenticated dashboard.`);
+                // In real implementation: window.location.href = '/dashboard';
+            });
+
+            // Feature exploration
+            document.getElementById('viewFeatures').addEventListener('click', function() {
+                document.querySelector('#features').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if(targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Highlight active navigation link on scroll
+            window.addEventListener('scroll', function() {
+                const sections = document.querySelectorAll('section');
+                const navLinks = document.querySelectorAll('.nav-links a');
+                
+                let currentSection = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if(window.pageYOffset >= (sectionTop - 120)) {
+                        currentSection = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if(link.getAttribute('href') === `#${currentSection}`) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+            // Simulate loading member data
+            console.log(`Private platform loaded for group: ${groupData.name}`);
+            console.log(`Members: ${groupData.members.map(m => m.name).join(', ')}`);
+            console.log(`Access restricted to invite code: ${groupData.accessCode}`);
+        });
+    </script>
+</body>
+</html>
