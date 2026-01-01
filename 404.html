@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FriendsCircle - Complete Working Platform</title>
+    <title>FriendsCircle - Akash's Group</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -523,6 +523,82 @@
             color: var(--danger);
         }
 
+        /* Poll Cards */
+        .poll-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--info);
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .poll-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .poll-question {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .poll-option {
+            background-color: var(--light);
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .poll-option:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-color: var(--info);
+        }
+
+        .poll-option.voted {
+            background-color: rgba(59, 130, 246, 0.15);
+            border-color: var(--info);
+        }
+
+        .poll-progress {
+            height: 8px;
+            background-color: var(--light-gray);
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .poll-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--info), var(--primary));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .poll-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        .poll-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--light-gray);
+            font-size: 12px;
+            color: var(--gray);
+        }
+
         /* Map Container */
         .map-container {
             height: 300px;
@@ -701,6 +777,9 @@
                 <a href="#" data-tab="payments">
                     <i class="fas fa-money-bill-wave"></i> Payments
                 </a>
+                <a href="#" data-tab="polls">
+                    <i class="fas fa-poll"></i> Polls
+                </a>
                 <a href="#" data-tab="gallery">
                     <i class="fas fa-images"></i> Gallery
                 </a>
@@ -710,8 +789,8 @@
             </div>
             
             <div class="user-menu">
-                <div class="user-avatar" id="userAvatar">AD</div>
-                <span style="color: white; font-weight: 500;">Admin User</span>
+                <div class="user-avatar" id="userAvatar">AK</div>
+                <span style="color: white; font-weight: 500;">Akash (Admin)</span>
             </div>
         </div>
     </nav>
@@ -725,7 +804,7 @@
                     <h3><i class="fas fa-tachometer-alt"></i> Quick Stats</h3>
                     <div style="display: grid; gap: 15px;">
                         <div style="background: linear-gradient(45deg, var(--primary), var(--primary-dark)); color: white; padding: 15px; border-radius: var(--border-radius);">
-                            <div style="font-size: 24px; font-weight: 700;" id="totalFriends">12</div>
+                            <div style="font-size: 24px; font-weight: 700;" id="totalFriends">11</div>
                             <div style="font-size: 14px;">Total Friends</div>
                         </div>
                         <div style="background: linear-gradient(45deg, var(--success), #0da271); color: white; padding: 15px; border-radius: var(--border-radius);">
@@ -733,7 +812,7 @@
                             <div style="font-size: 14px;">Upcoming Events</div>
                         </div>
                         <div style="background: linear-gradient(45deg, var(--accent), #d97706); color: white; padding: 15px; border-radius: var(--border-radius);">
-                            <div style="font-size: 24px; font-weight: 700;" id="totalBalance">$0</div>
+                            <div style="font-size: 24px; font-weight: 700;" id="totalBalance">₹0</div>
                             <div style="font-size: 14px;">Group Balance</div>
                         </div>
                     </div>
@@ -745,7 +824,6 @@
                         <li>
                             <a href="#" id="quickAddFriend">
                                 <i class="fas fa-user-plus"></i> Add Friend
-                                <span class="menu-badge" style="background-color: var(--primary);">New</span>
                             </a>
                         </li>
                         <li>
@@ -756,6 +834,11 @@
                         <li>
                             <a href="#" id="quickAddExpense">
                                 <i class="fas fa-receipt"></i> Add Expense
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" id="quickCreatePoll">
+                                <i class="fas fa-poll"></i> Create Poll
                             </a>
                         </li>
                         <li>
@@ -803,11 +886,11 @@
                                 </div>
                             </div>
                             
-                            <!-- Recent Expenses -->
+                            <!-- Active Polls -->
                             <div class="card">
-                                <h3 style="margin-bottom: 15px;"><i class="fas fa-money-bill-wave"></i> Recent Expenses</h3>
-                                <div id="recentExpenses">
-                                    <!-- Expenses will be loaded here -->
+                                <h3 style="margin-bottom: 15px;"><i class="fas fa-poll"></i> Active Polls</h3>
+                                <div id="activePolls">
+                                    <!-- Polls will be loaded here -->
                                 </div>
                             </div>
                         </div>
@@ -841,7 +924,6 @@
                             <button class="tab-btn active" data-friends-tab="all">All Friends</button>
                             <button class="tab-btn" data-friends-tab="online">Online</button>
                             <button class="tab-btn" data-friends-tab="admins">Admins</button>
-                            <button class="tab-btn" data-friends-tab="pending">Pending</button>
                         </div>
                         
                         <div class="table-responsive">
@@ -849,10 +931,10 @@
                                 <thead>
                                     <tr>
                                         <th>Name</th>
-                                        <th>Email</th>
                                         <th>Status</th>
                                         <th>Role</th>
                                         <th>Balance</th>
+                                        <th>Last Active</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -884,7 +966,7 @@
                 <div id="payments" class="tab-content">
                     <div class="card">
                         <div class="card-header">
-                            <h2><i class="fas fa-money-bill-wave"></i> Payments & Settlements</h2>
+                            <h2><i class="fas fa-money-bill-wave"></i> Payments & Settlements (INR)</h2>
                             <div>
                                 <button class="btn btn-success" id="addExpenseBtn">
                                     <i class="fas fa-plus"></i> Add Expense
@@ -920,7 +1002,7 @@
                                     <thead>
                                         <tr>
                                             <th>Description</th>
-                                            <th>Amount</th>
+                                            <th>Amount (₹)</th>
                                             <th>Paid By</th>
                                             <th>Split Between</th>
                                             <th>Date</th>
@@ -932,6 +1014,28 @@
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Polls Tab -->
+                <div id="polls" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-poll"></i> Group Polls</h2>
+                            <button class="btn btn-primary" id="createPollBtn">
+                                <i class="fas fa-plus"></i> Create Poll
+                            </button>
+                        </div>
+                        
+                        <div class="tabs">
+                            <button class="tab-btn active" data-poll-tab="active">Active Polls</button>
+                            <button class="tab-btn" data-poll-tab="closed">Closed Polls</button>
+                            <button class="tab-btn" data-poll-tab="myPolls">My Polls</button>
+                        </div>
+                        
+                        <div id="pollsContainer">
+                            <!-- Polls will be loaded here -->
                         </div>
                     </div>
                 </div>
@@ -1034,7 +1138,6 @@
                         <select id="friendRole">
                             <option value="member">Member</option>
                             <option value="admin">Admin</option>
-                            <option value="moderator">Moderator</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -1054,7 +1157,7 @@
     <div id="addExpenseModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-receipt"></i> Add New Expense</h3>
+                <h3><i class="fas fa-receipt"></i> Add New Expense (₹)</h3>
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -1064,8 +1167,8 @@
                         <input type="text" id="expenseDescription" required placeholder="Dinner, Movie tickets, etc.">
                     </div>
                     <div class="form-group">
-                        <label for="expenseAmount">Amount ($) *</label>
-                        <input type="number" id="expenseAmount" min="0" step="0.01" required>
+                        <label for="expenseAmount">Amount (₹) *</label>
+                        <input type="number" id="expenseAmount" min="0" step="1" required>
                     </div>
                     <div class="form-group">
                         <label for="expensePaidBy">Paid By *</label>
@@ -1097,7 +1200,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline close-modal">Cancel</button>
-                <button class="btn btn-success" id="saveExpenseBtn">Add Expense</button>
+                                <button class="btn btn-success" id="saveExpenseBtn">Add Expense</button>
             </div>
         </div>
     </div>
@@ -1142,6 +1245,75 @@
             <div class="modal-footer">
                 <button class="btn btn-outline close-modal">Cancel</button>
                 <button class="btn btn-primary" id="saveEventBtn">Create Event</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Poll Modal -->
+    <div id="createPollModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-poll"></i> Create New Poll</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createPollForm">
+                    <div class="form-group">
+                        <label for="pollQuestion">Poll Question *</label>
+                        <input type="text" id="pollQuestion" required placeholder="What should we do this weekend?">
+                    </div>
+                    <div class="form-group">
+                        <label for="pollDescription">Description (Optional)</label>
+                        <textarea id="pollDescription" rows="3" placeholder="Add more details about the poll..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Poll Options * (Minimum 2)</label>
+                        <div id="pollOptionsContainer">
+                            <div class="poll-option-input" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                <input type="text" class="poll-option" placeholder="Option 1" required>
+                                <button type="button" class="btn btn-danger remove-option" style="padding: 8px 12px;" disabled>
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="poll-option-input" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                <input type="text" class="poll-option" placeholder="Option 2" required>
+                                <button type="button" class="btn btn-danger remove-option" style="padding: 8px 12px;">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline" id="addPollOption" style="margin-top: 10px;">
+                            <i class="fas fa-plus"></i> Add Option
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label for="pollDuration">Poll Duration</label>
+                        <select id="pollDuration">
+                            <option value="1">1 Day</option>
+                            <option value="3">3 Days</option>
+                            <option value="7" selected>1 Week</option>
+                            <option value="30">1 Month</option>
+                            <option value="0">No End Date</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="pollVisibility">Visibility</label>
+                        <select id="pollVisibility">
+                            <option value="public" selected>Public (All friends can vote)</option>
+                            <option value="private">Private (Only selected friends)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="pollFriendsSelection" style="display: none;">
+                        <label>Select Friends</label>
+                        <div id="pollFriendsCheckboxes">
+                            <!-- Checkboxes will be populated dynamically -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline close-modal">Cancel</button>
+                <button class="btn btn-primary" id="savePollBtn">Create Poll</button>
             </div>
         </div>
     </div>
@@ -1196,61 +1368,75 @@
     </div>
 
     <script>
-        // Complete Database Simulation
+        // Complete Database Simulation with Akash's Group
         const database = {
             currentUser: {
                 id: 1,
-                name: "Admin User",
-                email: "admin@friendscircle.com",
-                avatar: "AD",
-                role: "admin"
+                name: "Akash",
+                email: "akash@friendscircle.com",
+                avatar: "AK",
+                role: "admin",
+                
             },
             friends: [
-                { id: 2, name: "John Smith", email: "john@example.com", phone: "+1234567890", status: "online", role: "admin", balance: 0, avatar: "JS" },
-                { id: 3, name: "Sarah Johnson", email: "sarah@example.com", phone: "+1234567891", status: "online", role: "moderator", balance: -45.50, avatar: "SJ" },
-                { id: 4, name: "Mike Williams", email: "mike@example.com", phone: "+1234567892", status: "offline", role: "member", balance: 25.00, avatar: "MW" },
-                { id: 5, name: "Emma Brown", email: "emma@example.com", phone: "+1234567893", status: "online", role: "member", balance: 0, avatar: "EB" },
-                { id: 6, name: "David Miller", email: "david@example.com", phone: "+1234567894", status: "offline", role: "member", balance: 20.50, avatar: "DM" },
-                { id: 7, name: "Lisa Davis", email: "lisa@example.com", phone: "+1234567895", status: "online", role: "member", balance: 0, avatar: "LD" }
-            ],
+               
+              
+    { "id": 2, "name": "Boopathi", "role": "member" },
+    { "id": 3, "name": "Diwakar", "role": "member" },
+    { "id": 4, "name": "Jayarajan", "role": "member" },
+    { "id": 5, "name": "Kanish", "role": "member" },
+    { "id": 6, "name": "Mukesh", "role": "member" },
+    { "id": 7, "name": "Naveen Kumar", "role": "member" },
+    { "id": 8, "name": "Naveen", "role": "member" },
+    { "id": 9, "name": "Prabanjan", "role": "member" },
+    { "id": 10, "name": "Prasad", "role": "member" }
+    { "id": 11, "name": "Yogaprasath", "role": "member" }
+    { "id": 12, "name": "Raghul dravid", "role": "member" }
+    { "id": 13, "name": "Madhan", "role": "member" }
+    { "id": 14, "name": "Vicky", "role": "member" }
+
+
+
+   ],
             events: [
-                { id: 1, title: "Weekend Hike", date: "2024-06-15", time: "09:00", location: "Mountain Trail", description: "Morning hike with picnic", organizer: "John Smith", participants: [1, 2, 3, 4], status: "upcoming" },
-                { id: 2, title: "Birthday Party", date: "2024-06-21", time: "19:00", location: "Sarah's House", description: "Sarah's birthday celebration", organizer: "Sarah Johnson", participants: [1, 2, 3, 4, 5, 6, 7], status: "upcoming" },
-                { id: 3, title: "Game Night", date: "2024-06-29", time: "18:00", location: "Mike's Apartment", description: "Board games and pizza", organizer: "Mike Williams", participants: [1, 3, 4, 5], status: "upcoming" },
-                { id: 4, title: "Beach Day", date: "2024-05-30", time: "10:00", location: "Ocean Beach", description: "Sun, sand, and volleyball", organizer: "Emma Brown", participants: [1, 2, 4, 5, 7], status: "past" }
+                
             ],
             expenses: [
-                { id: 1, description: "Dinner at Italian Restaurant", amount: 120.50, paidBy: 2, splitBetween: [1, 2, 3, 4], date: "2024-06-10", category: "food", status: "unsettled" },
-                { id: 2, description: "Concert Tickets", amount: 240.00, paidBy: 1, splitBetween: [1, 2, 3, 4, 5, 6], date: "2024-06-05", category: "entertainment", status: "unsettled" },
-                { id: 3, description: "Gas for Road Trip", amount: 60.00, paidBy: 3, splitBetween: [1, 3, 4], date: "2024-05-28", category: "travel", status: "settled" },
-                { id: 4, description: "Movie Tickets", amount: 45.00, paidBy: 4, splitBetween: [1, 4, 5], date: "2024-06-08", category: "entertainment", status: "unsettled" }
+                
+            ],
+            polls: [
+                { 
+                    id: 1, 
+                    question: "Where should we go for our next trip?", 
+                    description: "Planning a weekend getaway next month",
+                    options: [
+                        { id: 1, text: "Goa Beach", votes: 4, voters: [1, 2, 3, 4] },
+                        { id: 2, text: "Mountain Trek", votes: 3, voters: [5, 6, 7] },
+                        { id: 3, text: "Wildlife Safari", votes: 2, voters: [8, 9] },
+                        { id: 4, text: "Heritage City Tour", votes: 1, voters: [10] }
+                    ],
+                    createdBy: 1,
+                    createdAt: "2024-06-01",
+                    endsAt: "2024-06-15",
+                    totalVotes: 10,
+                    status: "active",
+                    visibility: "public"
+                },
+                
+                
+                
             ],
             gallery: [
-                { id: 1, url: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=400&fit=crop", caption: "Weekend hike memories", album: "events", uploadedBy: 2, date: "2024-06-03", likes: [1, 3, 4] },
-                { id: 2, url: "https://images.unsplash.com/photo-1547592180-85f173990554?w-400&h=400&fit=crop", caption: "Birthday celebration", album: "events", uploadedBy: 1, date: "2024-05-20", likes: [2, 3, 4, 5] },
-                { id: 3, url: "https://images.unsplash.com/photo-1511735111819-9a3f7709049c?w=400&h=400&fit=crop", caption: "Game night fun", album: "events", uploadedBy: 3, date: "2024-05-15", likes: [1, 2, 4] },
-                { id: 4, url: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=400&fit=crop", caption: "Beach day", album: "trips", uploadedBy: 4, date: "2024-05-30", likes: [1, 2, 3, 5] },
-                { id: 5, url: "https://images.unsplash.com/photo-1547592180-85f173990554?w=400&h=400&fit=crop", caption: "Group photo", album: "memories", uploadedBy: 5, date: "2024-05-25", likes: [1, 2, 3, 4, 6] },
-                { id: 6, url: "https://images.unsplash.com/photo-1511735111819-9a3f7709049c?w=400&h=400&fit=crop", caption: "City tour", album: "trips", uploadedBy: 6, date: "2024-05-10", likes: [1, 3, 4] }
+                
             ],
             locations: [
-                { id: 1, friendId: 2, name: "John Smith", location: "Downtown Cafe", latitude: 40.7128, longitude: -74.0060, lastUpdated: "10 min ago" },
-                { id: 2, friendId: 3, name: "Sarah Johnson", location: "Home", latitude: 40.7589, longitude: -73.9851, lastUpdated: "1 hour ago" },
-                { id: 3, friendId: 5, name: "Emma Brown", location: "Central Park", latitude: 40.7851, longitude: -73.9683, lastUpdated: "30 min ago" },
-                { id: 4, friendId: 7, name: "Lisa Davis", location: "Office", latitude: 40.7489, longitude: -73.9680, lastUpdated: "2 hours ago" }
+               
             ],
             savedPlaces: [
-                { id: 1, name: "Favorite Restaurant", address: "123 Main St", type: "restaurant", addedBy: 1 },
-                { id: 2, name: "Movie Theater", address: "456 Oak Ave", type: "entertainment", addedBy: 2 },
-                { id: 3, name: "Hiking Trail", address: "Mountain Rd", type: "outdoor", addedBy: 3 },
-                { id: 4, name: "Bowling Alley", address: "789 Pine St", type: "entertainment", addedBy: 4 }
+               
             ],
             activityLog: [
-                { id: 1, type: "friend_added", message: "John added Sarah to the group", timestamp: "2 hours ago" },
-                { id: 2, type: "expense_added", message: "Mike added a new expense: Dinner - $120.50", timestamp: "5 hours ago" },
-                { id: 3, type: "event_created", message: "Emma created a new event: Beach Day", timestamp: "1 day ago" },
-                { id: 4, type: "photo_uploaded", message: "David uploaded 3 new photos", timestamp: "2 days ago" },
-                { id: 5, type: "location_shared", message: "Lisa shared her location", timestamp: "3 days ago" }
+               
             ]
         };
 
@@ -1258,9 +1444,7 @@
         let currentState = {
             activeTab: 'dashboard',
             selectedFiles: [],
-            pendingFriendId: null,
-            pendingExpenseId: null,
-            pendingEventId: null
+            votedPolls: new Set()
         };
 
         // Initialize Application
@@ -1280,6 +1464,9 @@
             // Load expenses
             loadExpenses();
             
+            // Load polls
+            loadPolls();
+            
             // Load gallery
             loadGallery();
             
@@ -1290,7 +1477,7 @@
             setupEventListeners();
             
             // Show welcome notification
-            showNotification('Welcome!', 'FriendsCircle platform loaded successfully', 'success');
+            showNotification('Welcome Akash!', 'Your FriendsCircle platform is ready', 'success');
         }
 
         // Dashboard Functions
@@ -1301,7 +1488,7 @@
             
             // Calculate total balance
             const totalBalance = database.friends.reduce((sum, friend) => sum + friend.balance, 0);
-            document.getElementById('totalBalance').textContent = totalBalance >= 0 ? `$${totalBalance.toFixed(2)}` : `-$${Math.abs(totalBalance).toFixed(2)}`;
+            document.getElementById('totalBalance').textContent = totalBalance >= 0 ? `₹${totalBalance}` : `-₹${Math.abs(totalBalance)}`;
             
             // Load online friends
             loadOnlineFriends();
@@ -1309,8 +1496,8 @@
             // Load upcoming events
             loadUpcomingEvents();
             
-            // Load recent expenses
-            loadRecentExpenses();
+            // Load active polls
+            loadActivePolls();
             
             // Load recent photos
             loadRecentPhotos();
@@ -1338,7 +1525,21 @@
                 container.appendChild(friendEl);
             });
             
-            if (onlineFriends.length === 0) {
+            // Add current user if online
+            if (database.currentUser.status === 'online') {
+                const currentUserEl = document.createElement('div');
+                currentUserEl.className = 'friend-item';
+                currentUserEl.innerHTML = `
+                    <div class="friend-avatar">${database.currentUser.avatar}</div>
+                    <div class="friend-info">
+                        <h4>${database.currentUser.name} (You)</h4>
+                        <p>Admin</p>
+                    </div>
+                `;
+                container.appendChild(currentUserEl);
+            }
+            
+            if (onlineFriends.length === 0 && database.currentUser.status !== 'online') {
                 container.innerHTML = '<p style="color: var(--gray); text-align: center;">No friends online</p>';
             }
         }
@@ -1370,31 +1571,48 @@
             }
         }
 
-        function loadRecentExpenses() {
-            const container = document.getElementById('recentExpenses');
+        function loadActivePolls() {
+            const container = document.getElementById('activePolls');
             container.innerHTML = '';
             
-            const recentExpenses = database.expenses.slice(0, 3);
+            const activePolls = database.polls.filter(p => p.status === 'active').slice(0, 2);
             
-            recentExpenses.forEach(expense => {
-                const paidBy = database.friends.find(f => f.id === expense.paidBy) || database.currentUser;
-                const expenseEl = document.createElement('div');
-                expenseEl.className = 'payment-card';
-                expenseEl.innerHTML = `
-                    <div>
-                        <h4 style="margin-bottom: 5px;">${expense.description}</h4>
-                        <p style="color: var(--gray); font-size: 14px;">Paid by ${paidBy.name}</p>
-                    </div>
-                    <div class="payment-amount ${expense.paidBy === database.currentUser.id ? 'payment-positive' : 'payment-negative'}">
-                        ${expense.paidBy === database.currentUser.id ? '+' : '-'}$${expense.amount.toFixed(2)}
-                    </div>
-                `;
-                container.appendChild(expenseEl);
-            });
-            
-            if (recentExpenses.length === 0) {
-                container.innerHTML = '<p style="color: var(--gray); text-align: center;">No recent expenses</p>';
+            if (activePolls.length === 0) {
+                container.innerHTML = '<p style="color: var(--gray); text-align: center;">No active polls</p>';
+                return;
             }
+            
+            activePolls.forEach(poll => {
+                const totalVotes = poll.totalVotes || poll.options.reduce((sum, opt) => sum + opt.votes, 0);
+                const pollEl = document.createElement('div');
+                pollEl.className = 'poll-card';
+                pollEl.style.padding = '15px';
+                pollEl.style.marginBottom = '10px';
+                
+                pollEl.innerHTML = `
+                    <div class="poll-question" style="font-size: 16px;">${poll.question}</div>
+                    <div style="font-size: 12px; color: var(--gray); margin-bottom: 10px;">${totalVotes} votes</div>
+                    ${poll.options.slice(0, 2).map(option => {
+                        const percentage = totalVotes > 0 ? Math.round((option.votes / totalVotes) * 100) : 0;
+                        return `
+                            <div style="margin-bottom: 8px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                    <span style="font-size: 14px;">${option.text}</span>
+                                    <span style="font-size: 12px; color: var(--gray);">${percentage}%</span>
+                                </div>
+                                <div style="height: 6px; background-color: var(--light-gray); border-radius: 3px; overflow: hidden;">
+                                    <div style="height: 100%; width: ${percentage}%; background: linear-gradient(90deg, var(--info), var(--primary)); border-radius: 3px;"></div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                    <button class="btn btn-outline" style="width: 100%; padding: 8px; font-size: 12px; margin-top: 10px;" onclick="viewPoll(${poll.id})">
+                        View Poll
+                    </button>
+                `;
+                
+                container.appendChild(pollEl);
+            });
         }
 
         function loadRecentPhotos() {
@@ -1443,12 +1661,39 @@
                 filteredFriends = database.friends.filter(f => f.status === 'online');
             } else if (filter === 'admins') {
                 filteredFriends = database.friends.filter(f => f.role === 'admin');
-            } else if (filter === 'pending') {
-                // For demo, we'll show some pending friends
-                filteredFriends = [
-                    { id: 99, name: "Pending Friend", email: "pending@example.com", status: "pending", role: "member", balance: 0, avatar: "PF" }
-                ];
             }
+            
+            // Add current user first
+            const currentUserRow = document.createElement('tr');
+            currentUserRow.innerHTML = `
+                <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="friend-avatar" style="width: 40px; height: 40px;">${database.currentUser.avatar}</div>
+                        <div>
+                            <strong>${database.currentUser.name} (You)</strong>
+                            <br><small style="color: var(--primary);">Admin</small>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <span class="status-badge status-success">
+                        Online
+                    </span>
+                </td>
+                <td>Admin</td>
+                <td>
+                    <span>₹0</span>
+                </td>
+                <td>Just now</td>
+                <td>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-outline" style="padding: 8px 12px; font-size: 12px;" onclick="messageFriend(${database.currentUser.id})">
+                            <i class="fas fa-envelope"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(currentUserRow);
             
             filteredFriends.forEach(friend => {
                 const row = document.createElement('tr');
@@ -1462,7 +1707,6 @@
                             </div>
                         </div>
                     </td>
-                    <td>${friend.email}</td>
                     <td>
                         <span class="status-badge ${friend.status === 'online' ? 'status-success' : 'status-warning'}">
                             ${friend.status === 'online' ? 'Online' : 'Offline'}
@@ -1471,9 +1715,10 @@
                     <td>${friend.role.charAt(0).toUpperCase() + friend.role.slice(1)}</td>
                     <td>
                         <span class="${friend.balance > 0 ? 'payment-positive' : friend.balance < 0 ? 'payment-negative' : ''}">
-                            ${friend.balance > 0 ? '+' : ''}$${friend.balance.toFixed(2)}
+                            ${friend.balance > 0 ? '+' : ''}₹${Math.abs(friend.balance)}
                         </span>
                     </td>
+                    <td>${friend.lastActive}</td>
                     <td>
                         <div style="display: flex; gap: 8px;">
                             <button class="btn btn-outline" style="padding: 8px 12px; font-size: 12px;" onclick="messageFriend(${friend.id})">
@@ -1482,11 +1727,6 @@
                             <button class="btn btn-outline" style="padding: 8px 12px; font-size: 12px;" onclick="editFriend(${friend.id})">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            ${friend.id !== database.currentUser.id ? `
-                                <button class="btn btn-danger" style="padding: 8px 12px; font-size: 12px;" onclick="removeFriend(${friend.id})">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            ` : ''}
                         </div>
                     </td>
                 `;
@@ -1506,7 +1746,8 @@
                 status: 'offline',
                 role: friendData.role,
                 balance: 0,
-                avatar: avatar
+                avatar: avatar,
+                lastActive: 'Just added'
             };
             
             database.friends.push(newFriend);
@@ -1526,42 +1767,384 @@
             showNotification('Friend Added', `${friendData.name} has been added to the group`, 'success');
         }
 
-        function editFriend(friendId) {
-            const friend = database.friends.find(f => f.id === friendId);
-            if (!friend) return;
+        // Polls Functions
+        function loadPolls(filter = 'active') {
+            const container = document.getElementById('pollsContainer');
+            container.innerHTML = '';
             
-            // In a real app, open edit modal
-            showNotification('Edit Friend', `Editing ${friend.name} (ID: ${friendId})`, 'info');
-        }
-
-        function removeFriend(friendId) {
-            const friend = database.friends.find(f => f.id === friendId);
-            if (!friend) return;
+            let filteredPolls = database.polls;
             
-            if (confirm(`Are you sure you want to remove ${friend.name} from the group?`)) {
-                const index = database.friends.findIndex(f => f.id === friendId);
-                database.friends.splice(index, 1);
+            if (filter === 'active') {
+                filteredPolls = database.polls.filter(p => p.status === 'active');
+            } else if (filter === 'closed') {
+                filteredPolls = database.polls.filter(p => p.status === 'closed');
+            } else if (filter === 'myPolls') {
+                filteredPolls = database.polls.filter(p => p.createdBy === database.currentUser.id);
+            }
+            
+            if (filteredPolls.length === 0) {
+                container.innerHTML = `<p style="color: var(--gray); text-align: center; padding: 40px;">No ${filter} polls found</p>`;
+                return;
+            }
+            
+            filteredPolls.forEach(poll => {
+                const totalVotes = poll.totalVotes || poll.options.reduce((sum, opt) => sum + opt.votes, 0);
+                const hasVoted = currentState.votedPolls.has(poll.id) || 
+                    poll.options.some(opt => opt.voters.includes(database.currentUser.id));
+                const pollCreator = database.friends.find(f => f.id === poll.createdBy) || database.currentUser;
                 
-                // Add activity log
-                database.activityLog.unshift({
-                    id: database.activityLog.length + 1,
-                    type: "friend_removed",
-                    message: `${database.currentUser.name} removed ${friend.name} from the group`,
-                    timestamp: "Just now"
+                const pollEl = document.createElement('div');
+                pollEl.className = 'poll-card';
+                
+                // Calculate percentages
+                const optionsWithPercentages = poll.options.map(option => {
+                    const percentage = totalVotes > 0 ? Math.round((option.votes / totalVotes) * 100) : 0;
+                    return { ...option, percentage };
                 });
                 
-                loadDashboard();
-                loadFriendsTable();
+                pollEl.innerHTML = `
+                    <div class="poll-question">${poll.question}</div>
+                    ${poll.description ? `<p style="color: var(--gray); font-size: 14px; margin-bottom: 15px;">${poll.description}</p>` : ''}
+                    
+                    <div style="margin-bottom: 20px;">
+                        ${optionsWithPercentages.map(option => `
+                            <div class="poll-option ${hasVoted ? 'voted' : ''}" 
+                                 onclick="voteInPoll(${poll.id}, ${option.id})" 
+                                 style="cursor: ${hasVoted ? 'default' : 'pointer'};">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <span>${option.text}</span>
+                                    ${hasVoted ? `<span style="font-weight: 600;">${option.votes} vote${option.votes !== 1 ? 's' : ''}</span>` : ''}
+                                </div>
+                                ${hasVoted ? `
+                                    <div class="poll-progress">
+                                        <div class="poll-progress-bar" style="width: ${option.percentage}%"></div>
+                                    </div>
+                                    <div class="poll-stats">
+                                        <span>${option.percentage}%</span>
+                                        ${option.voters.includes(database.currentUser.id) ? 
+                                            '<span style="color: var(--success);"><i class="fas fa-check"></i> Your vote</span>' : ''}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="poll-meta">
+                        <div>
+                            <i class="fas fa-user"></i> ${pollCreator.name}
+                            <span style="margin-left: 15px;">
+                                <i class="fas fa-users"></i> ${totalVotes} vote${totalVotes !== 1 ? 's' : ''}
+                            </span>
+                        </div>
+                        <div>
+                            ${poll.status === 'active' ? 
+                                `<span class="status-badge status-success">Active</span>` : 
+                                `<span class="status-badge status-warning">Closed</span>`}
+                        </div>
+                    </div>
+                    
+                    ${database.currentUser.id === poll.createdBy ? `
+                        <div style="margin-top: 15px; display: flex; gap: 10px;">
+                            <button class="btn btn-outline" onclick="editPoll(${poll.id})" style="padding: 8px 12px; font-size: 12px;">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-danger" onclick="deletePoll(${poll.id})" style="padding: 8px 12px; font-size: 12px;">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    ` : ''}
+                `;
                 
-                showNotification('Friend Removed', `${friend.name} has been removed from the group`, 'success');
+                container.appendChild(pollEl);
+            });
+        }
+
+        function voteInPoll(pollId, optionId) {
+            const poll = database.polls.find(p => p.id === pollId);
+            if (!poll || poll.status === 'closed') return;
+            
+            // Check if user already voted
+            const hasVoted = currentState.votedPolls.has(pollId) || 
+                poll.options.some(opt => opt.voters.includes(database.currentUser.id));
+            
+            if (hasVoted) {
+                showNotification('Already Voted', 'You have already voted in this poll', 'warning');
+                return;
+            }
+            
+            // Find the option
+            const option = poll.options.find(opt => opt.id === optionId);
+            if (!option) return;
+            
+            // Add vote
+            option.votes++;
+            option.voters.push(database.currentUser.id);
+            poll.totalVotes = (poll.totalVotes || 0) + 1;
+            
+            // Mark as voted
+            currentState.votedPolls.add(pollId);
+            
+            // Add activity log
+            database.activityLog.unshift({
+                id: database.activityLog.length + 1,
+                type: "poll_voted",
+                message: `${database.currentUser.name} voted in poll: ${poll.question}`,
+                timestamp: "Just now"
+            });
+            
+            loadDashboard();
+            loadPolls();
+            
+            showNotification('Vote Submitted', 'Your vote has been recorded', 'success');
+        }
+
+        function createNewPoll(pollData) {
+            const newId = Math.max(...database.polls.map(p => p.id)) + 1;
+            
+            const newPoll = {
+                id: newId,
+                question: pollData.question,
+                description: pollData.description || '',
+                options: pollData.options.map((text, index) => ({
+                    id: index + 1,
+                    text: text,
+                    votes: 0,
+                    voters: []
+                })),
+                createdBy: database.currentUser.id,
+                createdAt: new Date().toISOString().split('T')[0],
+                endsAt: calculateEndDate(pollData.duration),
+                totalVotes: 0,
+                status: 'active',
+                visibility: pollData.visibility
+            };
+            
+            database.polls.push(newPoll);
+            
+            // Add activity log
+            database.activityLog.unshift({
+                id: database.activityLog.length + 1,
+                type: "poll_created",
+                message: `${database.currentUser.name} created a new poll: ${pollData.question}`,
+                timestamp: "Just now"
+            });
+            
+            closeModal('createPollModal');
+            loadDashboard();
+            loadPolls();
+            
+            showNotification('Poll Created', 'Your poll has been created successfully', 'success');
+        }
+
+        function calculateEndDate(durationDays) {
+            if (durationDays === 0) return null;
+            
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + parseInt(durationDays));
+            return endDate.toISOString().split('T')[0];
+        }
+
+        function viewPoll(pollId) {
+            const poll = database.polls.find(p => p.id === pollId);
+            if (!poll) return;
+            
+            // Switch to polls tab
+            document.querySelector('[data-tab="polls"]').click();
+            
+            showNotification('Poll Details', `Viewing poll: ${poll.question}`, 'info');
+        }
+
+        function editPoll(pollId) {
+            const poll = database.polls.find(p => p.id === pollId);
+            if (!poll) return;
+            
+            // In a real app, open edit modal
+            showNotification('Edit Poll', `Editing poll: ${poll.question}`, 'info');
+        }
+
+        function deletePoll(pollId) {
+            const poll = database.polls.find(p => p.id === pollId);
+            if (!poll) return;
+            
+            if (confirm(`Are you sure you want to delete poll: "${poll.question}"?`)) {
+                const index = database.polls.findIndex(p => p.id === pollId);
+                database.polls.splice(index, 1);
+                
+                loadDashboard();
+                loadPolls();
+                
+                showNotification('Poll Deleted', `"${poll.question}" has been deleted`, 'success');
             }
         }
 
-        function messageFriend(friendId) {
-            const friend = database.friends.find(f => f.id === friendId);
-            if (!friend) return;
+        // Expenses Functions (Updated for INR)
+        function loadExpenses() {
+            // Load expenses table
+            const tbody = document.getElementById('expensesTableBody');
+            tbody.innerHTML = '';
             
-            showNotification('Message', `Opening chat with ${friend.name}`, 'info');
+            database.expenses.forEach(expense => {
+                const paidBy = database.friends.find(f => f.id === expense.paidBy) || database.currentUser;
+                const splitCount = expense.splitBetween.length;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <strong>${expense.description}</strong>
+                        <br><small style="color: var(--gray);">${expense.category}</small>
+                    </td>
+                    <td><strong>₹${expense.amount}</strong></td>
+                    <td>${paidBy.name}</td>
+                    <td>${splitCount} people</td>
+                    <td>${formatDate(expense.date)}</td>
+                    <td>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-outline" style="padding: 8px 12px; font-size: 12px;" onclick="viewExpense(${expense.id})">
+                                View
+                            </button>
+                            <button class="btn btn-danger" style="padding: 8px 12px; font-size: 12px;" onclick="deleteExpense(${expense.id})">
+                                Delete
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Load recent transactions
+            loadRecentTransactions();
+            
+            // Load balance overview
+            loadBalanceOverview();
+        }
+
+        function loadRecentTransactions() {
+            const container = document.getElementById('recentTransactions');
+            container.innerHTML = '';
+            
+            const recentExpenses = database.expenses.slice(0, 5);
+            
+            recentExpenses.forEach(expense => {
+                const paidBy = database.friends.find(f => f.id === expense.paidBy) || database.currentUser;
+                const transactionEl = document.createElement('div');
+                transactionEl.style.padding = '10px 0';
+                transactionEl.style.borderBottom = '1px solid var(--light-gray)';
+                transactionEl.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>${expense.description}</strong>
+                            <p style="color: var(--gray); font-size: 12px; margin: 5px 0;">${formatDate(expense.date)}</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <strong class="${expense.paidBy === database.currentUser.id ? 'payment-positive' : 'payment-negative'}">
+                                ${expense.paidBy === database.currentUser.id ? '+' : '-'}₹${expense.amount}
+                            </strong>
+                            <p style="color: var(--gray); font-size: 12px; margin: 5px 0;">${paidBy.name}</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(transactionEl);
+            });
+        }
+
+        function loadBalanceOverview() {
+            const container = document.getElementById('balanceOverview');
+            container.innerHTML = '';
+            
+            // Calculate balances
+            const balances = {};
+            
+            // Initialize balances
+            database.friends.forEach(friend => {
+                balances[friend.id] = friend.balance;
+            });
+            balances[database.currentUser.id] = 0;
+            
+            // Display balances
+            Object.keys(balances).forEach(friendId => {
+                const friendIdNum = parseInt(friendId);
+                let friend;
+                
+                if (friendIdNum === database.currentUser.id) {
+                    friend = database.currentUser;
+                } else {
+                    friend = database.friends.find(f => f.id === friendIdNum);
+                }
+                
+                if (friend && balances[friendIdNum] !== 0) {
+                    const balanceEl = document.createElement('div');
+                    balanceEl.style.padding = '10px 0';
+                    balanceEl.style.borderBottom = '1px solid var(--light-gray)';
+                    balanceEl.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="friend-avatar" style="width: 30px; height: 30px; font-size: 12px;">${friend.avatar}</div>
+                                <span>${friend.name}</span>
+                            </div>
+                            <strong class="${balances[friendIdNum] > 0 ? 'payment-positive' : 'payment-negative'}">
+                                ${balances[friendIdNum] > 0 ? '+' : ''}₹${Math.abs(balances[friendIdNum])}
+                            </strong>
+                        </div>
+                    `;
+                    container.appendChild(balanceEl);
+                }
+            });
+            
+            if (container.children.length === 0) {
+                container.innerHTML = '<p style="color: var(--gray); text-align: center;">All settled up!</p>';
+            }
+        }
+
+        function addNewExpense(expenseData) {
+            const newId = Math.max(...database.expenses.map(e => e.id)) + 1;
+            
+            const newExpense = {
+                id: newId,
+                description: expenseData.description,
+                amount: parseInt(expenseData.amount),
+                paidBy: parseInt(expenseData.paidBy),
+                splitBetween: expenseData.splitBetween.map(id => parseInt(id)),
+                date: expenseData.date || new Date().toISOString().split('T')[0],
+                category: expenseData.category,
+                status: 'unsettled'
+            };
+            
+            database.expenses.push(newExpense);
+            
+            // Update friend balances
+            updateFriendBalances(newExpense);
+            
+            // Add activity log
+            const paidBy = database.friends.find(f => f.id === newExpense.paidBy) || database.currentUser;
+            database.activityLog.unshift({
+                id: database.activityLog.length + 1,
+                type: "expense_added",
+                message: `${paidBy.name} added a new expense: ${newExpense.description} - ₹${newExpense.amount}`,
+                timestamp: "Just now"
+            });
+            
+            closeModal('addExpenseModal');
+            loadDashboard();
+            loadExpenses();
+            
+            showNotification('Expense Added', `${newExpense.description} added successfully`, 'success');
+        }
+
+        function updateFriendBalances(expense) {
+            const splitAmount = expense.amount / expense.splitBetween.length;
+            
+            expense.splitBetween.forEach(friendId => {
+                const friend = database.friends.find(f => f.id === friendId);
+                if (friend) {
+                    if (friendId === expense.paidBy) {
+                        // Payer gets positive balance (others owe them)
+                        friend.balance += expense.amount - splitAmount;
+                    } else {
+                        // Others get negative balance (they owe)
+                        friend.balance -= splitAmount;
+                    }
+                }
+            });
         }
 
         // Events Functions
@@ -1626,211 +2209,6 @@
             showNotification('Event Created', `${eventData.title} has been scheduled`, 'success');
         }
 
-        function viewEvent(eventId) {
-            const event = database.events.find(e => e.id === eventId);
-            if (!event) return;
-            
-            showNotification('Event Details', `Viewing "${event.title}" on ${formatDate(event.date)}`, 'info');
-        }
-
-        // Expenses Functions
-        function loadExpenses() {
-            // Load expenses table
-            const tbody = document.getElementById('expensesTableBody');
-            tbody.innerHTML = '';
-            
-            database.expenses.forEach(expense => {
-                const paidBy = database.friends.find(f => f.id === expense.paidBy) || database.currentUser;
-                const splitCount = expense.splitBetween.length;
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <strong>${expense.description}</strong>
-                        <br><small style="color: var(--gray);">${expense.category}</small>
-                    </td>
-                    <td><strong>$${expense.amount.toFixed(2)}</strong></td>
-                    <td>${paidBy.name}</td>
-                    <td>${splitCount} people</td>
-                    <td>${formatDate(expense.date)}</td>
-                    <td>
-                        <div style="display: flex; gap: 8px;">
-                            <button class="btn btn-outline" style="padding: 8px 12px; font-size: 12px;" onclick="viewExpense(${expense.id})">
-                                View
-                            </button>
-                            <button class="btn btn-danger" style="padding: 8px 12px; font-size: 12px;" onclick="deleteExpense(${expense.id})">
-                                Delete
-                            </button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-            
-            // Load recent transactions
-            loadRecentTransactions();
-            
-            // Load balance overview
-            loadBalanceOverview();
-        }
-
-        function loadRecentTransactions() {
-            const container = document.getElementById('recentTransactions');
-            container.innerHTML = '';
-            
-            const recentExpenses = database.expenses.slice(0, 5);
-            
-            recentExpenses.forEach(expense => {
-                const paidBy = database.friends.find(f => f.id === expense.paidBy) || database.currentUser;
-                const transactionEl = document.createElement('div');
-                transactionEl.style.padding = '10px 0';
-                transactionEl.style.borderBottom = '1px solid var(--light-gray)';
-                transactionEl.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <strong>${expense.description}</strong>
-                            <p style="color: var(--gray); font-size: 12px; margin: 5px 0;">${formatDate(expense.date)}</p>
-                        </div>
-                        <div style="text-align: right;">
-                            <strong class="${expense.paidBy === database.currentUser.id ? 'payment-positive' : 'payment-negative'}">
-                                ${expense.paidBy === database.currentUser.id ? '+' : '-'}$${expense.amount.toFixed(2)}
-                            </strong>
-                            <p style="color: var(--gray); font-size: 12px; margin: 5px 0;">${paidBy.name}</p>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(transactionEl);
-            });
-        }
-
-        function loadBalanceOverview() {
-            const container = document.getElementById('balanceOverview');
-            container.innerHTML = '';
-            
-            // Calculate balances
-            const balances = {};
-            
-            // Initialize balances
-            database.friends.forEach(friend => {
-                balances[friend.id] = 0;
-            });
-            balances[database.currentUser.id] = 0;
-            
-            // Calculate from expenses
-            database.expenses.forEach(expense => {
-                if (expense.status === 'unsettled') {
-                    const splitAmount = expense.amount / expense.splitBetween.length;
-                    
-                    // Add to payer
-                    balances[expense.paidBy] += expense.amount;
-                    
-                    // Subtract from each participant
-                    expense.splitBetween.forEach(participantId => {
-                        balances[participantId] -= splitAmount;
-                    });
-                }
-            });
-            
-            // Display balances
-            Object.keys(balances).forEach(friendId => {
-                const friendIdNum = parseInt(friendId);
-                let friend;
-                
-                if (friendIdNum === database.currentUser.id) {
-                    friend = database.currentUser;
-                } else {
-                    friend = database.friends.find(f => f.id === friendIdNum);
-                }
-                
-                if (friend) {
-                    const balance = balances[friendIdNum];
-                    if (balance !== 0) {
-                        const balanceEl = document.createElement('div');
-                        balanceEl.style.padding = '10px 0';
-                        balanceEl.style.borderBottom = '1px solid var(--light-gray)';
-                        balanceEl.innerHTML = `
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <div class="friend-avatar" style="width: 30px; height: 30px; font-size: 12px;">${friend.avatar}</div>
-                                    <span>${friend.name}</span>
-                                </div>
-                                <strong class="${balance > 0 ? 'payment-positive' : 'payment-negative'}">
-                                    ${balance > 0 ? '+' : ''}$${Math.abs(balance).toFixed(2)}
-                                </strong>
-                            </div>
-                        `;
-                        container.appendChild(balanceEl);
-                    }
-                }
-            });
-            
-            if (container.children.length === 0) {
-                container.innerHTML = '<p style="color: var(--gray); text-align: center;">All settled up!</p>';
-            }
-        }
-
-        function addNewExpense(expenseData) {
-            const newId = Math.max(...database.expenses.map(e => e.id)) + 1;
-            
-            const newExpense = {
-                id: newId,
-                description: expenseData.description,
-                amount: parseFloat(expenseData.amount),
-                paidBy: parseInt(expenseData.paidBy),
-                splitBetween: expenseData.splitBetween.map(id => parseInt(id)),
-                date: expenseData.date || new Date().toISOString().split('T')[0],
-                category: expenseData.category,
-                status: 'unsettled'
-            };
-            
-            database.expenses.push(newExpense);
-            
-            // Update friend balances
-            updateFriendBalances(newExpense);
-            
-            // Add activity log
-            const paidBy = database.friends.find(f => f.id === newExpense.paidBy) || database.currentUser;
-            database.activityLog.unshift({
-                id: database.activityLog.length + 1,
-                type: "expense_added",
-                message: `${paidBy.name} added a new expense: ${newExpense.description} - $${newExpense.amount.toFixed(2)}`,
-                timestamp: "Just now"
-            });
-            
-            closeModal('addExpenseModal');
-            loadDashboard();
-            loadExpenses();
-            
-            showNotification('Expense Added', `${newExpense.description} added successfully`, 'success');
-        }
-
-        function updateFriendBalances(expense) {
-            // In a real app, this would update friend balances in database
-            console.log('Updating balances for expense:', expense);
-        }
-
-        function viewExpense(expenseId) {
-            const expense = database.expenses.find(e => e.id === expenseId);
-            if (!expense) return;
-            
-            showNotification('Expense Details', `Viewing "${expense.description}" - $${expense.amount.toFixed(2)}`, 'info');
-        }
-
-        function deleteExpense(expenseId) {
-            const expense = database.expenses.find(e => e.id === expenseId);
-            if (!expense) return;
-            
-            if (confirm(`Are you sure you want to delete expense: ${expense.description}?`)) {
-                const index = database.expenses.findIndex(e => e.id === expenseId);
-                database.expenses.splice(index, 1);
-                
-                loadDashboard();
-                loadExpenses();
-                
-                showNotification('Expense Deleted', `${expense.description} has been deleted`, 'success');
-            }
-        }
-
         // Gallery Functions
         function loadGallery() {
             const container = document.getElementById('galleryGrid');
@@ -1848,43 +2226,6 @@
                 `;
                 container.appendChild(photoEl);
             });
-        }
-
-        function uploadPhotos(files, album, caption) {
-            // Simulate photo upload
-            console.log('Uploading photos:', files.length, 'files to album:', album, 'with caption:', caption);
-            
-            // Add to gallery (in real app, this would upload to server)
-            files.forEach((file, index) => {
-                const newId = Math.max(...database.gallery.map(p => p.id)) + index + 1;
-                
-                // Create a mock URL for the uploaded file
-                const mockUrl = `https://images.unsplash.com/photo-${1500000000000 + newId}?w=400&h=400&fit=crop`;
-                
-                database.gallery.unshift({
-                    id: newId,
-                    url: mockUrl,
-                    caption: caption || `Photo ${newId}`,
-                    album: album,
-                    uploadedBy: database.currentUser.id,
-                    date: new Date().toISOString().split('T')[0],
-                    likes: []
-                });
-            });
-            
-            // Add activity log
-            database.activityLog.unshift({
-                id: database.activityLog.length + 1,
-                type: "photo_uploaded",
-                message: `${database.currentUser.name} uploaded ${files.length} new photos`,
-                timestamp: "Just now"
-            });
-            
-            closeModal('uploadPhotoModal');
-            loadDashboard();
-            loadGallery();
-            
-            showNotification('Photos Uploaded', `${files.length} photos uploaded successfully`, 'success');
         }
 
         // Locations Functions
@@ -1911,58 +2252,6 @@
             
             // Load saved places
             loadSavedPlaces();
-        }
-
-        function loadSavedPlaces() {
-            const container = document.getElementById('savedPlaces');
-            container.innerHTML = '';
-            
-            database.savedPlaces.forEach(place => {
-                const addedBy = database.friends.find(f => f.id === place.addedBy) || database.currentUser;
-                const placeEl = document.createElement('div');
-                placeEl.className = 'event-card';
-                placeEl.innerHTML = `
-                    <h4 style="margin-bottom: 10px;">${place.name}</h4>
-                    <p style="color: var(--gray); font-size: 14px; margin-bottom: 10px;">
-                        <i class="fas fa-map-marker-alt"></i> ${place.address}
-                    </p>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span class="status-badge status-info">${place.type}</span>
-                        <small style="color: var(--gray);">Added by ${addedBy.name}</small>
-                    </div>
-                `;
-                container.appendChild(placeEl);
-            });
-        }
-
-        function shareLocation() {
-            // In a real app, this would use Geolocation API
-            const location = prompt("Enter your location:");
-            if (location) {
-                // Add to locations
-                database.locations.unshift({
-                    id: database.locations.length + 1,
-                    friendId: database.currentUser.id,
-                    name: database.currentUser.name,
-                    location: location,
-                    latitude: 0,
-                    longitude: 0,
-                    lastUpdated: "Just now"
-                });
-                
-                // Add activity log
-                database.activityLog.unshift({
-                    id: database.activityLog.length + 1,
-                    type: "location_shared",
-                    message: `${database.currentUser.name} shared their location: ${location}`,
-                    timestamp: "Just now"
-                });
-                
-                loadDashboard();
-                loadLocations();
-                
-                showNotification('Location Shared', 'Your location has been shared with the group', 'success');
-            }
         }
 
         // Utility Functions
@@ -2002,6 +2291,8 @@
                 populateExpenseModal();
             } else if (modalId === 'createEventModal') {
                 populateEventModal();
+            } else if (modalId === 'createPollModal') {
+                populatePollModal();
             }
         }
 
@@ -2014,6 +2305,24 @@
                 document.getElementById('addExpenseForm').reset();
             } else if (modalId === 'createEventModal') {
                 document.getElementById('createEventForm').reset();
+            } else if (modalId === 'createPollModal') {
+                document.getElementById('createPollForm').reset();
+                // Reset poll options
+                const container = document.getElementById('pollOptionsContainer');
+                container.innerHTML = `
+                    <div class="poll-option-input" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <input type="text" class="poll-option" placeholder="Option 1" required>
+                        <button type="button" class="btn btn-danger remove-option" style="padding: 8px 12px;" disabled>
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="poll-option-input" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <input type="text" class="poll-option" placeholder="Option 2" required>
+                        <button type="button" class="btn btn-danger remove-option" style="padding: 8px 12px;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
             } else if (modalId === 'uploadPhotoModal') {
                 document.getElementById('previewContainer').innerHTML = '';
                 document.getElementById('uploadPreview').style.display = 'none';
@@ -2100,6 +2409,78 @@
             document.getElementById('eventTime').value = '18:00';
         }
 
+        function populatePollModal() {
+            // Set default date to today
+            document.getElementById('pollDuration').value = '7';
+            
+            // Handle visibility change
+            document.getElementById('pollVisibility').addEventListener('change', function() {
+                const friendsSelection = document.getElementById('pollFriendsSelection');
+                friendsSelection.style.display = this.value === 'private' ? 'block' : 'none';
+                
+                if (this.value === 'private') {
+                    const checkboxesContainer = document.getElementById('pollFriendsCheckboxes');
+                    checkboxesContainer.innerHTML = '';
+                    
+                    database.friends.forEach(friend => {
+                        const checkbox = document.createElement('div');
+                        checkbox.style.marginBottom = '8px';
+                        checkbox.innerHTML = `
+                            <input type="checkbox" id="poll-friend-${friend.id}" name="pollFriend" value="${friend.id}" checked>
+                            <label for="poll-friend-${friend.id}" style="display: inline; margin-left: 8px;">
+                                ${friend.name}
+                            </label>
+                        `;
+                        checkboxesContainer.appendChild(checkbox);
+                    });
+                }
+            });
+            
+            // Add poll option functionality
+            document.getElementById('addPollOption').addEventListener('click', function() {
+                const container = document.getElementById('pollOptionsContainer');
+                const optionCount = container.children.length + 1;
+                
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'poll-option-input';
+                optionDiv.style.display = 'flex';
+                optionDiv.style.gap = '10px';
+                optionDiv.style.marginBottom = '10px';
+                
+                optionDiv.innerHTML = `
+                    <input type="text" class="poll-option" placeholder="Option ${optionCount}" required>
+                    <button type="button" class="btn btn-danger remove-option" style="padding: 8px 12px;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                container.appendChild(optionDiv);
+                
+                // Enable remove buttons for all except first two
+                const removeButtons = container.querySelectorAll('.remove-option');
+                removeButtons.forEach((btn, index) => {
+                    btn.disabled = index < 2;
+                    btn.addEventListener('click', function() {
+                        if (container.children.length > 2) {
+                            this.parentElement.remove();
+                        }
+                    });
+                });
+            });
+            
+            // Initialize remove button listeners
+            const removeButtons = document.querySelectorAll('.remove-option');
+            removeButtons.forEach((btn, index) => {
+                btn.disabled = index < 2;
+                btn.addEventListener('click', function() {
+                    const container = document.getElementById('pollOptionsContainer');
+                    if (container.children.length > 2) {
+                        this.parentElement.remove();
+                    }
+                });
+            });
+        }
+
         // Setup Event Listeners
         function setupEventListeners() {
             // Navigation tab switching
@@ -2119,6 +2500,11 @@
                     document.getElementById(tabId).classList.add('active');
                     
                     currentState.activeTab = tabId;
+                    
+                    // Load specific data if needed
+                    if (tabId === 'polls') {
+                        loadPolls();
+                    }
                 });
             });
 
@@ -2132,6 +2518,19 @@
                     // Load filtered friends
                     const filter = this.dataset.friendsTab;
                     loadFriendsTable(filter);
+                });
+            });
+
+            // Polls tab switching
+            document.querySelectorAll('[data-poll-tab]').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Update active tab
+                    document.querySelectorAll('[data-poll-tab]').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Load filtered polls
+                    const filter = this.dataset.pollTab;
+                    loadPolls(filter);
                 });
             });
 
@@ -2172,6 +2571,44 @@
                 }
                 
                 addNewFriend(friendData);
+            });
+
+            // Create Poll Button
+            document.getElementById('createPollBtn').addEventListener('click', () => {
+                openModal('createPollModal');
+            });
+
+            document.getElementById('quickCreatePoll').addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal('createPollModal');
+            });
+
+            // Save Poll
+            document.getElementById('savePollBtn').addEventListener('click', () => {
+                const optionInputs = document.querySelectorAll('.poll-option');
+                const options = Array.from(optionInputs)
+                    .map(input => input.value.trim())
+                    .filter(value => value !== '');
+                
+                if (options.length < 2) {
+                    showNotification('Error', 'Please add at least 2 poll options', 'error');
+                    return;
+                }
+                
+                const pollData = {
+                    question: document.getElementById('pollQuestion').value,
+                    description: document.getElementById('pollDescription').value,
+                    options: options,
+                    duration: document.getElementById('pollDuration').value,
+                    visibility: document.getElementById('pollVisibility').value
+                };
+                
+                if (!pollData.question) {
+                    showNotification('Error', 'Please enter a poll question', 'error');
+                    return;
+                }
+                
+                createNewPoll(pollData);
             });
 
             // Add Expense Button
@@ -2299,11 +2736,21 @@
                 const album = document.getElementById('photoAlbum').value;
                 const caption = document.getElementById('photoCaption').value;
                 
-                uploadPhotos(currentState.selectedFiles, album, caption);
+                // Simulate photo upload
+                console.log('Uploading photos:', currentState.selectedFiles.length, 'files to album:', album, 'with caption:', caption);
+                
+                showNotification('Photos Uploaded', `${currentState.selectedFiles.length} photos uploaded successfully`, 'success');
+                closeModal('uploadPhotoModal');
             });
 
             // Share Location Button
-            document.getElementById('shareLocationBtn').addEventListener('click', shareLocation);
+            document.getElementById('shareLocationBtn').addEventListener('click', () => {
+                // In a real app, this would use Geolocation API
+                const location = prompt("Enter your location:");
+                if (location) {
+                    showNotification('Location Shared', `Your location (${location}) has been shared with the group`, 'success');
+                }
+            });
 
             // Create Album Button
             document.getElementById('createAlbumBtn').addEventListener('click', () => {
@@ -2345,8 +2792,41 @@
             });
         }
 
+        // Helper functions for other actions
+        function messageFriend(friendId) {
+            const friend = database.friends.find(f => f.id === friendId) || database.currentUser;
+            showNotification('Message', `Opening chat with ${friend.name}`, 'info');
+        }
+
+        function editFriend(friendId) {
+            const friend = database.friends.find(f => f.id === friendId);
+            if (!friend) return;
+            showNotification('Edit Friend', `Editing ${friend.name}`, 'info');
+        }
+
+        function viewExpense(expenseId) {
+            const expense = database.expenses.find(e => e.id === expenseId);
+            if (!expense) return;
+            showNotification('Expense Details', `Viewing "${expense.description}" - ₹${expense.amount}`, 'info');
+        }
+
+        function deleteExpense(expenseId) {
+            const expense = database.expenses.find(e => e.id === expenseId);
+            if (!expense) return;
+            
+            if (confirm(`Are you sure you want to delete expense: ${expense.description}?`)) {
+                showNotification('Expense Deleted', `${expense.description} has been deleted`, 'success');
+            }
+        }
+
+        function viewEvent(eventId) {
+            const event = database.events.find(e => e.id === eventId);
+            if (!event) return;
+            showNotification('Event Details', `Viewing "${event.title}" on ${formatDate(event.date)}`, 'info');
+        }
+
         // Initialize the app when DOM is loaded
         document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
-                            </html>
+</html>
