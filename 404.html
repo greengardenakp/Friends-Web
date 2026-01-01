@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FriendsCircle - Akash's Group</title>
+    <title>FriendsCircle - Complete Social Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -180,15 +180,6 @@
             color: var(--primary);
         }
 
-        .menu-badge {
-            background-color: var(--danger);
-            color: white;
-            font-size: 12px;
-            padding: 2px 8px;
-            border-radius: 10px;
-            margin-left: auto;
-        }
-
         /* Main Content */
         .main-content {
             display: grid;
@@ -225,6 +216,7 @@
             gap: 10px;
         }
 
+        /* Buttons */
         .btn {
             padding: 12px 24px;
             border-radius: var(--border-radius);
@@ -266,6 +258,7 @@
 
         .btn-danger:hover {
             background-color: #dc2626;
+            transform: translateY(-2px);
         }
 
         .btn-outline {
@@ -276,25 +269,6 @@
 
         .btn-outline:hover {
             background-color: rgba(124, 58, 237, 0.1);
-        }
-
-        /* Grid Layouts */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .grid-4 {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
         }
 
         /* Status Badges */
@@ -452,22 +426,6 @@
             transform: scale(1.05);
         }
 
-        .gallery-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7));
-            color: white;
-            padding: 15px;
-            transform: translateY(100%);
-            transition: var(--transition);
-        }
-
-        .gallery-item:hover .gallery-overlay {
-            transform: translateY(0);
-        }
-
         /* Event Cards */
         .event-card {
             background-color: white;
@@ -491,6 +449,25 @@
             border-radius: 20px;
             font-weight: 600;
             margin-bottom: 15px;
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
         }
 
         /* Payment Cards */
@@ -523,82 +500,6 @@
             color: var(--danger);
         }
 
-        /* Poll Cards */
-        .poll-card {
-            background-color: white;
-            border-radius: var(--border-radius);
-            padding: 20px;
-            box-shadow: var(--shadow);
-            border-left: 4px solid var(--info);
-            margin-bottom: 20px;
-            transition: var(--transition);
-        }
-
-        .poll-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .poll-question {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: var(--dark);
-        }
-
-        .poll-option {
-            background-color: var(--light);
-            border-radius: 12px;
-            padding: 12px 15px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: var(--transition);
-            border: 1px solid transparent;
-        }
-
-        .poll-option:hover {
-            background-color: rgba(59, 130, 246, 0.1);
-            border-color: var(--info);
-        }
-
-        .poll-option.voted {
-            background-color: rgba(59, 130, 246, 0.15);
-            border-color: var(--info);
-        }
-
-        .poll-progress {
-            height: 8px;
-            background-color: var(--light-gray);
-            border-radius: 4px;
-            margin-top: 8px;
-            overflow: hidden;
-        }
-
-        .poll-progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--info), var(--primary));
-            border-radius: 4px;
-            transition: width 0.5s ease;
-        }
-
-        .poll-stats {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: var(--gray);
-            margin-top: 5px;
-        }
-
-        .poll-meta {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid var(--light-gray);
-            font-size: 12px;
-            color: var(--gray);
-        }
-
         /* Map Container */
         .map-container {
             height: 300px;
@@ -619,6 +520,161 @@
             color: var(--gray);
         }
 
+        /* Poll-specific styles */
+        .poll-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            border-left: 4px solid var(--info);
+            transition: var(--transition);
+        }
+        
+        .poll-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .poll-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .poll-status {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        
+        .poll-status-active {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+        
+        .poll-status-closed {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+        
+        .poll-options {
+            margin: 20px 0;
+        }
+        
+        .poll-option {
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+        
+        .poll-option:hover {
+            background-color: rgba(124, 58, 237, 0.05);
+            border-color: rgba(124, 58, 237, 0.2);
+        }
+        
+        .poll-option.selected {
+            background-color: rgba(124, 58, 237, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .poll-results {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .poll-result-bar {
+            height: 10px;
+            background-color: var(--light-gray);
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .poll-result-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        
+        .poll-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--light-gray);
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        /* Phone Support Card */
+        .phone-support-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .phone-number {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 15px 0;
+            letter-spacing: 1px;
+        }
+        
+        .phone-hours {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        /* Call button styles */
+        .call-btn {
+            background-color: var(--success);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .call-btn:hover {
+            background-color: #0da271;
+            transform: translateY(-2px);
+        }
+        
+        /* Delete button in polls */
+        .poll-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+        
         /* Modal */
         .modal {
             display: none;
@@ -669,37 +725,6 @@
             font-size: 20px;
             cursor: pointer;
             color: var(--gray);
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            border-bottom: 1px solid var(--light-gray);
-            margin-bottom: 20px;
-        }
-
-        .tab-btn {
-            padding: 15px 25px;
-            background: none;
-            border: none;
-            border-bottom: 3px solid transparent;
-            font-weight: 600;
-            color: var(--gray);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .tab-btn.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
         }
 
         /* Notification */
@@ -789,8 +814,8 @@
             </div>
             
             <div class="user-menu">
-                <div class="user-avatar" id="userAvatar">AK</div>
-                <span style="color: white; font-weight: 500;">Akash (Admin)</span>
+                <div class="user-avatar" id="userAvatar">AD</div>
+                <span style="color: white; font-weight: 500;">Admin User</span>
             </div>
         </div>
     </nav>
@@ -804,15 +829,15 @@
                     <h3><i class="fas fa-tachometer-alt"></i> Quick Stats</h3>
                     <div style="display: grid; gap: 15px;">
                         <div style="background: linear-gradient(45deg, var(--primary), var(--primary-dark)); color: white; padding: 15px; border-radius: var(--border-radius);">
-                            <div style="font-size: 24px; font-weight: 700;" id="totalFriends">11</div>
+                            <div style="font-size: 24px; font-weight: 700;" id="totalFriends">12</div>
                             <div style="font-size: 14px;">Total Friends</div>
                         </div>
-                        <div style="background: linear-gradient(45deg, var(--success), #0da271); color: white; padding: 15px; border-radius: var(--border-radius);">
-                            <div style="font-size: 24px; font-weight: 700;" id="upcomingEventsCount">3</div>
-                            <div style="font-size: 14px;">Upcoming Events</div>
+                        <div style="background: linear-gradient(45deg, var(--info), #2563eb); color: white; padding: 15px; border-radius: var(--border-radius);">
+                            <div style="font-size: 24px; font-weight: 700;" id="activePollsCount">2</div>
+                            <div style="font-size: 14px;">Active Polls</div>
                         </div>
                         <div style="background: linear-gradient(45deg, var(--accent), #d97706); color: white; padding: 15px; border-radius: var(--border-radius);">
-                            <div style="font-size: 24px; font-weight: 700;" id="totalBalance">₹0</div>
+                            <div style="font-size: 24px; font-weight: 700;" id="totalBalance">$0</div>
                             <div style="font-size: 14px;">Group Balance</div>
                         </div>
                     </div>
@@ -827,6 +852,11 @@
                             </a>
                         </li>
                         <li>
+                            <a href="#" id="quickCreatePoll">
+                                <i class="fas fa-poll-h"></i> Create Poll
+                            </a>
+                        </li>
+                        <li>
                             <a href="#" id="quickCreateEvent">
                                 <i class="fas fa-calendar-plus"></i> Create Event
                             </a>
@@ -837,13 +867,8 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" id="quickCreatePoll">
-                                <i class="fas fa-poll"></i> Create Poll
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" id="quickUploadPhoto">
-                                <i class="fas fa-upload"></i> Upload Photo
+                            <a href="#" id="quickCallSupport">
+                                <i class="fas fa-phone-alt"></i> Call Support
                             </a>
                         </li>
                     </ul>
@@ -869,12 +894,23 @@
                             </button>
                         </div>
                         
+                        <!-- Phone Support Card on Dashboard -->
+                        <div class="phone-support-card">
+                            <h3><i class="fas fa-phone-alt"></i> Phone Support</h3>
+                            <div class="phone-number">1-800-FRIENDS</div>
+                            <p>24/7 Group Support Hotline</p>
+                            <div class="phone-hours">Available: Monday-Sunday, 24 hours</div>
+                            <button class="call-btn" id="callSupportBtn">
+                                <i class="fas fa-phone"></i> Call Now
+                            </button>
+                        </div>
+                        
                         <div class="grid-3">
-                            <!-- Friends Online -->
+                            <!-- Active Polls -->
                             <div class="card">
-                                <h3 style="margin-bottom: 15px;"><i class="fas fa-user-check"></i> Online Now</h3>
-                                <div id="onlineFriends">
-                                    <!-- Online friends will be loaded here -->
+                                <h3 style="margin-bottom: 15px;"><i class="fas fa-poll"></i> Active Polls</h3>
+                                <div id="activePollsDashboard">
+                                    <!-- Polls will be loaded here -->
                                 </div>
                             </div>
                             
@@ -886,25 +922,22 @@
                                 </div>
                             </div>
                             
-                            <!-- Active Polls -->
+                            <!-- Recent Expenses -->
                             <div class="card">
-                                <h3 style="margin-bottom: 15px;"><i class="fas fa-poll"></i> Active Polls</h3>
-                                <div id="activePolls">
-                                    <!-- Polls will be loaded here -->
+                                <h3 style="margin-bottom: 15px;"><i class="fas fa-money-bill-wave"></i> Recent Expenses</h3>
+                                <div id="recentExpenses">
+                                    <!-- Expenses will be loaded here -->
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Recent Photos -->
+                        <!-- Recent Activity -->
                         <div class="card" style="margin-top: 20px;">
                             <div class="card-header">
-                                <h2><i class="fas fa-images"></i> Recent Photos</h2>
-                                <button class="btn btn-outline" id="viewAllPhotos">
-                                    <i class="fas fa-eye"></i> View All
-                                </button>
+                                <h2><i class="fas fa-history"></i> Recent Activity</h2>
                             </div>
-                            <div class="gallery-grid" id="recentPhotosGrid">
-                                <!-- Recent photos will be loaded here -->
+                            <div id="dashboardActivity">
+                                <!-- Activity will be loaded here -->
                             </div>
                         </div>
                     </div>
@@ -920,21 +953,16 @@
                             </button>
                         </div>
                         
-                        <div class="tabs">
-                            <button class="tab-btn active" data-friends-tab="all">All Friends</button>
-                            <button class="tab-btn" data-friends-tab="online">Online</button>
-                            <button class="tab-btn" data-friends-tab="admins">Admins</button>
-                        </div>
-                        
                         <div class="table-responsive">
                             <table id="friendsTable">
                                 <thead>
                                     <tr>
                                         <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
                                         <th>Status</th>
                                         <th>Role</th>
                                         <th>Balance</th>
-                                        <th>Last Active</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -966,7 +994,7 @@
                 <div id="payments" class="tab-content">
                     <div class="card">
                         <div class="card-header">
-                            <h2><i class="fas fa-money-bill-wave"></i> Payments & Settlements (INR)</h2>
+                            <h2><i class="fas fa-money-bill-wave"></i> Payments & Settlements</h2>
                             <div>
                                 <button class="btn btn-success" id="addExpenseBtn">
                                     <i class="fas fa-plus"></i> Add Expense
@@ -977,43 +1005,22 @@
                             </div>
                         </div>
                         
-                        <div class="grid-2">
-                            <div class="card">
-                                <h3 style="margin-bottom: 15px;"><i class="fas fa-credit-card"></i> Recent Transactions</h3>
-                                <div id="recentTransactions">
-                                    <!-- Transactions will be loaded here -->
-                                </div>
-                            </div>
-                            
-                            <div class="card">
-                                <h3 style="margin-bottom: 15px;"><i class="fas fa-chart-pie"></i> Balance Overview</h3>
-                                <div id="balanceOverview">
-                                    <!-- Balance overview will be loaded here -->
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card" style="margin-top: 20px;">
-                            <div class="card-header">
-                                <h2><i class="fas fa-list"></i> All Expenses</h2>
-                            </div>
-                            <div class="table-responsive">
-                                <table id="expensesTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Description</th>
-                                            <th>Amount (₹)</th>
-                                            <th>Paid By</th>
-                                            <th>Split Between</th>
-                                            <th>Date</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="expensesTableBody">
-                                        <!-- Expenses will be loaded here -->
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="table-responsive">
+                            <table id="expensesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Amount</th>
+                                        <th>Paid By</th>
+                                        <th>Split Between</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="expensesTableBody">
+                                    <!-- Expenses will be loaded here -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -1022,20 +1029,41 @@
                 <div id="polls" class="tab-content">
                     <div class="card">
                         <div class="card-header">
-                            <h2><i class="fas fa-poll"></i> Group Polls</h2>
-                            <button class="btn btn-primary" id="createPollBtn">
-                                <i class="fas fa-plus"></i> Create Poll
+                            <h2><i class="fas fa-poll"></i> Polls & Voting</h2>
+                            <div>
+                                <button class="btn btn-primary" id="createPollBtn">
+                                    <i class="fas fa-plus"></i> Create Poll
+                                </button>
+                                <button class="btn btn-success" id="callSupportFromPolls">
+                                    <i class="fas fa-phone"></i> Call Support
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Phone Support Section -->
+                        <div class="phone-support-card" style="margin-top: 20px;">
+                            <h3><i class="fas fa-headset"></i> Need Help with Polls?</h3>
+                            <p>Call our support team for assistance with creating or managing polls</p>
+                            <div class="phone-number">1-800-POLLHELP</div>
+                            <button class="call-btn" id="callPollSupportBtn">
+                                <i class="fas fa-phone"></i> Call Poll Support
                             </button>
                         </div>
                         
-                        <div class="tabs">
-                            <button class="tab-btn active" data-poll-tab="active">Active Polls</button>
-                            <button class="tab-btn" data-poll-tab="closed">Closed Polls</button>
-                            <button class="tab-btn" data-poll-tab="myPolls">My Polls</button>
+                        <!-- Active Polls -->
+                        <div style="margin-top: 30px;">
+                            <h3 style="margin-bottom: 20px;"><i class="fas fa-bullhorn"></i> Active Polls</h3>
+                            <div id="pollsList">
+                                <!-- Polls will be loaded here -->
+                            </div>
                         </div>
                         
-                        <div id="pollsContainer">
-                            <!-- Polls will be loaded here -->
+                        <!-- Past Polls -->
+                        <div style="margin-top: 40px;">
+                            <h3 style="margin-bottom: 20px;"><i class="fas fa-history"></i> Past Polls</h3>
+                            <div id="pastPollsList">
+                                <!-- Past polls will be loaded here -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1045,20 +1073,9 @@
                     <div class="card">
                         <div class="card-header">
                             <h2><i class="fas fa-images"></i> Photo Gallery</h2>
-                            <div>
-                                <button class="btn btn-primary" id="createAlbumBtn">
-                                    <i class="fas fa-folder-plus"></i> Create Album
-                                </button>
-                                <button class="btn btn-success" id="uploadPhotoBtn">
-                                    <i class="fas fa-upload"></i> Upload Photos
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="tabs">
-                            <button class="tab-btn active" data-gallery-tab="recent">Recent</button>
-                            <button class="tab-btn" data-gallery-tab="albums">Albums</button>
-                            <button class="tab-btn" data-gallery-tab="favorites">Favorites</button>
+                            <button class="btn btn-success" id="uploadPhotoBtn">
+                                <i class="fas fa-upload"></i> Upload Photos
+                            </button>
                         </div>
                         
                         <div class="gallery-grid" id="galleryGrid">
@@ -1077,32 +1094,18 @@
                             </button>
                         </div>
                         
-                        <div class="grid-2">
-                            <div class="card">
-                                <h3 style="margin-bottom: 15px;"><i class="fas fa-map"></i> Group Map</h3>
-                                <div class="map-container">
-                                    <div class="map-placeholder" id="mapPlaceholder">
-                                        <i class="fas fa-map-marked-alt" style="font-size: 60px; margin-bottom: 15px;"></i>
-                                        <p>Interactive Map</p>
-                                        <small>Showing friend locations</small>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="card">
-                                <h3 style="margin-bottom: 15px;"><i class="fas fa-location-dot"></i> Friend Locations</h3>
-                                <div id="friendLocations">
-                                    <!-- Friend locations will be loaded here -->
-                                </div>
+                        <div class="map-container">
+                            <div class="map-placeholder" id="mapPlaceholder">
+                                <i class="fas fa-map-marked-alt" style="font-size: 60px; margin-bottom: 15px;"></i>
+                                <p>Interactive Map</p>
+                                <small>Showing friend locations</small>
                             </div>
                         </div>
                         
-                        <div class="card" style="margin-top: 20px;">
-                            <div class="card-header">
-                                <h2><i class="fas fa-star"></i> Saved Places</h2>
-                            </div>
-                            <div id="savedPlaces">
-                                <!-- Saved places will be loaded here -->
+                        <div style="margin-top: 20px;">
+                            <h3 style="margin-bottom: 15px;"><i class="fas fa-location-dot"></i> Friend Locations</h3>
+                            <div id="friendLocations">
+                                <!-- Friend locations will be loaded here -->
                             </div>
                         </div>
                     </div>
@@ -1138,11 +1141,8 @@
                         <select id="friendRole">
                             <option value="member">Member</option>
                             <option value="admin">Admin</option>
+                            <option value="moderator">Moderator</option>
                         </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="friendNotes">Notes</label>
-                        <textarea id="friendNotes" rows="3"></textarea>
                     </div>
                 </form>
             </div>
@@ -1153,11 +1153,64 @@
         </div>
     </div>
 
+    <!-- Create Poll Modal -->
+    <div id="createPollModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-poll-h"></i> Create New Poll</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createPollForm">
+                    <div class="form-group">
+                        <label for="pollQuestion">Poll Question *</label>
+                        <input type="text" id="pollQuestion" required placeholder="What should we do this weekend?">
+                    </div>
+                    <div class="form-group">
+                        <label for="pollOptions">Options (one per line) *</label>
+                        <textarea id="pollOptions" rows="4" required placeholder="Option 1\nOption 2\nOption 3"></textarea>
+                        <small style="color: var(--gray);">Enter each option on a new line</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="pollDuration">Duration (days)</label>
+                        <select id="pollDuration">
+                            <option value="1">1 Day</option>
+                            <option value="3" selected>3 Days</option>
+                            <option value="7">7 Days</option>
+                            <option value="30">30 Days</option>
+                            <option value="0">No Limit</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="allowMultiple" style="width: auto; display: inline;">
+                            Allow multiple selections
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="pollCategory">Category</label>
+                        <select id="pollCategory">
+                            <option value="general">General</option>
+                            <option value="events">Events</option>
+                            <option value="food">Food</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline close-modal">Cancel</button>
+                <button class="btn btn-primary" id="savePollBtn">Create Poll</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Add Expense Modal -->
     <div id="addExpenseModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-receipt"></i> Add New Expense (₹)</h3>
+                <h3><i class="fas fa-receipt"></i> Add New Expense</h3>
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -1167,8 +1220,8 @@
                         <input type="text" id="expenseDescription" required placeholder="Dinner, Movie tickets, etc.">
                     </div>
                     <div class="form-group">
-                        <label for="expenseAmount">Amount (₹) *</label>
-                        <input type="number" id="expenseAmount" min="0" step="1" required>
+                        <label for="expenseAmount">Amount ($) *</label>
+                        <input type="number" id="expenseAmount" min="0" step="0.01" required>
                     </div>
                     <div class="form-group">
                         <label for="expensePaidBy">Paid By *</label>
@@ -1182,25 +1235,11 @@
                             <!-- Checkboxes will be populated dynamically -->
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="expenseDate">Date</label>
-                        <input type="date" id="expenseDate">
-                    </div>
-                    <div class="form-group">
-                        <label for="expenseCategory">Category</label>
-                        <select id="expenseCategory">
-                            <option value="food">Food & Dining</option>
-                            <option value="entertainment">Entertainment</option>
-                            <option value="travel">Travel</option>
-                            <option value="shopping">Shopping</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline close-modal">Cancel</button>
-                                <button class="btn btn-success" id="saveExpenseBtn">Add Expense</button>
+                <button class="btn btn-success" id="saveExpenseBtn">Add Expense</button>
             </div>
         </div>
     </div>
@@ -1234,86 +1273,11 @@
                         <label for="eventDescription">Description</label>
                         <textarea id="eventDescription" rows="4"></textarea>
                     </div>
-                    <div class="form-group">
-                        <label>Invite Friends</label>
-                        <div id="inviteFriendsCheckboxes">
-                            <!-- Checkboxes will be populated dynamically -->
-                        </div>
-                    </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline close-modal">Cancel</button>
                 <button class="btn btn-primary" id="saveEventBtn">Create Event</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Create Poll Modal -->
-    <div id="createPollModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-poll"></i> Create New Poll</h3>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="createPollForm">
-                    <div class="form-group">
-                        <label for="pollQuestion">Poll Question *</label>
-                        <input type="text" id="pollQuestion" required placeholder="What should we do this weekend?">
-                    </div>
-                    <div class="form-group">
-                        <label for="pollDescription">Description (Optional)</label>
-                        <textarea id="pollDescription" rows="3" placeholder="Add more details about the poll..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Poll Options * (Minimum 2)</label>
-                        <div id="pollOptionsContainer">
-                            <div class="poll-option-input" style="display: flex; gap: 10px; margin-bottom: 10px;">
-                                <input type="text" class="poll-option" placeholder="Option 1" required>
-                                <button type="button" class="btn btn-danger remove-option" style="padding: 8px 12px;" disabled>
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                            <div class="poll-option-input" style="display: flex; gap: 10px; margin-bottom: 10px;">
-                                <input type="text" class="poll-option" placeholder="Option 2" required>
-                                <button type="button" class="btn btn-danger remove-option" style="padding: 8px 12px;">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-outline" id="addPollOption" style="margin-top: 10px;">
-                            <i class="fas fa-plus"></i> Add Option
-                        </button>
-                    </div>
-                    <div class="form-group">
-                        <label for="pollDuration">Poll Duration</label>
-                        <select id="pollDuration">
-                            <option value="1">1 Day</option>
-                            <option value="3">3 Days</option>
-                            <option value="7" selected>1 Week</option>
-                            <option value="30">1 Month</option>
-                            <option value="0">No End Date</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="pollVisibility">Visibility</label>
-                        <select id="pollVisibility">
-                            <option value="public" selected>Public (All friends can vote)</option>
-                            <option value="private">Private (Only selected friends)</option>
-                        </select>
-                    </div>
-                    <div class="form-group" id="pollFriendsSelection" style="display: none;">
-                        <label>Select Friends</label>
-                        <div id="pollFriendsCheckboxes">
-                            <!-- Checkboxes will be populated dynamically -->
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline close-modal">Cancel</button>
-                <button class="btn btn-primary" id="savePollBtn">Create Poll</button>
             </div>
         </div>
     </div>
@@ -1328,21 +1292,8 @@
             <div class="modal-body">
                 <div id="uploadArea" style="border: 2px dashed var(--light-gray); border-radius: var(--border-radius); padding: 40px; text-align: center; cursor: pointer; margin-bottom: 20px;">
                     <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: var(--gray); margin-bottom: 15px;"></i>
-                    <p>Drag and drop photos here, or click to browse</p>
+                    <p>Click to select photos</p>
                     <input type="file" id="photoUpload" multiple accept="image/*" style="display: none;">
-                </div>
-                <div id="uploadPreview" style="display: none;">
-                    <h4>Selected Photos</h4>
-                    <div id="previewContainer" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px;"></div>
-                </div>
-                <div class="form-group" style="margin-top: 20px;">
-                    <label for="photoAlbum">Album</label>
-                    <select id="photoAlbum">
-                        <option value="general">General</option>
-                        <option value="events">Events</option>
-                        <option value="trips">Trips</option>
-                        <option value="memories">Memories</option>
-                    </select>
                 </div>
                 <div class="form-group">
                     <label for="photoCaption">Caption</label>
@@ -1351,7 +1302,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline close-modal">Cancel</button>
-                <button class="btn btn-success" id="uploadPhotosBtn" disabled>Upload Photos</button>
+                <button class="btn btn-success" id="uploadPhotosBtn">Upload Photos</button>
             </div>
         </div>
     </div>
@@ -1368,83 +1319,106 @@
     </div>
 
     <script>
-        // Complete Database Simulation with Akash's Group
+        // Complete Database
         const database = {
             currentUser: {
                 id: 1,
-                name: "Akash",
-                email: "akash@friendscircle.com",
-                avatar: "AK",
-                role: "admin",
-                
+                name: "Admin User",
+                email: "admin@friendscircle.com",
+                phone: "+1-555-123-4567",
+                avatar: "AD",
+                role: "admin"
             },
             friends: [
-               
-              
-    { "id": 2, "name": "Boopathi", "role": "member" },
-    { "id": 3, "name": "Diwakar", "role": "member" },
-    { "id": 4, "name": "Jayarajan", "role": "member" },
-    { "id": 5, "name": "Kanish", "role": "member" },
-    { "id": 6, "name": "Mukesh", "role": "member" },
-    { "id": 7, "name": "Naveen Kumar", "role": "member" },
-    { "id": 8, "name": "Naveen", "role": "member" },
-    { "id": 9, "name": "Prabanjan", "role": "member" },
-    { "id": 10, "name": "Prasad", "role": "member" }
-    { "id": 11, "name": "Yogaprasath", "role": "member" }
-    { "id": 12, "name": "Raghul dravid", "role": "member" }
-    { "id": 13, "name": "Madhan", "role": "member" }
-    { "id": 14, "name": "Vicky", "role": "member" }
-
-
-
-   ],
+                { id: 2, name: "John Smith", email: "john@example.com", phone: "+1234567890", status: "online", role: "admin", balance: 0, avatar: "JS" },
+                { id: 3, name: "Sarah Johnson", email: "sarah@example.com", phone: "+1234567891", status: "online", role: "moderator", balance: -45.50, avatar: "SJ" },
+                { id: 4, name: "Mike Williams", email: "mike@example.com", phone: "+1234567892", status: "offline", role: "member", balance: 25.00, avatar: "MW" },
+                { id: 5, name: "Emma Brown", email: "emma@example.com", phone: "+1234567893", status: "online", role: "member", balance: 0, avatar: "EB" },
+                { id: 6, name: "David Miller", email: "david@example.com", phone: "+1234567894", status: "offline", role: "member", balance: 20.50, avatar: "DM" },
+                { id: 7, name: "Lisa Davis", email: "lisa@example.com", phone: "+1234567895", status: "online", role: "member", balance: 0, avatar: "LD" }
+            ],
             events: [
-                
+                { id: 1, title: "Weekend Hike", date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], time: "09:00", location: "Mountain Trail", description: "Morning hike with picnic", organizer: 2, participants: [1, 2, 3, 4], status: "upcoming" },
+                { id: 2, title: "Birthday Party", date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], time: "19:00", location: "Sarah's House", description: "Sarah's birthday celebration", organizer: 3, participants: [1, 2, 3, 4, 5, 6, 7], status: "upcoming" },
+                { id: 3, title: "Game Night", date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], time: "18:00", location: "Mike's Apartment", description: "Board games and pizza", organizer: 4, participants: [1, 3, 4, 5], status: "upcoming" }
             ],
             expenses: [
-                
+                { id: 1, description: "Dinner at Italian Restaurant", amount: 120.50, paidBy: 2, splitBetween: [1, 2, 3, 4], date: "2024-06-10", category: "food", status: "unsettled" },
+                { id: 2, description: "Concert Tickets", amount: 240.00, paidBy: 1, splitBetween: [1, 2, 3, 4, 5, 6], date: "2024-06-05", category: "entertainment", status: "unsettled" },
+                { id: 3, description: "Gas for Road Trip", amount: 60.00, paidBy: 3, splitBetween: [1, 3, 4], date: "2024-05-28", category: "travel", status: "settled" }
             ],
             polls: [
                 { 
                     id: 1, 
-                    question: "Where should we go for our next trip?", 
-                    description: "Planning a weekend getaway next month",
+                    question: "Where should we go for dinner this Friday?", 
                     options: [
-                        { id: 1, text: "Goa Beach", votes: 4, voters: [1, 2, 3, 4] },
-                        { id: 2, text: "Mountain Trek", votes: 3, voters: [5, 6, 7] },
-                        { id: 3, text: "Wildlife Safari", votes: 2, voters: [8, 9] },
-                        { id: 4, text: "Heritage City Tour", votes: 1, voters: [10] }
-                    ],
+                        { id: 1, text: "Italian Restaurant", votes: 3, voters: [1, 2, 3] },
+                        { id: 2, text: "Mexican Food", votes: 2, voters: [4, 5] },
+                        { id: 3, text: "Chinese Takeout", votes: 1, voters: [6] },
+                        { id: 4, text: "Home Cooked Meal", votes: 2, voters: [7, 8] }
+                    ], 
+                    category: "food",
                     createdBy: 1,
-                    createdAt: "2024-06-01",
-                    endsAt: "2024-06-15",
-                    totalVotes: 10,
+                    createdAt: new Date().toISOString().split('T')[0],
+                    endsAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                     status: "active",
-                    visibility: "public"
+                    allowMultiple: false,
+                    totalVotes: 8
                 },
-                
-                
-                
+                { 
+                    id: 2, 
+                    question: "Which movie should we watch?", 
+                    options: [
+                        { id: 1, text: "Action Movie", votes: 4, voters: [1, 2, 3, 4] },
+                        { id: 2, text: "Comedy", votes: 3, voters: [5, 6, 7] },
+                        { id: 3, text: "Drama", votes: 1, voters: [8] }
+                    ], 
+                    category: "entertainment",
+                    createdBy: 2,
+                    createdAt: new Date().toISOString().split('T')[0],
+                    endsAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    status: "active",
+                    allowMultiple: true,
+                    totalVotes: 8
+                },
+                { 
+                    id: 3, 
+                    question: "Best day for weekend trip?", 
+                    options: [
+                        { id: 1, text: "Saturday", votes: 5, voters: [1, 2, 3, 4, 5] },
+                        { id: 2, text: "Sunday", votes: 3, voters: [6, 7, 8] }
+                    ], 
+                    category: "events",
+                    createdBy: 3,
+                    createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    endsAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    status: "closed",
+                    allowMultiple: false,
+                    totalVotes: 8
+                }
             ],
             gallery: [
-                
+                { id: 1, url: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=400&fit=crop", caption: "Weekend hike memories", uploadedBy: 2, date: "2024-06-03", likes: [1, 3, 4] },
+                { id: 2, url: "https://images.unsplash.com/photo-1547592180-85f173990554?w=400&h=400&fit=crop", caption: "Birthday celebration", uploadedBy: 1, date: "2024-05-20", likes: [2, 3, 4, 5] },
+                { id: 3, url: "https://images.unsplash.com/photo-1511735111819-9a3f7709049c?w=400&h=400&fit=crop", caption: "Game night fun", uploadedBy: 3, date: "2024-05-15", likes: [1, 2, 4] },
+                { id: 4, url: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=400&h=400&fit=crop", caption: "Beach day", uploadedBy: 4, date: "2024-05-30", likes: [1, 2, 3, 5] }
             ],
             locations: [
-               
-            ],
-            savedPlaces: [
-               
+                { id: 1, friendId: 2, name: "John Smith", location: "Downtown Cafe", lastUpdated: "10 min ago" },
+                { id: 2, friendId: 3, name: "Sarah Johnson", location: "Home", lastUpdated: "1 hour ago" },
+                { id: 3, friendId: 5, name: "Emma Brown", location: "Central Park", lastUpdated: "30 min ago" }
             ],
             activityLog: [
-               
+                { id: 1, type: "friend_added", message: "Admin added John to the group", timestamp: "2 hours ago" },
+                { id: 2, type: "poll_created", message: "Admin created a new poll: Where should we go for dinner?", timestamp: "5 hours ago" },
+                { id: 3, type: "expense_added", message: "Mike added a new expense: Dinner - $120.50", timestamp: "1 day ago" },
+                { id: 4, type: "event_created", message: "Emma created a new event: Beach Day", timestamp: "2 days ago" }
             ]
         };
 
         // State Management
         let currentState = {
-            activeTab: 'dashboard',
-            selectedFiles: [],
-            votedPolls: new Set()
+            activeTab: 'dashboard'
         };
 
         // Initialize Application
@@ -1452,127 +1426,41 @@
             // Set user avatar
             document.getElementById('userAvatar').textContent = database.currentUser.avatar;
             
-            // Load dashboard
+            // Load all sections
             loadDashboard();
-            
-            // Load friends
             loadFriendsTable();
-            
-            // Load events
             loadEvents();
-            
-            // Load expenses
             loadExpenses();
-            
-            // Load polls
             loadPolls();
-            
-            // Load gallery
             loadGallery();
-            
-            // Load locations
             loadLocations();
             
             // Setup event listeners
             setupEventListeners();
             
             // Show welcome notification
-            showNotification('Welcome Akash!', 'Your FriendsCircle platform is ready', 'success');
+            showNotification('Welcome!', 'FriendsCircle platform loaded successfully', 'success');
         }
 
         // Dashboard Functions
         function loadDashboard() {
             // Update stats
-            document.getElementById('totalFriends').textContent = database.friends.length + 1; // +1 for current user
-            document.getElementById('upcomingEventsCount').textContent = database.events.filter(e => e.status === 'upcoming').length;
+            document.getElementById('totalFriends').textContent = database.friends.length + 1;
+            document.getElementById('activePollsCount').textContent = database.polls.filter(p => p.status === 'active').length;
             
             // Calculate total balance
             const totalBalance = database.friends.reduce((sum, friend) => sum + friend.balance, 0);
-            document.getElementById('totalBalance').textContent = totalBalance >= 0 ? `₹${totalBalance}` : `-₹${Math.abs(totalBalance)}`;
+            document.getElementById('totalBalance').textContent = totalBalance >= 0 ? `$${totalBalance.toFixed(2)}` : `-$${Math.abs(totalBalance).toFixed(2)}`;
             
-            // Load online friends
-            loadOnlineFriends();
-            
-            // Load upcoming events
+            // Load dashboard sections
+            loadActivePollsDashboard();
             loadUpcomingEvents();
-            
-            // Load active polls
-            loadActivePolls();
-            
-            // Load recent photos
-            loadRecentPhotos();
-            
-            // Load recent activity
-            loadRecentActivity();
+            loadRecentExpenses();
+            loadDashboardActivity();
         }
 
-        function loadOnlineFriends() {
-            const container = document.getElementById('onlineFriends');
-            container.innerHTML = '';
-            
-            const onlineFriends = database.friends.filter(f => f.status === 'online');
-            
-            onlineFriends.forEach(friend => {
-                const friendEl = document.createElement('div');
-                friendEl.className = 'friend-item';
-                friendEl.innerHTML = `
-                    <div class="friend-avatar">${friend.avatar}</div>
-                    <div class="friend-info">
-                        <h4>${friend.name}</h4>
-                        <p>${friend.role === 'admin' ? 'Admin' : 'Member'}</p>
-                    </div>
-                `;
-                container.appendChild(friendEl);
-            });
-            
-            // Add current user if online
-            if (database.currentUser.status === 'online') {
-                const currentUserEl = document.createElement('div');
-                currentUserEl.className = 'friend-item';
-                currentUserEl.innerHTML = `
-                    <div class="friend-avatar">${database.currentUser.avatar}</div>
-                    <div class="friend-info">
-                        <h4>${database.currentUser.name} (You)</h4>
-                        <p>Admin</p>
-                    </div>
-                `;
-                container.appendChild(currentUserEl);
-            }
-            
-            if (onlineFriends.length === 0 && database.currentUser.status !== 'online') {
-                container.innerHTML = '<p style="color: var(--gray); text-align: center;">No friends online</p>';
-            }
-        }
-
-        function loadUpcomingEvents() {
-            const container = document.getElementById('upcomingEventsList');
-            container.innerHTML = '';
-            
-            const upcomingEvents = database.events.filter(e => e.status === 'upcoming').slice(0, 3);
-            
-            upcomingEvents.forEach(event => {
-                const eventEl = document.createElement('div');
-                eventEl.className = 'event-card';
-                eventEl.innerHTML = `
-                    <div class="event-date">${formatDate(event.date)}</div>
-                    <h4 style="margin-bottom: 10px;">${event.title}</h4>
-                    <p style="color: var(--gray); font-size: 14px; margin-bottom: 10px;">
-                        <i class="fas fa-map-marker-alt"></i> ${event.location}
-                    </p>
-                    <p style="color: var(--gray); font-size: 14px;">
-                        <i class="fas fa-user"></i> ${event.organizer}
-                    </p>
-                `;
-                container.appendChild(eventEl);
-            });
-            
-            if (upcomingEvents.length === 0) {
-                container.innerHTML = '<p style="color: var(--gray); text-align: center;">No upcoming events</p>';
-            }
-        }
-
-        function loadActivePolls() {
-            const container = document.getElementById('activePolls');
+        function loadActivePollsDashboard() {
+            const container = document.getElementById('activePollsDashboard');
             container.innerHTML = '';
             
             const activePolls = database.polls.filter(p => p.status === 'active').slice(0, 2);
@@ -1583,59 +1471,83 @@
             }
             
             activePolls.forEach(poll => {
-                const totalVotes = poll.totalVotes || poll.options.reduce((sum, opt) => sum + opt.votes, 0);
                 const pollEl = document.createElement('div');
-                pollEl.className = 'poll-card';
-                pollEl.style.padding = '15px';
-                pollEl.style.marginBottom = '10px';
-                
+                pollEl.className = 'event-card';
                 pollEl.innerHTML = `
-                    <div class="poll-question" style="font-size: 16px;">${poll.question}</div>
-                    <div style="font-size: 12px; color: var(--gray); margin-bottom: 10px;">${totalVotes} votes</div>
-                    ${poll.options.slice(0, 2).map(option => {
-                        const percentage = totalVotes > 0 ? Math.round((option.votes / totalVotes) * 100) : 0;
-                        return `
-                            <div style="margin-bottom: 8px;">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                                    <span style="font-size: 14px;">${option.text}</span>
-                                    <span style="font-size: 12px; color: var(--gray);">${percentage}%</span>
-                                </div>
-                                <div style="height: 6px; background-color: var(--light-gray); border-radius: 3px; overflow: hidden;">
-                                    <div style="height: 100%; width: ${percentage}%; background: linear-gradient(90deg, var(--info), var(--primary)); border-radius: 3px;"></div>
-                                </div>
-                            </div>
-                        `;
-                    }).join('')}
-                    <button class="btn btn-outline" style="width: 100%; padding: 8px; font-size: 12px; margin-top: 10px;" onclick="viewPoll(${poll.id})">
-                        View Poll
-                    </button>
+                    <h4 style="margin-bottom: 10px;">${poll.question}</h4>
+                    <p style="color: var(--gray); font-size: 14px; margin-bottom: 10px;">
+                        <i class="fas fa-users"></i> ${poll.totalVotes} votes
+                    </p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="status-badge status-success">Active</span>
+                        <button class="btn btn-outline btn-sm" onclick="viewPoll(${poll.id})">
+                            <i class="fas fa-vote-yea"></i> Vote
+                        </button>
+                    </div>
                 `;
-                
                 container.appendChild(pollEl);
             });
         }
 
-        function loadRecentPhotos() {
-            const container = document.getElementById('recentPhotosGrid');
+        function loadUpcomingEvents() {
+            const container = document.getElementById('upcomingEventsList');
             container.innerHTML = '';
             
-            const recentPhotos = database.gallery.slice(0, 8);
+            const upcomingEvents = database.events.filter(e => e.status === 'upcoming').slice(0, 3);
             
-            recentPhotos.forEach(photo => {
-                const photoEl = document.createElement('div');
-                photoEl.className = 'gallery-item';
-                photoEl.innerHTML = `
-                    <img src="${photo.url}" alt="${photo.caption}">
-                    <div class="gallery-overlay">
-                        <p style="font-size: 12px;">${photo.caption}</p>
-                    </div>
+            if (upcomingEvents.length === 0) {
+                container.innerHTML = '<p style="color: var(--gray); text-align: center;">No upcoming events</p>';
+                return;
+            }
+            
+            upcomingEvents.forEach(event => {
+                const organizer = database.friends.find(f => f.id === event.organizer) || database.currentUser;
+                const eventEl = document.createElement('div');
+                eventEl.className = 'event-card';
+                eventEl.innerHTML = `
+                    <div class="event-date">${formatDate(event.date)}</div>
+                    <h4 style="margin-bottom: 10px;">${event.title}</h4>
+                    <p style="color: var(--gray); font-size: 14px; margin-bottom: 10px;">
+                        <i class="fas fa-map-marker-alt"></i> ${event.location}
+                    </p>
+                    <p style="color: var(--gray); font-size: 14px;">
+                        <i class="fas fa-user"></i> ${organizer.name}
+                    </p>
                 `;
-                container.appendChild(photoEl);
+                container.appendChild(eventEl);
             });
         }
 
-        function loadRecentActivity() {
-            const container = document.getElementById('recentActivity');
+        function loadRecentExpenses() {
+            const container = document.getElementById('recentExpenses');
+            container.innerHTML = '';
+            
+            const recentExpenses = database.expenses.slice(0, 3);
+            
+            if (recentExpenses.length === 0) {
+                container.innerHTML = '<p style="color: var(--gray); text-align: center;">No recent expenses</p>';
+                return;
+            }
+            
+            recentExpenses.forEach(expense => {
+                const paidBy = database.friends.find(f => f.id === expense.paidBy) || database.currentUser;
+                const expenseEl = document.createElement('div');
+                expenseEl.className = 'payment-card';
+                expenseEl.innerHTML = `
+                    <div>
+                        <h4 style="margin-bottom: 5px;">${expense.description}</h4>
+                        <p style="color: var(--gray); font-size: 14px;">Paid by ${paidBy.name}</p>
+                    </div>
+                    <div class="payment-amount ${expense.paidBy === database.currentUser.id ? 'payment-positive' : 'payment-negative'}">
+                        ${expense.paidBy === database.currentUser.id ? '+' : '-'}$${expense.amount.toFixed(2)}
+                    </div>
+                `;
+                container.appendChild(expenseEl);
+            });
+        }
+
+        function loadDashboardActivity() {
+            const container = document.getElementById('dashboardActivity');
             container.innerHTML = '';
             
             database.activityLog.forEach(activity => {
@@ -1648,54 +1560,29 @@
                 `;
                 container.appendChild(activityEl);
             });
+            
+            // Also update sidebar activity
+            const sidebarActivity = document.getElementById('recentActivity');
+            sidebarActivity.innerHTML = '';
+            
+            database.activityLog.slice(0, 3).forEach(activity => {
+                const activityEl = document.createElement('div');
+                activityEl.style.padding = '10px 0';
+                activityEl.style.borderBottom = '1px solid var(--light-gray)';
+                activityEl.innerHTML = `
+                    <p style="margin-bottom: 5px;">${activity.message}</p>
+                    <small style="color: var(--gray);">${activity.timestamp}</small>
+                `;
+                sidebarActivity.appendChild(activityEl);
+            });
         }
 
         // Friends Management Functions
-        function loadFriendsTable(filter = 'all') {
+        function loadFriendsTable() {
             const tbody = document.getElementById('friendsTableBody');
             tbody.innerHTML = '';
             
-            let filteredFriends = database.friends;
-            
-            if (filter === 'online') {
-                filteredFriends = database.friends.filter(f => f.status === 'online');
-            } else if (filter === 'admins') {
-                filteredFriends = database.friends.filter(f => f.role === 'admin');
-            }
-            
-            // Add current user first
-            const currentUserRow = document.createElement('tr');
-            currentUserRow.innerHTML = `
-                <td>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <div class="friend-avatar" style="width: 40px; height: 40px;">${database.currentUser.avatar}</div>
-                        <div>
-                            <strong>${database.currentUser.name} (You)</strong>
-                            <br><small style="color: var(--primary);">Admin</small>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <span class="status-badge status-success">
-                        Online
-                    </span>
-                </td>
-                <td>Admin</td>
-                <td>
-                    <span>₹0</span>
-                </td>
-                <td>Just now</td>
-                <td>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="btn btn-outline" style="padding: 8px 12px; font-size: 12px;" onclick="messageFriend(${database.currentUser.id})">
-                            <i class="fas fa-envelope"></i>
-                        </button>
-                    </div>
-                </td>
-            `;
-            tbody.appendChild(currentUserRow);
-            
-            filteredFriends.forEach(friend => {
+            database.friends.forEach(friend => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>
@@ -1707,6 +1594,8 @@
                             </div>
                         </div>
                     </td>
+                    <td>${friend.email}</td>
+                    <td>${friend.phone}</td>
                     <td>
                         <span class="status-badge ${friend.status === 'online' ? 'status-success' : 'status-warning'}">
                             ${friend.status === 'online' ? 'Online' : 'Offline'}
@@ -1715,17 +1604,16 @@
                     <td>${friend.role.charAt(0).toUpperCase() + friend.role.slice(1)}</td>
                     <td>
                         <span class="${friend.balance > 0 ? 'payment-positive' : friend.balance < 0 ? 'payment-negative' : ''}">
-                            ${friend.balance > 0 ? '+' : ''}₹${Math.abs(friend.balance)}
+                            ${friend.balance > 0 ? '+' : ''}$${friend.balance.toFixed(2)}
                         </span>
                     </td>
-                    <td>${friend.lastActive}</td>
                     <td>
-                        <div style="display: flex; gap: 8px;">
-                            <button class="btn btn-outline" style="padding: 8px 12px; font-size: 12px;" onclick="messageFriend(${friend.id})">
+                        <div class="action-buttons">
+                            <button class="btn btn-outline btn-sm" onclick="messageFriend(${friend.id})">
                                 <i class="fas fa-envelope"></i>
                             </button>
-                            <button class="btn btn-outline" style="padding: 8px 12px; font-size: 12px;" onclick="editFriend(${friend.id})">
-                                <i class="fas fa-edit"></i>
+                            <button class="btn btn-danger btn-sm" onclick="removeFriend(${friend.id})">
+                                <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </td>
@@ -1746,8 +1634,7 @@
                 status: 'offline',
                 role: friendData.role,
                 balance: 0,
-                avatar: avatar,
-                lastActive: 'Just added'
+                avatar: avatar
             };
             
             database.friends.push(newFriend);
@@ -1767,384 +1654,34 @@
             showNotification('Friend Added', `${friendData.name} has been added to the group`, 'success');
         }
 
-        // Polls Functions
-        function loadPolls(filter = 'active') {
-            const container = document.getElementById('pollsContainer');
-            container.innerHTML = '';
+        function removeFriend(friendId) {
+            const friend = database.friends.find(f => f.id === friendId);
+            if (!friend) return;
             
-            let filteredPolls = database.polls;
-            
-            if (filter === 'active') {
-                filteredPolls = database.polls.filter(p => p.status === 'active');
-            } else if (filter === 'closed') {
-                filteredPolls = database.polls.filter(p => p.status === 'closed');
-            } else if (filter === 'myPolls') {
-                filteredPolls = database.polls.filter(p => p.createdBy === database.currentUser.id);
-            }
-            
-            if (filteredPolls.length === 0) {
-                container.innerHTML = `<p style="color: var(--gray); text-align: center; padding: 40px;">No ${filter} polls found</p>`;
-                return;
-            }
-            
-            filteredPolls.forEach(poll => {
-                const totalVotes = poll.totalVotes || poll.options.reduce((sum, opt) => sum + opt.votes, 0);
-                const hasVoted = currentState.votedPolls.has(poll.id) || 
-                    poll.options.some(opt => opt.voters.includes(database.currentUser.id));
-                const pollCreator = database.friends.find(f => f.id === poll.createdBy) || database.currentUser;
+            if (confirm(`Are you sure you want to remove ${friend.name} from the group?`)) {
+                const index = database.friends.findIndex(f => f.id === friendId);
+                database.friends.splice(index, 1);
                 
-                const pollEl = document.createElement('div');
-                pollEl.className = 'poll-card';
-                
-                // Calculate percentages
-                const optionsWithPercentages = poll.options.map(option => {
-                    const percentage = totalVotes > 0 ? Math.round((option.votes / totalVotes) * 100) : 0;
-                    return { ...option, percentage };
+                // Add activity log
+                database.activityLog.unshift({
+                    id: database.activityLog.length + 1,
+                    type: "friend_removed",
+                    message: `${database.currentUser.name} removed ${friend.name} from the group`,
+                    timestamp: "Just now"
                 });
                 
-                pollEl.innerHTML = `
-                    <div class="poll-question">${poll.question}</div>
-                    ${poll.description ? `<p style="color: var(--gray); font-size: 14px; margin-bottom: 15px;">${poll.description}</p>` : ''}
-                    
-                    <div style="margin-bottom: 20px;">
-                        ${optionsWithPercentages.map(option => `
-                            <div class="poll-option ${hasVoted ? 'voted' : ''}" 
-                                 onclick="voteInPoll(${poll.id}, ${option.id})" 
-                                 style="cursor: ${hasVoted ? 'default' : 'pointer'};">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                    <span>${option.text}</span>
-                                    ${hasVoted ? `<span style="font-weight: 600;">${option.votes} vote${option.votes !== 1 ? 's' : ''}</span>` : ''}
-                                </div>
-                                ${hasVoted ? `
-                                    <div class="poll-progress">
-                                        <div class="poll-progress-bar" style="width: ${option.percentage}%"></div>
-                                    </div>
-                                    <div class="poll-stats">
-                                        <span>${option.percentage}%</span>
-                                        ${option.voters.includes(database.currentUser.id) ? 
-                                            '<span style="color: var(--success);"><i class="fas fa-check"></i> Your vote</span>' : ''}
-                                    </div>
-                                ` : ''}
-                            </div>
-                        `).join('')}
-                    </div>
-                    
-                    <div class="poll-meta">
-                        <div>
-                            <i class="fas fa-user"></i> ${pollCreator.name}
-                            <span style="margin-left: 15px;">
-                                <i class="fas fa-users"></i> ${totalVotes} vote${totalVotes !== 1 ? 's' : ''}
-                            </span>
-                        </div>
-                        <div>
-                            ${poll.status === 'active' ? 
-                                `<span class="status-badge status-success">Active</span>` : 
-                                `<span class="status-badge status-warning">Closed</span>`}
-                        </div>
-                    </div>
-                    
-                    ${database.currentUser.id === poll.createdBy ? `
-                        <div style="margin-top: 15px; display: flex; gap: 10px;">
-                            <button class="btn btn-outline" onclick="editPoll(${poll.id})" style="padding: 8px 12px; font-size: 12px;">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                            <button class="btn btn-danger" onclick="deletePoll(${poll.id})" style="padding: 8px 12px; font-size: 12px;">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
-                        </div>
-                    ` : ''}
-                `;
-                
-                container.appendChild(pollEl);
-            });
-        }
-
-        function voteInPoll(pollId, optionId) {
-            const poll = database.polls.find(p => p.id === pollId);
-            if (!poll || poll.status === 'closed') return;
-            
-            // Check if user already voted
-            const hasVoted = currentState.votedPolls.has(pollId) || 
-                poll.options.some(opt => opt.voters.includes(database.currentUser.id));
-            
-            if (hasVoted) {
-                showNotification('Already Voted', 'You have already voted in this poll', 'warning');
-                return;
-            }
-            
-            // Find the option
-            const option = poll.options.find(opt => opt.id === optionId);
-            if (!option) return;
-            
-            // Add vote
-            option.votes++;
-            option.voters.push(database.currentUser.id);
-            poll.totalVotes = (poll.totalVotes || 0) + 1;
-            
-            // Mark as voted
-            currentState.votedPolls.add(pollId);
-            
-            // Add activity log
-            database.activityLog.unshift({
-                id: database.activityLog.length + 1,
-                type: "poll_voted",
-                message: `${database.currentUser.name} voted in poll: ${poll.question}`,
-                timestamp: "Just now"
-            });
-            
-            loadDashboard();
-            loadPolls();
-            
-            showNotification('Vote Submitted', 'Your vote has been recorded', 'success');
-        }
-
-        function createNewPoll(pollData) {
-            const newId = Math.max(...database.polls.map(p => p.id)) + 1;
-            
-            const newPoll = {
-                id: newId,
-                question: pollData.question,
-                description: pollData.description || '',
-                options: pollData.options.map((text, index) => ({
-                    id: index + 1,
-                    text: text,
-                    votes: 0,
-                    voters: []
-                })),
-                createdBy: database.currentUser.id,
-                createdAt: new Date().toISOString().split('T')[0],
-                endsAt: calculateEndDate(pollData.duration),
-                totalVotes: 0,
-                status: 'active',
-                visibility: pollData.visibility
-            };
-            
-            database.polls.push(newPoll);
-            
-            // Add activity log
-            database.activityLog.unshift({
-                id: database.activityLog.length + 1,
-                type: "poll_created",
-                message: `${database.currentUser.name} created a new poll: ${pollData.question}`,
-                timestamp: "Just now"
-            });
-            
-            closeModal('createPollModal');
-            loadDashboard();
-            loadPolls();
-            
-            showNotification('Poll Created', 'Your poll has been created successfully', 'success');
-        }
-
-        function calculateEndDate(durationDays) {
-            if (durationDays === 0) return null;
-            
-            const endDate = new Date();
-            endDate.setDate(endDate.getDate() + parseInt(durationDays));
-            return endDate.toISOString().split('T')[0];
-        }
-
-        function viewPoll(pollId) {
-            const poll = database.polls.find(p => p.id === pollId);
-            if (!poll) return;
-            
-            // Switch to polls tab
-            document.querySelector('[data-tab="polls"]').click();
-            
-            showNotification('Poll Details', `Viewing poll: ${poll.question}`, 'info');
-        }
-
-        function editPoll(pollId) {
-            const poll = database.polls.find(p => p.id === pollId);
-            if (!poll) return;
-            
-            // In a real app, open edit modal
-            showNotification('Edit Poll', `Editing poll: ${poll.question}`, 'info');
-        }
-
-        function deletePoll(pollId) {
-            const poll = database.polls.find(p => p.id === pollId);
-            if (!poll) return;
-            
-            if (confirm(`Are you sure you want to delete poll: "${poll.question}"?`)) {
-                const index = database.polls.findIndex(p => p.id === pollId);
-                database.polls.splice(index, 1);
-                
                 loadDashboard();
-                loadPolls();
+                loadFriendsTable();
                 
-                showNotification('Poll Deleted', `"${poll.question}" has been deleted`, 'success');
+                showNotification('Friend Removed', `${friend.name} has been removed from the group`, 'success');
             }
         }
 
-        // Expenses Functions (Updated for INR)
-        function loadExpenses() {
-            // Load expenses table
-            const tbody = document.getElementById('expensesTableBody');
-            tbody.innerHTML = '';
+        function messageFriend(friendId) {
+            const friend = database.friends.find(f => f.id === friendId);
+            if (!friend) return;
             
-            database.expenses.forEach(expense => {
-                const paidBy = database.friends.find(f => f.id === expense.paidBy) || database.currentUser;
-                const splitCount = expense.splitBetween.length;
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <strong>${expense.description}</strong>
-                        <br><small style="color: var(--gray);">${expense.category}</small>
-                    </td>
-                    <td><strong>₹${expense.amount}</strong></td>
-                    <td>${paidBy.name}</td>
-                    <td>${splitCount} people</td>
-                    <td>${formatDate(expense.date)}</td>
-                    <td>
-                        <div style="display: flex; gap: 8px;">
-                            <button class="btn btn-outline" style="padding: 8px 12px; font-size: 12px;" onclick="viewExpense(${expense.id})">
-                                View
-                            </button>
-                            <button class="btn btn-danger" style="padding: 8px 12px; font-size: 12px;" onclick="deleteExpense(${expense.id})">
-                                Delete
-                            </button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-            
-            // Load recent transactions
-            loadRecentTransactions();
-            
-            // Load balance overview
-            loadBalanceOverview();
-        }
-
-        function loadRecentTransactions() {
-            const container = document.getElementById('recentTransactions');
-            container.innerHTML = '';
-            
-            const recentExpenses = database.expenses.slice(0, 5);
-            
-            recentExpenses.forEach(expense => {
-                const paidBy = database.friends.find(f => f.id === expense.paidBy) || database.currentUser;
-                const transactionEl = document.createElement('div');
-                transactionEl.style.padding = '10px 0';
-                transactionEl.style.borderBottom = '1px solid var(--light-gray)';
-                transactionEl.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <strong>${expense.description}</strong>
-                            <p style="color: var(--gray); font-size: 12px; margin: 5px 0;">${formatDate(expense.date)}</p>
-                        </div>
-                        <div style="text-align: right;">
-                            <strong class="${expense.paidBy === database.currentUser.id ? 'payment-positive' : 'payment-negative'}">
-                                ${expense.paidBy === database.currentUser.id ? '+' : '-'}₹${expense.amount}
-                            </strong>
-                            <p style="color: var(--gray); font-size: 12px; margin: 5px 0;">${paidBy.name}</p>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(transactionEl);
-            });
-        }
-
-        function loadBalanceOverview() {
-            const container = document.getElementById('balanceOverview');
-            container.innerHTML = '';
-            
-            // Calculate balances
-            const balances = {};
-            
-            // Initialize balances
-            database.friends.forEach(friend => {
-                balances[friend.id] = friend.balance;
-            });
-            balances[database.currentUser.id] = 0;
-            
-            // Display balances
-            Object.keys(balances).forEach(friendId => {
-                const friendIdNum = parseInt(friendId);
-                let friend;
-                
-                if (friendIdNum === database.currentUser.id) {
-                    friend = database.currentUser;
-                } else {
-                    friend = database.friends.find(f => f.id === friendIdNum);
-                }
-                
-                if (friend && balances[friendIdNum] !== 0) {
-                    const balanceEl = document.createElement('div');
-                    balanceEl.style.padding = '10px 0';
-                    balanceEl.style.borderBottom = '1px solid var(--light-gray)';
-                    balanceEl.innerHTML = `
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <div class="friend-avatar" style="width: 30px; height: 30px; font-size: 12px;">${friend.avatar}</div>
-                                <span>${friend.name}</span>
-                            </div>
-                            <strong class="${balances[friendIdNum] > 0 ? 'payment-positive' : 'payment-negative'}">
-                                ${balances[friendIdNum] > 0 ? '+' : ''}₹${Math.abs(balances[friendIdNum])}
-                            </strong>
-                        </div>
-                    `;
-                    container.appendChild(balanceEl);
-                }
-            });
-            
-            if (container.children.length === 0) {
-                container.innerHTML = '<p style="color: var(--gray); text-align: center;">All settled up!</p>';
-            }
-        }
-
-        function addNewExpense(expenseData) {
-            const newId = Math.max(...database.expenses.map(e => e.id)) + 1;
-            
-            const newExpense = {
-                id: newId,
-                description: expenseData.description,
-                amount: parseInt(expenseData.amount),
-                paidBy: parseInt(expenseData.paidBy),
-                splitBetween: expenseData.splitBetween.map(id => parseInt(id)),
-                date: expenseData.date || new Date().toISOString().split('T')[0],
-                category: expenseData.category,
-                status: 'unsettled'
-            };
-            
-            database.expenses.push(newExpense);
-            
-            // Update friend balances
-            updateFriendBalances(newExpense);
-            
-            // Add activity log
-            const paidBy = database.friends.find(f => f.id === newExpense.paidBy) || database.currentUser;
-            database.activityLog.unshift({
-                id: database.activityLog.length + 1,
-                type: "expense_added",
-                message: `${paidBy.name} added a new expense: ${newExpense.description} - ₹${newExpense.amount}`,
-                timestamp: "Just now"
-            });
-            
-            closeModal('addExpenseModal');
-            loadDashboard();
-            loadExpenses();
-            
-            showNotification('Expense Added', `${newExpense.description} added successfully`, 'success');
-        }
-
-        function updateFriendBalances(expense) {
-            const splitAmount = expense.amount / expense.splitBetween.length;
-            
-            expense.splitBetween.forEach(friendId => {
-                const friend = database.friends.find(f => f.id === friendId);
-                if (friend) {
-                    if (friendId === expense.paidBy) {
-                        // Payer gets positive balance (others owe them)
-                        friend.balance += expense.amount - splitAmount;
-                    } else {
-                        // Others get negative balance (they owe)
-                        friend.balance -= splitAmount;
-                    }
-                }
-            });
+            showNotification('Message', `Opening chat with ${friend.name}`, 'info');
         }
 
         // Events Functions
@@ -2153,6 +1690,7 @@
             container.innerHTML = '';
             
             database.events.forEach(event => {
+                const organizer = database.friends.find(f => f.id === event.organizer) || database.currentUser;
                 const eventEl = document.createElement('div');
                 eventEl.className = 'event-card';
                 eventEl.innerHTML = `
@@ -2165,12 +1703,17 @@
                         <i class="fas fa-map-marker-alt"></i> ${event.location}
                     </p>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span class="status-badge ${event.status === 'upcoming' ? 'status-success' : 'status-info'}">
-                            ${event.status === 'upcoming' ? 'Upcoming' : 'Past'}
+                        <span class="status-badge status-success">
+                            Upcoming
                         </span>
-                        <button class="btn btn-outline" style="padding: 8px 12px; font-size: 12px;" onclick="viewEvent(${event.id})">
-                            View Details
-                        </button>
+                        <div class="action-buttons">
+                            <button class="btn btn-outline btn-sm" onclick="viewEvent(${event.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteEvent(${event.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
                 `;
                 container.appendChild(eventEl);
@@ -2187,8 +1730,8 @@
                 time: eventData.time || '',
                 location: eventData.location || '',
                 description: eventData.description || '',
-                organizer: database.currentUser.name,
-                participants: eventData.participants || [],
+                organizer: database.currentUser.id,
+                participants: [database.currentUser.id],
                 status: 'upcoming'
             };
             
@@ -2209,6 +1752,354 @@
             showNotification('Event Created', `${eventData.title} has been scheduled`, 'success');
         }
 
+        function viewEvent(eventId) {
+            const event = database.events.find(e => e.id === eventId);
+            if (!event) return;
+            
+            const organizer = database.friends.find(f => f.id === event.organizer) || database.currentUser;
+            showNotification('Event Details', 
+                `${event.title} on ${formatDate(event.date)}\nLocation: ${event.location}\nOrganizer: ${organizer.name}`, 
+                'info');
+        }
+
+        function deleteEvent(eventId) {
+            const event = database.events.find(e => e.id === eventId);
+            if (!event) return;
+            
+            if (confirm(`Are you sure you want to delete event: ${event.title}?`)) {
+                const index = database.events.findIndex(e => e.id === eventId);
+                database.events.splice(index, 1);
+                
+                // Add activity log
+                database.activityLog.unshift({
+                    id: database.activityLog.length + 1,
+                    type: "event_deleted",
+                    message: `${database.currentUser.name} deleted event: ${event.title}`,
+                    timestamp: "Just now"
+                });
+                
+                loadDashboard();
+                loadEvents();
+                
+                showNotification('Event Deleted', `${event.title} has been deleted`, 'success');
+            }
+        }
+
+        // Expenses Functions
+        function loadExpenses() {
+            const tbody = document.getElementById('expensesTableBody');
+            tbody.innerHTML = '';
+            
+            database.expenses.forEach(expense => {
+                const paidBy = database.friends.find(f => f.id === expense.paidBy) || database.currentUser;
+                const splitCount = expense.splitBetween.length;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <strong>${expense.description}</strong>
+                        <br><small style="color: var(--gray);">${expense.category}</small>
+                    </td>
+                    <td><strong>$${expense.amount.toFixed(2)}</strong></td>
+                    <td>${paidBy.name}</td>
+                    <td>${splitCount} people</td>
+                    <td>${formatDate(expense.date)}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-outline btn-sm" onclick="viewExpense(${expense.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteExpense(${expense.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function addNewExpense(expenseData) {
+            const newId = Math.max(...database.expenses.map(e => e.id)) + 1;
+            
+            const newExpense = {
+                id: newId,
+                description: expenseData.description,
+                amount: parseFloat(expenseData.amount),
+                paidBy: parseInt(expenseData.paidBy),
+                splitBetween: expenseData.splitBetween.map(id => parseInt(id)),
+                date: new Date().toISOString().split('T')[0],
+                category: "food",
+                status: 'unsettled'
+            };
+            
+            database.expenses.push(newExpense);
+            
+            // Add activity log
+            const paidBy = database.friends.find(f => f.id === newExpense.paidBy) || database.currentUser;
+            database.activityLog.unshift({
+                id: database.activityLog.length + 1,
+                type: "expense_added",
+                message: `${paidBy.name} added a new expense: ${newExpense.description} - $${newExpense.amount.toFixed(2)}`,
+                timestamp: "Just now"
+            });
+            
+            closeModal('addExpenseModal');
+            loadDashboard();
+            loadExpenses();
+            
+            showNotification('Expense Added', `${newExpense.description} added successfully`, 'success');
+        }
+
+        function viewExpense(expenseId) {
+            const expense = database.expenses.find(e => e.id === expenseId);
+            if (!expense) return;
+            
+            const paidBy = database.friends.find(f => f.id === expense.paidBy) || database.currentUser;
+            showNotification('Expense Details', 
+                `${expense.description}\nAmount: $${expense.amount.toFixed(2)}\nPaid by: ${paidBy.name}\nDate: ${formatDate(expense.date)}`, 
+                'info');
+        }
+
+        function deleteExpense(expenseId) {
+            const expense = database.expenses.find(e => e.id === expenseId);
+            if (!expense) return;
+            
+            if (confirm(`Are you sure you want to delete expense: ${expense.description}?`)) {
+                const index = database.expenses.findIndex(e => e.id === expenseId);
+                database.expenses.splice(index, 1);
+                
+                // Add activity log
+                database.activityLog.unshift({
+                    id: database.activityLog.length + 1,
+                    type: "expense_deleted",
+                    message: `${database.currentUser.name} deleted expense: ${expense.description}`,
+                    timestamp: "Just now"
+                });
+                
+                loadDashboard();
+                loadExpenses();
+                
+                showNotification('Expense Deleted', `${expense.description} has been deleted`, 'success');
+            }
+        }
+
+        // Poll Functions
+        function loadPolls() {
+            loadActivePolls();
+            loadPastPolls();
+        }
+
+        function loadActivePolls() {
+            const container = document.getElementById('pollsList');
+            container.innerHTML = '';
+            
+            const activePolls = database.polls.filter(p => p.status === 'active');
+            
+            if (activePolls.length === 0) {
+                container.innerHTML = '<p style="color: var(--gray); text-align: center; padding: 40px;">No active polls. Create one!</p>';
+                return;
+            }
+            
+            activePolls.forEach(poll => {
+                const pollEl = createPollElement(poll);
+                container.appendChild(pollEl);
+            });
+        }
+
+        function loadPastPolls() {
+            const container = document.getElementById('pastPollsList');
+            container.innerHTML = '';
+            
+            const pastPolls = database.polls.filter(p => p.status === 'closed');
+            
+            if (pastPolls.length === 0) {
+                container.innerHTML = '<p style="color: var(--gray); text-align: center; padding: 20px;">No past polls</p>';
+                return;
+            }
+            
+            pastPolls.forEach(poll => {
+                const pollEl = createPollElement(poll);
+                container.appendChild(pollEl);
+            });
+        }
+
+        function createPollElement(poll) {
+            const pollEl = document.createElement('div');
+            pollEl.className = 'poll-card';
+            pollEl.dataset.pollId = poll.id;
+            
+            const createdBy = database.friends.find(f => f.id === poll.createdBy) || database.currentUser;
+            const hasVoted = poll.options.some(option => option.voters.includes(database.currentUser.id));
+            const isClosed = poll.status === 'closed';
+            
+            let optionsHtml = '';
+            if (isClosed || hasVoted) {
+                // Show results
+                optionsHtml = `
+                    <div class="poll-results" style="display: block;">
+                        ${poll.options.map(option => {
+                            const percentage = poll.totalVotes > 0 ? (option.votes / poll.totalVotes * 100).toFixed(1) : 0;
+                            return `
+                                <div style="margin-bottom: 15px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                        <span>${option.text}</span>
+                                        <span>${option.votes} votes (${percentage}%)</span>
+                                    </div>
+                                    <div class="poll-result-bar">
+                                        <div class="poll-result-fill" style="width: ${percentage}%"></div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            } else {
+                // Show voting options
+                optionsHtml = `
+                    <div class="poll-options">
+                        ${poll.options.map(option => `
+                            <div class="poll-option" onclick="voteOnPoll(${poll.id}, ${option.id})">
+                                ${option.text}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            pollEl.innerHTML = `
+                <div class="poll-header">
+                    <div>
+                        <h3 style="margin-bottom: 5px;">${poll.question}</h3>
+                        <p style="color: var(--gray); font-size: 14px;">
+                            Created by ${createdBy.name} • ${formatDate(poll.createdAt)}
+                        </p>
+                    </div>
+                    <span class="poll-status ${poll.status === 'active' ? 'poll-status-active' : 'poll-status-closed'}">
+                        ${poll.status === 'active' ? 'Active' : 'Closed'}
+                    </span>
+                </div>
+                
+                ${optionsHtml}
+                
+                <div class="poll-meta">
+                    <div>
+                        <i class="fas fa-chart-pie"></i> ${poll.totalVotes} total votes
+                        ${poll.allowMultiple ? ' • <i class="fas fa-check-double"></i> Multiple choices allowed' : ''}
+                    </div>
+                    <div class="poll-actions">
+                        <button class="btn btn-danger btn-sm" onclick="deletePoll(${poll.id})">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            return pollEl;
+        }
+
+        function createNewPoll(pollData) {
+            const newId = Math.max(...database.polls.map(p => p.id)) + 1;
+            const options = pollData.options.split('\n').filter(opt => opt.trim() !== '').map((text, index) => ({
+                id: index + 1,
+                text: text.trim(),
+                votes: 0,
+                voters: []
+            }));
+            
+            // Calculate end date
+            const endsAt = new Date();
+            endsAt.setDate(endsAt.getDate() + parseInt(pollData.duration));
+            
+            const newPoll = {
+                id: newId,
+                question: pollData.question,
+                options: options,
+                category: pollData.category,
+                createdBy: database.currentUser.id,
+                createdAt: new Date().toISOString().split('T')[0],
+                endsAt: endsAt.toISOString().split('T')[0],
+                status: "active",
+                allowMultiple: pollData.allowMultiple,
+                totalVotes: 0
+            };
+            
+            database.polls.push(newPoll);
+            
+            // Add activity log
+            database.activityLog.unshift({
+                id: database.activityLog.length + 1,
+                type: "poll_created",
+                message: `${database.currentUser.name} created a new poll: ${pollData.question}`,
+                timestamp: "Just now"
+            });
+            
+            closeModal('createPollModal');
+            loadDashboard();
+            loadPolls();
+            
+            showNotification('Poll Created', `${pollData.question} has been created`, 'success');
+        }
+
+        function voteOnPoll(pollId, optionId) {
+            const poll = database.polls.find(p => p.id === pollId);
+            if (!poll || poll.status === 'closed') return;
+            
+            const option = poll.options.find(o => o.id === optionId);
+            if (!option) return;
+            
+            // Check if user already voted (for single-choice polls)
+            if (!poll.allowMultiple) {
+                const hasVoted = poll.options.some(o => o.voters.includes(database.currentUser.id));
+                if (hasVoted) {
+                    showNotification('Already Voted', 'You have already voted on this poll', 'warning');
+                    return;
+                }
+            }
+            
+            // Check if user already voted for this option
+            if (option.voters.includes(database.currentUser.id)) {
+                // Remove vote
+                option.votes--;
+                option.voters = option.voters.filter(id => id !== database.currentUser.id);
+                poll.totalVotes--;
+            } else {
+                // Add vote
+                option.votes++;
+                option.voters.push(database.currentUser.id);
+                poll.totalVotes++;
+            }
+            
+            // Refresh poll display
+            loadPolls();
+            loadActivePollsDashboard();
+            
+            showNotification('Vote Recorded', 'Your vote has been recorded', 'success');
+        }
+
+        function deletePoll(pollId) {
+            const poll = database.polls.find(p => p.id === pollId);
+            if (!poll) return;
+            
+            if (confirm(`Are you sure you want to delete poll: "${poll.question}"?`)) {
+                const index = database.polls.findIndex(p => p.id === pollId);
+                database.polls.splice(index, 1);
+                
+                // Add activity log
+                database.activityLog.unshift({
+                    id: database.activityLog.length + 1,
+                    type: "poll_deleted",
+                    message: `${database.currentUser.name} deleted poll: ${poll.question}`,
+                    timestamp: "Just now"
+                });
+                
+                loadDashboard();
+                loadPolls();
+                
+                showNotification('Poll Deleted', `"${poll.question}" has been deleted`, 'success');
+            }
+        }
+
         // Gallery Functions
         function loadGallery() {
             const container = document.getElementById('galleryGrid');
@@ -2221,16 +2112,42 @@
                     <img src="${photo.url}" alt="${photo.caption}">
                     <div class="gallery-overlay">
                         <p style="font-size: 12px;">${photo.caption}</p>
-                        <small style="font-size: 10px;">${photo.album} • ${photo.likes.length} likes</small>
                     </div>
                 `;
                 container.appendChild(photoEl);
             });
         }
 
+        function uploadPhoto() {
+            const caption = document.getElementById('photoCaption').value || 'New photo';
+            const newId = Math.max(...database.gallery.map(p => p.id)) + 1;
+            
+            // Add mock photo
+            database.gallery.unshift({
+                id: newId,
+                url: `https://images.unsplash.com/photo-${1500000000000 + newId}?w=400&h=400&fit=crop`,
+                caption: caption,
+                uploadedBy: database.currentUser.id,
+                date: new Date().toISOString().split('T')[0],
+                likes: []
+            });
+            
+            // Add activity log
+            database.activityLog.unshift({
+                id: database.activityLog.length + 1,
+                type: "photo_uploaded",
+                message: `${database.currentUser.name} uploaded a new photo`,
+                timestamp: "Just now"
+            });
+            
+            closeModal('uploadPhotoModal');
+            loadGallery();
+            
+            showNotification('Photo Uploaded', 'Photo uploaded successfully', 'success');
+        }
+
         // Locations Functions
         function loadLocations() {
-            // Load friend locations
             const container = document.getElementById('friendLocations');
             container.innerHTML = '';
             
@@ -2249,9 +2166,49 @@
                 `;
                 container.appendChild(locationEl);
             });
-            
-            // Load saved places
-            loadSavedPlaces();
+        }
+
+        function shareLocation() {
+            const location = prompt("Enter your location:");
+            if (location) {
+                // Add to locations
+                database.locations.unshift({
+                    id: database.locations.length + 1,
+                    friendId: database.currentUser.id,
+                    name: database.currentUser.name,
+                    location: location,
+                    lastUpdated: "Just now"
+                });
+                
+                // Add activity log
+                database.activityLog.unshift({
+                    id: database.activityLog.length + 1,
+                    type: "location_shared",
+                    message: `${database.currentUser.name} shared their location: ${location}`,
+                    timestamp: "Just now"
+                });
+                
+                loadLocations();
+                
+                showNotification('Location Shared', 'Your location has been shared with the group', 'success');
+            }
+        }
+
+        // Phone Support Functions
+        function callSupport() {
+            showNotification('Calling Support', 'Connecting to 1-800-FRIENDS...', 'info');
+            // In a real app, this would initiate a phone call
+            setTimeout(() => {
+                showNotification('Support Connected', 'You are now connected to support', 'success');
+            }, 2000);
+        }
+
+        function callPollSupport() {
+            showNotification('Calling Poll Support', 'Connecting to 1-800-POLLHELP...', 'info');
+            // In a real app, this would initiate a phone call
+            setTimeout(() => {
+                showNotification('Poll Support Connected', 'Specialized poll support is now available', 'success');
+            }, 2000);
         }
 
         // Utility Functions
@@ -2265,7 +2222,6 @@
             const titleEl = document.getElementById('notificationTitle');
             const messageEl = document.getElementById('notificationMessage');
             
-            // Set notification color
             notification.style.backgroundColor = 
                 type === 'success' ? 'var(--success)' :
                 type === 'error' ? 'var(--danger)' :
@@ -2277,7 +2233,6 @@
             
             notification.style.display = 'block';
             
-            // Auto hide after 5 seconds
             setTimeout(() => {
                 notification.style.display = 'none';
             }, 5000);
@@ -2290,44 +2245,13 @@
             if (modalId === 'addExpenseModal') {
                 populateExpenseModal();
             } else if (modalId === 'createEventModal') {
-                populateEventModal();
-            } else if (modalId === 'createPollModal') {
-                populatePollModal();
-            }
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-            // Clear forms
-            if (modalId === 'addFriendModal') {
-                document.getElementById('addFriendForm').reset();
-            } else if (modalId === 'addExpenseModal') {
-                document.getElementById('addExpenseForm').reset();
-            } else if (modalId === 'createEventModal') {
-                document.getElementById('createEventForm').reset();
-            } else if (modalId === 'createPollModal') {
-                document.getElementById('createPollForm').reset();
-                // Reset poll options
-                const container = document.getElementById('pollOptionsContainer');
-                container.innerHTML = `
-                    <div class="poll-option-input" style="display: flex; gap: 10px; margin-bottom: 10px;">
-                        <input type="text" class="poll-option" placeholder="Option 1" required>
-                        <button type="button" class="btn btn-danger remove-option" style="padding: 8px 12px;" disabled>
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="poll-option-input" style="display: flex; gap: 10px; margin-bottom: 10px;">
-                        <input type="text" class="poll-option" placeholder="Option 2" required>
-                        <button type="button" class="btn btn-danger remove-option" style="padding: 8px 12px;">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                `;
-            } else if (modalId === 'uploadPhotoModal') {
-                document.getElementById('previewContainer').innerHTML = '';
-                document.getElementById('uploadPreview').style.display = 'none';
-                document.getElementById('uploadPhotosBtn').disabled = true;
-                currentState.selectedFiles = [];
+                // Set default date to tomorrow
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                document.getElementById('eventDate').value = tomorrow.toISOString().split('T')[0];
+                
+                // Set default time to 18:00
+                document.getElementById('eventTime').value = '18:00';
             }
         }
 
@@ -2377,108 +2301,13 @@
                 `;
                 checkboxesContainer.appendChild(checkbox);
             });
-            
-            // Set default date to today
-            document.getElementById('expenseDate').value = new Date().toISOString().split('T')[0];
         }
 
-        function populateEventModal() {
-            // Populate invite checkboxes
-            const checkboxesContainer = document.getElementById('inviteFriendsCheckboxes');
-            checkboxesContainer.innerHTML = '';
-            
-            // Add friends checkboxes (all checked by default)
-            database.friends.forEach(friend => {
-                const checkbox = document.createElement('div');
-                checkbox.style.marginBottom = '8px';
-                checkbox.innerHTML = `
-                    <input type="checkbox" id="invite-${friend.id}" name="invite" value="${friend.id}" checked>
-                    <label for="invite-${friend.id}" style="display: inline; margin-left: 8px;">
-                        ${friend.name}
-                    </label>
-                `;
-                checkboxesContainer.appendChild(checkbox);
-            });
-            
-            // Set default date to tomorrow
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            document.getElementById('eventDate').value = tomorrow.toISOString().split('T')[0];
-            
-            // Set default time to 18:00
-            document.getElementById('eventTime').value = '18:00';
-        }
-
-        function populatePollModal() {
-            // Set default date to today
-            document.getElementById('pollDuration').value = '7';
-            
-            // Handle visibility change
-            document.getElementById('pollVisibility').addEventListener('change', function() {
-                const friendsSelection = document.getElementById('pollFriendsSelection');
-                friendsSelection.style.display = this.value === 'private' ? 'block' : 'none';
-                
-                if (this.value === 'private') {
-                    const checkboxesContainer = document.getElementById('pollFriendsCheckboxes');
-                    checkboxesContainer.innerHTML = '';
-                    
-                    database.friends.forEach(friend => {
-                        const checkbox = document.createElement('div');
-                        checkbox.style.marginBottom = '8px';
-                        checkbox.innerHTML = `
-                            <input type="checkbox" id="poll-friend-${friend.id}" name="pollFriend" value="${friend.id}" checked>
-                            <label for="poll-friend-${friend.id}" style="display: inline; margin-left: 8px;">
-                                ${friend.name}
-                            </label>
-                        `;
-                        checkboxesContainer.appendChild(checkbox);
-                    });
-                }
-            });
-            
-            // Add poll option functionality
-            document.getElementById('addPollOption').addEventListener('click', function() {
-                const container = document.getElementById('pollOptionsContainer');
-                const optionCount = container.children.length + 1;
-                
-                const optionDiv = document.createElement('div');
-                optionDiv.className = 'poll-option-input';
-                optionDiv.style.display = 'flex';
-                optionDiv.style.gap = '10px';
-                optionDiv.style.marginBottom = '10px';
-                
-                optionDiv.innerHTML = `
-                    <input type="text" class="poll-option" placeholder="Option ${optionCount}" required>
-                    <button type="button" class="btn btn-danger remove-option" style="padding: 8px 12px;">
-                        <i class="fas fa-times"></i>
-                    </button>
-                `;
-                
-                container.appendChild(optionDiv);
-                
-                // Enable remove buttons for all except first two
-                const removeButtons = container.querySelectorAll('.remove-option');
-                removeButtons.forEach((btn, index) => {
-                    btn.disabled = index < 2;
-                    btn.addEventListener('click', function() {
-                        if (container.children.length > 2) {
-                            this.parentElement.remove();
-                        }
-                    });
-                });
-            });
-            
-            // Initialize remove button listeners
-            const removeButtons = document.querySelectorAll('.remove-option');
-            removeButtons.forEach((btn, index) => {
-                btn.disabled = index < 2;
-                btn.addEventListener('click', function() {
-                    const container = document.getElementById('pollOptionsContainer');
-                    if (container.children.length > 2) {
-                        this.parentElement.remove();
-                    }
-                });
-            });
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            // Clear forms
+            const form = document.getElementById(modalId.replace('Modal', 'Form'));
+            if (form) form.reset();
         }
 
         // Setup Event Listeners
@@ -2500,50 +2329,44 @@
                     document.getElementById(tabId).classList.add('active');
                     
                     currentState.activeTab = tabId;
-                    
-                    // Load specific data if needed
-                    if (tabId === 'polls') {
-                        loadPolls();
-                    }
                 });
             });
 
-            // Friends tab switching
-            document.querySelectorAll('[data-friends-tab]').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    // Update active tab
-                    document.querySelectorAll('[data-friends-tab]').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Load filtered friends
-                    const filter = this.dataset.friendsTab;
-                    loadFriendsTable(filter);
-                });
+            // Call Support Buttons
+            document.getElementById('callSupportBtn').addEventListener('click', callSupport);
+            document.getElementById('callPollSupportBtn').addEventListener('click', callPollSupport);
+            document.getElementById('callSupportFromPolls').addEventListener('click', callSupport);
+            document.getElementById('quickCallSupport').addEventListener('click', (e) => {
+                e.preventDefault();
+                callSupport();
             });
 
-            // Polls tab switching
-            document.querySelectorAll('[data-poll-tab]').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    // Update active tab
-                    document.querySelectorAll('[data-poll-tab]').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Load filtered polls
-                    const filter = this.dataset.pollTab;
-                    loadPolls(filter);
-                });
+            // Create Poll Button
+            document.getElementById('createPollBtn').addEventListener('click', () => {
+                openModal('createPollModal');
             });
 
-            // Gallery tab switching
-            document.querySelectorAll('[data-gallery-tab]').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    // Update active tab
-                    document.querySelectorAll('[data-gallery-tab]').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // In a real app, filter gallery here
-                    showNotification('Gallery Filter', `Showing ${this.dataset.galleryTab} photos`, 'info');
-                });
+            document.getElementById('quickCreatePoll').addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal('createPollModal');
+            });
+
+            // Save Poll
+            document.getElementById('savePollBtn').addEventListener('click', () => {
+                const pollData = {
+                    question: document.getElementById('pollQuestion').value,
+                    options: document.getElementById('pollOptions').value,
+                    duration: document.getElementById('pollDuration').value,
+                    allowMultiple: document.getElementById('allowMultiple').checked,
+                    category: document.getElementById('pollCategory').value
+                };
+                
+                if (!pollData.question || !pollData.options) {
+                    showNotification('Error', 'Please fill in all required fields', 'error');
+                    return;
+                }
+                
+                createNewPoll(pollData);
             });
 
             // Add Friend Button
@@ -2573,44 +2396,6 @@
                 addNewFriend(friendData);
             });
 
-            // Create Poll Button
-            document.getElementById('createPollBtn').addEventListener('click', () => {
-                openModal('createPollModal');
-            });
-
-            document.getElementById('quickCreatePoll').addEventListener('click', (e) => {
-                e.preventDefault();
-                openModal('createPollModal');
-            });
-
-            // Save Poll
-            document.getElementById('savePollBtn').addEventListener('click', () => {
-                const optionInputs = document.querySelectorAll('.poll-option');
-                const options = Array.from(optionInputs)
-                    .map(input => input.value.trim())
-                    .filter(value => value !== '');
-                
-                if (options.length < 2) {
-                    showNotification('Error', 'Please add at least 2 poll options', 'error');
-                    return;
-                }
-                
-                const pollData = {
-                    question: document.getElementById('pollQuestion').value,
-                    description: document.getElementById('pollDescription').value,
-                    options: options,
-                    duration: document.getElementById('pollDuration').value,
-                    visibility: document.getElementById('pollVisibility').value
-                };
-                
-                if (!pollData.question) {
-                    showNotification('Error', 'Please enter a poll question', 'error');
-                    return;
-                }
-                
-                createNewPoll(pollData);
-            });
-
             // Add Expense Button
             document.getElementById('addExpenseBtn').addEventListener('click', () => {
                 openModal('addExpenseModal');
@@ -2628,8 +2413,7 @@
                     amount: document.getElementById('expenseAmount').value,
                     paidBy: document.getElementById('expensePaidBy').value,
                     splitBetween: Array.from(document.querySelectorAll('input[name="split"]:checked')).map(cb => cb.value),
-                    date: document.getElementById('expenseDate').value,
-                    category: document.getElementById('expenseCategory').value
+                    date: new Date().toISOString().split('T')[0]
                 };
                 
                 if (!expenseData.description || !expenseData.amount || expenseData.splitBetween.length === 0) {
@@ -2667,8 +2451,7 @@
                     date: document.getElementById('eventDate').value,
                     time: document.getElementById('eventTime').value,
                     location: document.getElementById('eventLocation').value,
-                    description: document.getElementById('eventDescription').value,
-                    participants: Array.from(document.querySelectorAll('input[name="invite"]:checked')).map(cb => parseInt(cb.value))
+                    description: document.getElementById('eventDescription').value
                 };
                 
                 if (!eventData.title || !eventData.date) {
@@ -2684,87 +2467,16 @@
                 openModal('uploadPhotoModal');
             });
 
-            document.getElementById('quickUploadPhoto').addEventListener('click', (e) => {
-                e.preventDefault();
-                openModal('uploadPhotoModal');
-            });
-
             // Photo Upload Area
             document.getElementById('uploadArea').addEventListener('click', () => {
                 document.getElementById('photoUpload').click();
             });
 
-            document.getElementById('photoUpload').addEventListener('change', function(e) {
-                const files = Array.from(e.target.files);
-                currentState.selectedFiles = files;
-                
-                if (files.length > 0) {
-                    document.getElementById('uploadPreview').style.display = 'block';
-                    document.getElementById('uploadPhotosBtn').disabled = false;
-                    
-                    const previewContainer = document.getElementById('previewContainer');
-                    previewContainer.innerHTML = '';
-                    
-                    files.slice(0, 6).forEach((file, index) => {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const img = document.createElement('img');
-                            img.src = e.target.result;
-                            img.style.width = '100%';
-                            img.style.height = '100px';
-                            img.style.objectFit = 'cover';
-                            img.style.borderRadius = '8px';
-                            previewContainer.appendChild(img);
-                        };
-                        reader.readAsDataURL(file);
-                    });
-                    
-                    if (files.length > 6) {
-                        const moreText = document.createElement('div');
-                        moreText.textContent = `+${files.length - 6} more`;
-                        moreText.style.gridColumn = 'span 3';
-                        moreText.style.textAlign = 'center';
-                        moreText.style.padding = '20px';
-                        moreText.style.color = 'var(--gray)';
-                        previewContainer.appendChild(moreText);
-                    }
-                }
-            });
-
             // Upload Photos
-            document.getElementById('uploadPhotosBtn').addEventListener('click', () => {
-                const album = document.getElementById('photoAlbum').value;
-                const caption = document.getElementById('photoCaption').value;
-                
-                // Simulate photo upload
-                console.log('Uploading photos:', currentState.selectedFiles.length, 'files to album:', album, 'with caption:', caption);
-                
-                showNotification('Photos Uploaded', `${currentState.selectedFiles.length} photos uploaded successfully`, 'success');
-                closeModal('uploadPhotoModal');
-            });
+            document.getElementById('uploadPhotosBtn').addEventListener('click', uploadPhoto);
 
             // Share Location Button
-            document.getElementById('shareLocationBtn').addEventListener('click', () => {
-                // In a real app, this would use Geolocation API
-                const location = prompt("Enter your location:");
-                if (location) {
-                    showNotification('Location Shared', `Your location (${location}) has been shared with the group`, 'success');
-                }
-            });
-
-            // Create Album Button
-            document.getElementById('createAlbumBtn').addEventListener('click', () => {
-                const albumName = prompt("Enter album name:");
-                if (albumName) {
-                    showNotification('Album Created', `Album "${albumName}" created successfully`, 'success');
-                }
-            });
-
-            // View All Photos
-            document.getElementById('viewAllPhotos').addEventListener('click', () => {
-                // Switch to gallery tab
-                document.querySelector('[data-tab="gallery"]').click();
-            });
+            document.getElementById('shareLocationBtn').addEventListener('click', shareLocation);
 
             // Refresh Dashboard
             document.getElementById('refreshDashboard').addEventListener('click', () => {
@@ -2790,39 +2502,6 @@
                     }
                 });
             });
-        }
-
-        // Helper functions for other actions
-        function messageFriend(friendId) {
-            const friend = database.friends.find(f => f.id === friendId) || database.currentUser;
-            showNotification('Message', `Opening chat with ${friend.name}`, 'info');
-        }
-
-        function editFriend(friendId) {
-            const friend = database.friends.find(f => f.id === friendId);
-            if (!friend) return;
-            showNotification('Edit Friend', `Editing ${friend.name}`, 'info');
-        }
-
-        function viewExpense(expenseId) {
-            const expense = database.expenses.find(e => e.id === expenseId);
-            if (!expense) return;
-            showNotification('Expense Details', `Viewing "${expense.description}" - ₹${expense.amount}`, 'info');
-        }
-
-        function deleteExpense(expenseId) {
-            const expense = database.expenses.find(e => e.id === expenseId);
-            if (!expense) return;
-            
-            if (confirm(`Are you sure you want to delete expense: ${expense.description}?`)) {
-                showNotification('Expense Deleted', `${expense.description} has been deleted`, 'success');
-            }
-        }
-
-        function viewEvent(eventId) {
-            const event = database.events.find(e => e.id === eventId);
-            if (!event) return;
-            showNotification('Event Details', `Viewing "${event.title}" on ${formatDate(event.date)}`, 'info');
         }
 
         // Initialize the app when DOM is loaded
