@@ -219,6 +219,7 @@
             color: var(--dark);
             transition: var(--transition);
             margin-bottom: 4px;
+            cursor: pointer;
         }
 
         .menu-item:hover {
@@ -327,6 +328,7 @@
             color: var(--gray);
             text-decoration: none;
             transition: var(--transition);
+            cursor: pointer;
         }
 
         .post-action:hover {
@@ -413,6 +415,10 @@
             text-decoration: none;
             transition: var(--transition);
             cursor: pointer;
+            border: none;
+            background: none;
+            font-family: inherit;
+            font-size: 14px;
         }
 
         .post-action-btn:hover {
@@ -538,6 +544,7 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
+            font-family: inherit;
         }
 
         .btn-primary {
@@ -743,29 +750,6 @@
             }
         }
 
-        /* Reactions */
-        .reactions {
-            position: absolute;
-            bottom: 100%;
-            left: 0;
-            background: white;
-            border-radius: 24px;
-            padding: 4px;
-            box-shadow: var(--shadow-lg);
-            display: none;
-            z-index: 100;
-        }
-
-        .reaction {
-            font-size: 24px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        .reaction:hover {
-            transform: scale(1.2);
-        }
-
         /* Responsive */
         @media (max-width: 992px) {
             .main-layout {
@@ -810,31 +794,31 @@
             </a>
             
             <div class="search-bar">
-                <input type="text" placeholder="Search friends, posts, or groups...">
-                <button type="button">
+                <input type="text" placeholder="Search friends, posts, or groups..." id="searchInput">
+                <button type="button" id="searchButton">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
             
             <div class="nav-icons">
-                <a href="#" class="nav-icon active">
+                <a href="#" class="nav-icon active" id="homeBtn">
                     <i class="fas fa-home"></i>
                 </a>
-                <a href="#" class="nav-icon" data-tab="friends">
+                <a href="#" class="nav-icon" id="friendsBtn">
                     <i class="fas fa-user-friends"></i>
                 </a>
-                <a href="#" class="nav-icon" data-tab="messages">
+                <a href="#" class="nav-icon" id="messagesBtn">
                     <i class="fas fa-comments"></i>
-                    <span class="notification-badge">3</span>
+                    <span class="notification-badge" id="messageBadge">3</span>
                 </a>
-                <a href="#" class="nav-icon" data-tab="notifications">
+                <a href="#" class="nav-icon" id="notificationsBtn">
                     <i class="fas fa-bell"></i>
-                    <span class="notification-badge">5</span>
+                    <span class="notification-badge" id="notificationBadge">5</span>
                 </a>
             </div>
             
             <div class="user-menu" id="userMenu">
-                <div class="user-avatar">JS</div>
+                <div class="user-avatar" id="userAvatar">JS</div>
                 <div class="user-name">John</div>
                 <i class="fas fa-chevron-down"></i>
             </div>
@@ -848,37 +832,37 @@
             <aside class="sidebar">
                 <div class="sidebar-section">
                     <nav>
-                        <a href="#" class="menu-item active">
+                        <a href="#" class="menu-item active" id="newsFeedBtn">
                             <div class="menu-icon">
                                 <i class="fas fa-home"></i>
                             </div>
                             <span>News Feed</span>
                         </a>
-                        <a href="#" class="menu-item" data-tab="friends">
+                        <a href="#" class="menu-item" id="friendsMenuBtn">
                             <div class="menu-icon">
                                 <i class="fas fa-user-friends"></i>
                             </div>
                             <span>Friends</span>
                         </a>
-                        <a href="#" class="menu-item" data-tab="messages">
+                        <a href="#" class="menu-item" id="messagesMenuBtn">
                             <div class="menu-icon">
                                 <i class="fas fa-comments"></i>
                             </div>
                             <span>Messages</span>
                         </a>
-                        <a href="#" class="menu-item" data-tab="events">
+                        <a href="#" class="menu-item" id="eventsMenuBtn">
                             <div class="menu-icon">
                                 <i class="fas fa-calendar"></i>
                             </div>
                             <span>Events</span>
                         </a>
-                        <a href="#" class="menu-item" data-tab="photos">
+                        <a href="#" class="menu-item" id="photosMenuBtn">
                             <div class="menu-icon">
                                 <i class="fas fa-images"></i>
                             </div>
                             <span>Photos</span>
                         </a>
-                        <a href="#" class="menu-item" data-tab="groups">
+                        <a href="#" class="menu-item" id="groupsMenuBtn">
                             <div class="menu-icon">
                                 <i class="fas fa-users"></i>
                             </div>
@@ -889,25 +873,25 @@
 
                 <div class="sidebar-section">
                     <h3 class="sidebar-title">Your Shortcuts</h3>
-                    <div class="shortcut-item">
+                    <div class="shortcut-item" id="gamingShortcut">
                         <div class="shortcut-icon">
                             <i class="fas fa-gamepad"></i>
                         </div>
                         <span>Gaming</span>
                     </div>
-                    <div class="shortcut-item">
+                    <div class="shortcut-item" id="watchShortcut">
                         <div class="shortcut-icon">
                             <i class="fas fa-film"></i>
                         </div>
                         <span>Watch</span>
                     </div>
-                    <div class="shortcut-item">
+                    <div class="shortcut-item" id="marketplaceShortcut">
                         <div class="shortcut-icon">
                             <i class="fas fa-shopping-bag"></i>
                         </div>
                         <span>Marketplace</span>
                     </div>
-                    <div class="shortcut-item">
+                    <div class="shortcut-item" id="memoriesShortcut">
                         <div class="shortcut-icon">
                             <i class="fas fa-book"></i>
                         </div>
@@ -920,6 +904,9 @@
                     <div id="friendRequestsList">
                         <!-- Friend requests will be loaded here -->
                     </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" id="viewAllRequestsBtn">
+                        View All Requests
+                    </button>
                 </div>
             </aside>
 
@@ -932,18 +919,18 @@
                         <input type="text" id="postText" placeholder="What's on your mind, John?">
                     </div>
                     <div class="post-actions">
-                        <a href="#" class="post-action" id="addPhotoBtn">
+                        <div class="post-action" id="addPhotoBtn">
                             <i class="fas fa-image" style="color: #45bd62;"></i>
                             <span>Photo/Video</span>
-                        </a>
-                        <a href="#" class="post-action" id="tagFriendsBtn">
+                        </div>
+                        <div class="post-action" id="tagFriendsBtn">
                             <i class="fas fa-user-tag" style="color: #1877f2;"></i>
                             <span>Tag Friends</span>
-                        </a>
-                        <a href="#" class="post-action" id="createPostBtn">
+                        </div>
+                        <div class="post-action" id="createPostBtn">
                             <i class="fas fa-feather-alt" style="color: #f7b928;"></i>
                             <span>Create Post</span>
-                        </a>
+                        </div>
                     </div>
                 </div>
 
@@ -962,7 +949,7 @@
                         <div class="friend-info">
                             <h4>Sarah Kim</h4>
                             <p class="friend-mutual">Tomorrow</p>
-                            <button class="btn btn-primary btn-sm">Post</button>
+                            <button class="btn btn-primary btn-sm" id="birthdayPostBtn1">Post</button>
                         </div>
                     </div>
                     <div class="friend-request">
@@ -970,7 +957,7 @@
                         <div class="friend-info">
                             <h4>Mike Brown</h4>
                             <p class="friend-mutual">In 3 days</p>
-                            <button class="btn btn-primary btn-sm">Post</button>
+                            <button class="btn btn-primary btn-sm" id="birthdayPostBtn2">Post</button>
                         </div>
                     </div>
                 </div>
@@ -980,6 +967,9 @@
                     <div id="eventsList">
                         <!-- Events will be loaded here -->
                     </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" id="createEventBtn">
+                        Create Event
+                    </button>
                 </div>
 
                 <div class="sidebar-section">
@@ -987,6 +977,9 @@
                     <div id="onlineFriends">
                         <!-- Online friends will be loaded here -->
                     </div>
+                    <button class="btn btn-secondary" style="width: 100%; margin-top: 10px;" id="findFriendsBtn">
+                        Find Friends
+                    </button>
                 </div>
             </aside>
         </div>
@@ -998,17 +991,17 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Create Post</h3>
-                <button class="close-modal">&times;</button>
+                <button class="close-modal" id="closePostModal">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="post-input" style="margin-bottom: 20px;">
                     <div class="user-avatar" style="width: 40px; height: 40px;">JS</div>
                     <div>
                         <h4 style="font-size: 14px;">John Smith</h4>
-                        <select class="form-control" style="padding: 4px 8px; font-size: 12px; width: auto;">
-                            <option>🌐 Public</option>
-                            <option>👥 Friends</option>
-                            <option>🔒 Only me</option>
+                        <select class="form-control" id="postPrivacy" style="padding: 4px 8px; font-size: 12px; width: auto;">
+                            <option value="public">🌐 Public</option>
+                            <option value="friends">👥 Friends</option>
+                            <option value="onlyme">🔒 Only me</option>
                         </select>
                     </div>
                 </div>
@@ -1018,14 +1011,14 @@
                 <div class="form-group">
                     <div id="postPreview" style="display: none;">
                         <img id="postImagePreview" style="width: 100%; border-radius: 8px; margin-bottom: 10px;">
-                        <button class="btn btn-danger btn-sm" onclick="removeImage()">Remove</button>
+                        <button class="btn btn-danger btn-sm" id="removeImageBtn">Remove</button>
                     </div>
                 </div>
                 <div style="border: 2px dashed var(--light-gray); border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 20px;">
                     <i class="fas fa-plus" style="font-size: 24px; color: var(--gray); margin-bottom: 10px;"></i>
                     <p style="color: var(--gray); margin-bottom: 10px;">Add to your post</p>
                     <div style="display: flex; justify-content: center; gap: 20px;">
-                        <button class="btn btn-secondary" onclick="document.getElementById('imageUpload').click()">
+                        <button class="btn btn-secondary" id="addPhotoModalBtn">
                             <i class="fas fa-image"></i> Photo/Video
                         </button>
                         <button class="btn btn-secondary" id="tagFriendsModalBtn">
@@ -1036,7 +1029,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary close-modal">Cancel</button>
+                <button class="btn btn-secondary" id="cancelPostBtn">Cancel</button>
                 <button class="btn btn-primary" id="publishPostBtn">Publish</button>
             </div>
         </div>
@@ -1047,12 +1040,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Friend Requests</h3>
-                <button class="close-modal">&times;</button>
+                <button class="close-modal" id="closeRequestsModal">&times;</button>
             </div>
             <div class="modal-body">
                 <div id="allFriendRequests">
                     <!-- All friend requests will be loaded here -->
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="closeRequestsBtn">Close</button>
             </div>
         </div>
     </div>
@@ -1062,19 +1058,64 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Tag Friends</h3>
-                <button class="close-modal">&times;</button>
+                <button class="close-modal" id="closeTagModal">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search friends...">
+                    <input type="text" class="form-control" id="friendSearchInput" placeholder="Search friends...">
                 </div>
                 <div id="friendsToTag">
                     <!-- Friends list for tagging -->
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary close-modal">Cancel</button>
-                <button class="btn btn-primary">Done</button>
+                <button class="btn btn-secondary" id="cancelTagBtn">Cancel</button>
+                <button class="btn btn-primary" id="doneTagBtn">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Event Modal -->
+    <div id="createEventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-calendar-plus"></i> Create Event</h3>
+                <button class="close-modal" id="closeEventModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="eventForm">
+                    <div class="form-group">
+                        <label for="eventTitle">Event Title</label>
+                        <input type="text" class="form-control" id="eventTitle" placeholder="What's the event?" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventDate">Date & Time</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <input type="date" class="form-control" id="eventDate" required>
+                            <input type="time" class="form-control" id="eventTime" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventLocation">Location</label>
+                        <input type="text" class="form-control" id="eventLocation" placeholder="Where is the event?" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventDescription">Description</label>
+                        <textarea class="form-control" id="eventDescription" rows="3" placeholder="Tell people about the event..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventPrivacy">Privacy</label>
+                        <select class="form-control" id="eventPrivacy">
+                            <option value="public">Public Event</option>
+                            <option value="friends">Friends Only</option>
+                            <option value="invite">Invite Only</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelEventBtn">Cancel</button>
+                <button class="btn btn-primary" id="saveEventBtn">Create Event</button>
             </div>
         </div>
     </div>
@@ -1082,7 +1123,7 @@
     <!-- Notification -->
     <div id="notification" class="notification">
         <div style="display: flex; align-items: center; gap: 12px;">
-            <i class="fas fa-check-circle" style="color: var(--success);"></i>
+            <i class="fas fa-check-circle" id="notificationIcon" style="color: var(--success);"></i>
             <div>
                 <h4 id="notificationTitle" style="font-size: 14px; margin-bottom: 4px;">Success</h4>
                 <p id="notificationMessage" style="font-size: 13px; color: var(--gray);">Action completed</p>
@@ -1137,25 +1178,6 @@
                     commentsList: [
                         { id: 1, userId: 1, author: "John Smith", text: "Amazing time! Keep it up!", time: "4 hours ago", likes: 1 }
                     ]
-                },
-                {
-                    id: 3,
-                    userId: 4,
-                    author: "Emma Wilson",
-                    avatar: "EW",
-                    time: "1 day ago",
-                    text: "Excited to announce I'll be starting my new job at TechCorp next week! Thanks everyone for your support during this journey.",
-                    image: null,
-                    likes: 42,
-                    comments: 12,
-                    shares: 5,
-                    userLiked: false,
-                    privacy: "public",
-                    tagged: [],
-                    commentsList: [
-                        { id: 1, userId: 2, author: "Sarah Johnson", text: "Congratulations Emma! So proud of you!", time: "1 day ago", likes: 3 },
-                        { id: 2, userId: 3, author: "Mike Chen", text: "That's amazing news! Well deserved.", time: "1 day ago", likes: 2 }
-                    ]
                 }
             ],
             friends: [
@@ -1174,6 +1196,15 @@
                 { id: 1, title: "Weekend BBQ", date: "Jun 15", time: "2:00 PM", location: "Central Park", attendees: 15 },
                 { id: 2, title: "Birthday Party", date: "Jun 20", time: "7:00 PM", location: "Sarah's House", attendees: 25 },
                 { id: 3, title: "Game Night", date: "Jun 22", time: "6:00 PM", location: "Mike's Place", attendees: 10 }
+            ],
+            allFriends: [
+                { id: 2, name: "Sarah Johnson", avatar: "SJ", status: "online" },
+                { id: 3, name: "Mike Chen", avatar: "MC", status: "online" },
+                { id: 4, name: "Emma Wilson", avatar: "EW", status: "offline" },
+                { id: 5, name: "David Brown", avatar: "DB", status: "online" },
+                { id: 6, name: "Lisa Martinez", avatar: "LM", status: "offline" },
+                { id: 10, name: "Tom Wilson", avatar: "TW", status: "online" },
+                { id: 11, name: "Anna Taylor", avatar: "AT", status: "offline" }
             ]
         };
 
@@ -1181,7 +1212,8 @@
         let currentState = {
             selectedImage: null,
             taggedFriends: [],
-            activePostId: null
+            activePostId: null,
+            selectedFriends: []
         };
 
         // Initialize Application
@@ -1246,7 +1278,7 @@
                         <h4>${post.author}</h4>
                         <div class="post-time">${post.time} • <i class="fas fa-globe"></i></div>
                     </div>
-                    <button class="close-modal" style="font-size: 18px; color: var(--gray);">
+                    <button class="close-modal" style="font-size: 18px; color: var(--gray); background: none; border: none; cursor: pointer;">
                         <i class="fas fa-ellipsis-h"></i>
                     </button>
                 </div>
@@ -1271,18 +1303,18 @@
                     </div>
                 </div>
                 <div class="post-actions-bar">
-                    <div class="post-action-btn ${post.userLiked ? 'active' : ''}" onclick="toggleLike(${post.id})">
+                    <button class="post-action-btn ${post.userLiked ? 'active' : ''}" onclick="toggleLike(${post.id})">
                         <i class="fas fa-thumbs-up"></i>
                         <span>Like</span>
-                    </div>
-                    <div class="post-action-btn" onclick="focusComment(${post.id})">
+                    </button>
+                    <button class="post-action-btn" onclick="focusComment(${post.id})">
                         <i class="fas fa-comment"></i>
                         <span>Comment</span>
-                    </div>
-                    <div class="post-action-btn" onclick="sharePost(${post.id})">
+                    </button>
+                    <button class="post-action-btn" onclick="sharePost(${post.id})">
                         <i class="fas fa-share"></i>
                         <span>Share</span>
-                    </div>
+                    </button>
                 </div>
                 <div class="comments-section" id="comments-${post.id}">
                     ${post.commentsList.map(comment => `
@@ -1292,8 +1324,8 @@
                                 <div class="comment-author">${comment.author}</div>
                                 <div class="comment-text">${comment.text}</div>
                                 <div class="comment-actions">
-                                    <span class="comment-action">Like</span>
-                                    <span class="comment-action">Reply</span>
+                                    <span class="comment-action" onclick="likeComment(${post.id}, ${comment.id})">Like</span>
+                                    <span class="comment-action" onclick="replyToComment(${post.id}, ${comment.id})">Reply</span>
                                     <span class="comment-time">${comment.time}</span>
                                 </div>
                             </div>
@@ -1301,8 +1333,8 @@
                     `).join('')}
                     <div class="comment-input">
                         <div class="user-avatar" style="width: 32px; height: 32px; font-size: 12px;">${database.currentUser.avatar}</div>
-                        <input type="text" placeholder="Write a comment..." onkeypress="if(event.key === 'Enter') addComment(${post.id}, this)">
-                        <button class="btn btn-primary btn-sm" onclick="addComment(${post.id}, this.previousElementSibling)">Post</button>
+                        <input type="text" id="comment-input-${post.id}" placeholder="Write a comment..." onkeypress="if(event.key === 'Enter') addComment(${post.id})">
+                        <button class="btn btn-primary btn-sm" onclick="addComment(${post.id})">Post</button>
                     </div>
                 </div>
             `;
@@ -1320,7 +1352,7 @@
             
             database.friendRequests.slice(0, 2).forEach(request => {
                 const requestEl = createFriendRequestElement(request);
-                sidebarList.appendChild(requestEl.cloneNode(true));
+                sidebarList.appendChild(requestEl);
             });
             
             database.friendRequests.forEach(request => {
@@ -1337,14 +1369,15 @@
         function createFriendRequestElement(request) {
             const requestEl = document.createElement('div');
             requestEl.className = 'friend-request';
+            requestEl.dataset.requestId = request.id;
             requestEl.innerHTML = `
                 <div class="user-avatar">${request.avatar}</div>
                 <div class="friend-info">
                     <h4>${request.name}</h4>
                     <p class="friend-mutual">${request.mutual} mutual friends</p>
                     <div class="friend-actions">
-                        <button class="btn btn-success btn-sm" onclick="acceptFriendRequest(${request.id})">Confirm</button>
-                        <button class="btn btn-secondary btn-sm" onclick="declineFriendRequest(${request.id})">Delete</button>
+                        <button class="btn btn-success btn-sm confirm-btn" data-id="${request.id}">Confirm</button>
+                        <button class="btn btn-secondary btn-sm delete-btn" data-id="${request.id}">Delete</button>
                     </div>
                 </div>
             `;
@@ -1356,9 +1389,10 @@
             const container = document.getElementById('eventsList');
             container.innerHTML = '';
             
-            database.events.forEach(event => {
+            database.events.forEach((event, index) => {
                 const eventEl = document.createElement('div');
                 eventEl.className = 'event-item';
+                eventEl.dataset.eventId = event.id;
                 eventEl.innerHTML = `
                     <div class="event-date">${event.date}</div>
                     <h4>${event.title}</h4>
@@ -1370,7 +1404,7 @@
                         <span style="font-size: 12px; color: var(--gray);">
                             <i class="fas fa-users"></i> ${event.attendees} going
                         </span>
-                        <button class="btn btn-primary btn-sm" onclick="rsvpToEvent(${event.id})">RSVP</button>
+                        <button class="btn btn-primary btn-sm rsvp-btn" data-index="${index}">RSVP</button>
                     </div>
                 `;
                 container.appendChild(eventEl);
@@ -1394,7 +1428,26 @@
                     </div>
                     <span>${friend.name}</span>
                 `;
-                friendEl.onclick = () => startChat(friend.id);
+                container.appendChild(friendEl);
+            });
+        }
+
+        // Load Friends for Tagging
+        function loadFriendsForTagging() {
+            const container = document.getElementById('friendsToTag');
+            container.innerHTML = '';
+            
+            database.allFriends.forEach(friend => {
+                const friendEl = document.createElement('div');
+                friendEl.className = 'friend-request';
+                friendEl.innerHTML = `
+                    <div class="user-avatar">${friend.avatar}</div>
+                    <div class="friend-info">
+                        <h4>${friend.name}</h4>
+                        <p class="friend-mutual">${friend.status === 'online' ? '🟢 Online' : '⚫ Offline'}</p>
+                    </div>
+                    <input type="checkbox" class="tag-checkbox" data-id="${friend.id}" style="width: 20px; height: 20px;">
+                `;
                 container.appendChild(friendEl);
             });
         }
@@ -1406,6 +1459,8 @@
                 showNotification('Error', 'Please add some text or a photo to your post', 'error');
                 return;
             }
+            
+            const privacy = document.getElementById('postPrivacy').value;
             
             const newPost = {
                 id: database.posts.length + 1,
@@ -1419,7 +1474,7 @@
                 comments: 0,
                 shares: 0,
                 userLiked: false,
-                privacy: "public",
+                privacy: privacy,
                 tagged: currentState.taggedFriends,
                 commentsList: []
             };
@@ -1430,11 +1485,43 @@
             document.getElementById('modalPostText').value = '';
             currentState.selectedImage = null;
             currentState.taggedFriends = [];
+            document.getElementById('postPreview').style.display = 'none';
             
             closeModal('createPostModal');
             loadPosts();
             
             showNotification('Post published', 'Your post is now visible to friends', 'success');
+        }
+
+        function quickCreatePost() {
+            const text = document.getElementById('postText').value.trim();
+            if (!text) {
+                showNotification('Error', 'Please enter some text for your post', 'error');
+                return;
+            }
+            
+            const newPost = {
+                id: database.posts.length + 1,
+                userId: database.currentUser.id,
+                author: database.currentUser.name,
+                avatar: database.currentUser.avatar,
+                time: "Just now",
+                text: text,
+                image: null,
+                likes: 0,
+                comments: 0,
+                shares: 0,
+                userLiked: false,
+                privacy: "public",
+                tagged: [],
+                commentsList: []
+            };
+            
+            database.posts.unshift(newPost);
+            document.getElementById('postText').value = '';
+            loadPosts();
+            
+            showNotification('Post published', '', 'success');
         }
 
         function toggleLike(postId) {
@@ -1455,7 +1542,8 @@
             showNotification(post.userLiked ? 'Liked' : 'Unliked', '', 'success');
         }
 
-        function addComment(postId, input) {
+        function addComment(postId) {
+            const input = document.getElementById(`comment-input-${postId}`);
             const text = input.value.trim();
             if (!text) return;
             
@@ -1476,7 +1564,6 @@
             
             // Update UI
             const commentsSection = document.getElementById(`comments-${postId}`);
-            const commentInput = commentsSection.querySelector('.comment-input input');
             
             const commentEl = document.createElement('div');
             commentEl.className = 'comment';
@@ -1486,15 +1573,16 @@
                     <div class="comment-author">${database.currentUser.name}</div>
                     <div class="comment-text">${text}</div>
                     <div class="comment-actions">
-                        <span class="comment-action">Like</span>
-                        <span class="comment-action">Reply</span>
+                        <span class="comment-action" onclick="likeComment(${postId}, ${newComment.id})">Like</span>
+                        <span class="comment-action" onclick="replyToComment(${postId}, ${newComment.id})">Reply</span>
                         <span class="comment-time">Just now</span>
                     </div>
                 </div>
             `;
             
-            commentsSection.insertBefore(commentEl, commentInput.parentElement);
-            commentInput.value = '';
+            const commentInput = commentsSection.querySelector('.comment-input');
+            commentsSection.insertBefore(commentEl, commentInput);
+            input.value = '';
             
             // Update comments count
             const stats = document.querySelector(`[data-post-id="${postId}"] .post-stats`);
@@ -1504,9 +1592,19 @@
             showNotification('Comment added', '', 'success');
         }
 
+        function likeComment(postId, commentId) {
+            showNotification('Liked', 'Comment liked', 'success');
+        }
+
+        function replyToComment(postId, commentId) {
+            const input = document.getElementById(`comment-input-${postId}`);
+            input.focus();
+            input.value = '@reply ';
+            showNotification('Reply', 'Ready to reply to comment', 'info');
+        }
+
         function focusComment(postId) {
-            const commentsSection = document.getElementById(`comments-${postId}`);
-            const input = commentsSection.querySelector('input');
+            const input = document.getElementById(`comment-input-${postId}`);
             input.focus();
         }
 
@@ -1563,25 +1661,58 @@
         }
 
         function sendFriendRequest() {
-            showNotification('Feature', 'Friend request feature would be implemented', 'success');
+            showNotification('Friend Request', 'Friend request sent successfully', 'success');
         }
 
         // Event Functions
-        function rsvpToEvent(eventId) {
-            const event = database.events.find(e => e.id === eventId);
+        function createNewEvent() {
+            const title = document.getElementById('eventTitle').value.trim();
+            const date = document.getElementById('eventDate').value;
+            const time = document.getElementById('eventTime').value;
+            const location = document.getElementById('eventLocation').value.trim();
+            
+            if (!title || !date || !time || !location) {
+                showNotification('Error', 'Please fill in all required fields', 'error');
+                return;
+            }
+            
+            const newEvent = {
+                id: database.events.length + 1,
+                title: title,
+                date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                time: time,
+                location: location,
+                attendees: 1
+            };
+            
+            database.events.push(newEvent);
+            
+            // Reset form
+            document.getElementById('eventForm').reset();
+            
+            closeModal('createEventModal');
+            loadEvents();
+            
+            showNotification('Event created', `${title} has been scheduled`, 'success');
+        }
+
+        function rsvpToEvent(eventIndex) {
+            const event = database.events[eventIndex];
             if (!event) return;
             
             event.attendees += 1;
             
             // Update UI
-            const eventEl = document.querySelector(`[data-event-id="${eventId}"]`) || document.querySelectorAll('.event-item')[eventId - 1];
+            const eventEl = document.querySelectorAll('.event-item')[eventIndex];
             if (eventEl) {
                 const attendeesSpan = eventEl.querySelector('span');
                 attendeesSpan.innerHTML = `<i class="fas fa-users"></i> ${event.attendees} going`;
                 
-                const rsvpBtn = eventEl.querySelector('button');
+                const rsvpBtn = eventEl.querySelector('.rsvp-btn');
                 rsvpBtn.textContent = 'Going ✓';
                 rsvpBtn.disabled = true;
+                rsvpBtn.classList.remove('btn-primary');
+                rsvpBtn.classList.add('btn-success');
             }
             
             showNotification('RSVP confirmed', `You're going to ${event.title}`, 'success');
@@ -1614,20 +1745,12 @@
             document.getElementById('imageUpload').value = '';
         }
 
-        // Chat Functions
-        function startChat(friendId) {
-            const friend = database.friends.find(f => f.id === friendId);
-            if (!friend) return;
-            
-            showNotification('Chat', `Opening chat with ${friend.name}`, 'success');
-        }
-
         // Utility Functions
         function showNotification(title, message, type = 'success') {
             const notification = document.getElementById('notification');
             const titleEl = document.getElementById('notificationTitle');
             const messageEl = document.getElementById('notificationMessage');
-            const icon = notification.querySelector('i');
+            const icon = document.getElementById('notificationIcon');
             
             notification.className = `notification ${type}`;
             titleEl.textContent = title;
@@ -1653,6 +1776,17 @@
 
         function openModal(modalId) {
             document.getElementById(modalId).style.display = 'flex';
+            
+            if (modalId === 'createEventModal') {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                document.getElementById('eventDate').value = tomorrow.toISOString().split('T')[0];
+                document.getElementById('eventTime').value = '18:00';
+            }
+            
+            if (modalId === 'tagFriendsModal') {
+                loadFriendsForTagging();
+            }
         }
 
         function closeModal(modalId) {
@@ -1668,14 +1802,16 @@
             
             document.getElementById('publishPostBtn').addEventListener('click', createPost);
             
-            document.getElementById('addPhotoBtn').addEventListener('click', (e) => {
-                e.preventDefault();
+            document.getElementById('addPhotoBtn').addEventListener('click', () => {
                 openModal('createPostModal');
                 document.getElementById('imageUpload').click();
             });
             
-            document.getElementById('tagFriendsBtn').addEventListener('click', (e) => {
-                e.preventDefault();
+            document.getElementById('addPhotoModalBtn').addEventListener('click', () => {
+                document.getElementById('imageUpload').click();
+            });
+            
+            document.getElementById('tagFriendsBtn').addEventListener('click', () => {
                 openModal('tagFriendsModal');
             });
             
@@ -1684,64 +1820,191 @@
                 openModal('tagFriendsModal');
             });
             
-            // Image upload
-            document.getElementById('imageUpload').addEventListener('change', handleImageUpload);
-            
             // Quick post from input
             document.getElementById('postText').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
-                    const text = e.target.value.trim();
-                    if (text) {
-                        const newPost = {
-                            id: database.posts.length + 1,
-                            userId: database.currentUser.id,
-                            author: database.currentUser.name,
-                            avatar: database.currentUser.avatar,
-                            time: "Just now",
-                            text: text,
-                            image: null,
-                            likes: 0,
-                            comments: 0,
-                            shares: 0,
-                            userLiked: false,
-                            privacy: "public",
-                            tagged: [],
-                            commentsList: []
-                        };
-                        
-                        database.posts.unshift(newPost);
-                        e.target.value = '';
-                        loadPosts();
-                        showNotification('Post published', '', 'success');
+                    quickCreatePost();
+                }
+            });
+            
+            // Image upload
+            document.getElementById('imageUpload').addEventListener('change', handleImageUpload);
+            document.getElementById('removeImageBtn').addEventListener('click', removeImage);
+            
+            // Friend requests
+            document.getElementById('viewAllRequestsBtn').addEventListener('click', () => {
+                openModal('friendRequestsModal');
+            });
+            
+            // Event listeners for friend request buttons (delegated)
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('confirm-btn')) {
+                    const requestId = parseInt(e.target.dataset.id);
+                    acceptFriendRequest(requestId);
+                } else if (e.target.classList.contains('delete-btn')) {
+                    const requestId = parseInt(e.target.dataset.id);
+                    declineFriendRequest(requestId);
+                } else if (e.target.classList.contains('rsvp-btn')) {
+                    const eventIndex = parseInt(e.target.dataset.index);
+                    rsvpToEvent(eventIndex);
+                }
+            });
+            
+            // Events
+            document.getElementById('createEventBtn').addEventListener('click', () => {
+                openModal('createEventModal');
+            });
+            
+            document.getElementById('saveEventBtn').addEventListener('click', createNewEvent);
+            
+            // Find friends
+            document.getElementById('findFriendsBtn').addEventListener('click', () => {
+                showNotification('Find Friends', 'Searching for friend suggestions...', 'info');
+            });
+            
+            // Birthday posts
+            document.getElementById('birthdayPostBtn1').addEventListener('click', () => {
+                showNotification('Birthday Post', 'Creating birthday post for Sarah', 'success');
+            });
+            
+            document.getElementById('birthdayPostBtn2').addEventListener('click', () => {
+                showNotification('Birthday Post', 'Creating birthday post for Mike', 'success');
+            });
+            
+            // Navigation
+            document.getElementById('homeBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                showNotification('Home', 'Switching to home feed', 'info');
+            });
+            
+            document.getElementById('friendsBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                showNotification('Friends', 'Opening friends list', 'info');
+            });
+            
+            document.getElementById('messagesBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                showNotification('Messages', 'Opening messages', 'info');
+            });
+            
+            document.getElementById('notificationsBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                showNotification('Notifications', 'You have 5 unread notifications', 'info');
+            });
+            
+            // Sidebar menu
+            document.getElementById('newsFeedBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                showNotification('News Feed', 'Loading your feed', 'info');
+            });
+            
+            document.getElementById('friendsMenuBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                showNotification('Friends', 'Opening friends section', 'info');
+            });
+            
+            document.getElementById('messagesMenuBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                showNotification('Messages', 'Opening messages', 'info');
+            });
+            
+            document.getElementById('eventsMenuBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                showNotification('Events', 'Opening events calendar', 'info');
+            });
+            
+            document.getElementById('photosMenuBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                showNotification('Photos', 'Opening photo gallery', 'info');
+            });
+            
+            document.getElementById('groupsMenuBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                showNotification('Groups', 'Opening groups', 'info');
+            });
+            
+            // Shortcuts
+            document.getElementById('gamingShortcut').addEventListener('click', () => {
+                showNotification('Gaming', 'Opening gaming section', 'info');
+            });
+            
+            document.getElementById('watchShortcut').addEventListener('click', () => {
+                showNotification('Watch', 'Opening videos', 'info');
+            });
+            
+            document.getElementById('marketplaceShortcut').addEventListener('click', () => {
+                showNotification('Marketplace', 'Opening marketplace', 'info');
+            });
+            
+            document.getElementById('memoriesShortcut').addEventListener('click', () => {
+                showNotification('Memories', 'Showing your memories', 'info');
+            });
+            
+            // Search
+            document.getElementById('searchButton').addEventListener('click', () => {
+                const query = document.getElementById('searchInput').value;
+                if (query.trim()) {
+                    showNotification('Search', `Searching for "${query}"`, 'info');
+                }
+            });
+            
+            document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const query = e.target.value;
+                    if (query.trim()) {
+                        showNotification('Search', `Searching for "${query}"`, 'info');
                     }
                 }
             });
             
-            // Navigation
-            document.querySelectorAll('[data-tab]').forEach(tab => {
-                tab.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const tabId = tab.dataset.tab;
-                    showNotification('Navigation', `Switching to ${tabId}`, 'info');
-                });
-            });
-            
-            // Friend requests modal
-            document.querySelectorAll('.friend-request .btn-success').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const requestId = parseInt(this.closest('.friend-request').dataset.requestId);
-                    if (requestId) acceptFriendRequest(requestId);
-                });
+            // User menu
+            document.getElementById('userMenu').addEventListener('click', () => {
+                showNotification('Profile', 'Opening your profile', 'info');
             });
             
             // Close modals
-            document.querySelectorAll('.close-modal').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const modal = this.closest('.modal');
-                    if (modal) {
-                        modal.style.display = 'none';
-                    }
-                });
+            document.getElementById('closePostModal').addEventListener('click', () => {
+                closeModal('createPostModal');
+            });
+            
+            document.getElementById('cancelPostBtn').addEventListener('click', () => {
+                closeModal('createPostModal');
+            });
+            
+            document.getElementById('closeRequestsModal').addEventListener('click', () => {
+                closeModal('friendRequestsModal');
+            });
+            
+            document.getElementById('closeRequestsBtn').addEventListener('click', () => {
+                closeModal('friendRequestsModal');
+            });
+            
+            document.getElementById('closeTagModal').addEventListener('click', () => {
+                closeModal('tagFriendsModal');
+            });
+            
+            document.getElementById('cancelTagBtn').addEventListener('click', () => {
+                closeModal('tagFriendsModal');
+            });
+            
+            document.getElementById('doneTagBtn').addEventListener('click', () => {
+                const selected = Array.from(document.querySelectorAll('.tag-checkbox:checked'))
+                    .map(cb => parseInt(cb.dataset.id));
+                
+                if (selected.length > 0) {
+                    currentState.taggedFriends = selected;
+                    showNotification('Friends Tagged', `Tagged ${selected.length} friend(s)`, 'success');
+                }
+                
+                closeModal('tagFriendsModal');
+            });
+            
+            document.getElementById('closeEventModal').addEventListener('click', () => {
+                closeModal('createEventModal');
+            });
+            
+            document.getElementById('cancelEventBtn').addEventListener('click', () => {
+                closeModal('createEventModal');
             });
             
             // Close modals on outside click
@@ -1756,19 +2019,6 @@
             // Notification click to close
             document.getElementById('notification').addEventListener('click', function() {
                 this.style.display = 'none';
-            });
-            
-            // User menu
-            document.getElementById('userMenu').addEventListener('click', () => {
-                showNotification('Profile', 'Opening your profile', 'info');
-            });
-            
-            // Search
-            document.querySelector('.search-bar button').addEventListener('click', () => {
-                const query = document.querySelector('.search-bar input').value;
-                if (query.trim()) {
-                    showNotification('Search', `Searching for "${query}"`, 'info');
-                }
             });
         }
 
