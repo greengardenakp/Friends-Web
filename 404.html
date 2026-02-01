@@ -3,26 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FriendsCircle - Complete Social Platform</title>
+    <title>FriendsConnect - Real Social Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #7c3aed;
-            --primary-dark: #6d28d9;
-            --secondary: #10b981;
-            --accent: #f59e0b;
-            --danger: #ef4444;
-            --success: #10b981;
-            --info: #3b82f6;
-            --light: #f8fafc;
-            --dark: #1e293b;
-            --gray: #64748b;
-            --light-gray: #e2e8f0;
-            --border-radius: 16px;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --transition: all 0.3s ease;
+            --primary: #1877f2;
+            --primary-dark: #166fe5;
+            --secondary: #42b72a;
+            --accent: #f02849;
+            --warning: #f7b928;
+            --success: #36a420;
+            --light: #f0f2f5;
+            --dark: #1c1e21;
+            --gray: #65676b;
+            --light-gray: #e4e6eb;
+            --border-radius: 8px;
+            --shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 2px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.2s ease;
         }
 
         * {
@@ -33,649 +32,585 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            line-height: 1.6;
-            color: var(--dark);
             background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
         }
 
         h1, h2, h3, h4, h5, h6 {
             font-family: 'Montserrat', sans-serif;
             font-weight: 600;
-            line-height: 1.3;
         }
 
         .container {
-            width: 100%;
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 15px;
         }
 
-        /* Navigation */
-        .navbar {
-            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
-            color: white;
-            padding: 15px 0;
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: var(--shadow);
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: var(--shadow-lg);
         }
 
-        .navbar .container {
+        .header .container {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            padding: 10px 15px;
+            gap: 20px;
         }
 
         .logo {
             font-size: 28px;
             font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo span {
-            color: var(--accent);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
+            color: var(--primary);
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
-            border-radius: var(--border-radius);
+            text-decoration: none;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 680px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px 45px 12px 16px;
+            border: none;
+            background: var(--light);
+            border-radius: 50px;
+            font-size: 15px;
+            color: var(--dark);
+        }
+
+        .search-bar button {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 20px;
+            margin-left: auto;
+        }
+
+        .nav-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            text-decoration: none;
+            position: relative;
             transition: var(--transition);
         }
 
-        .nav-links a:hover, .nav-links a.active {
-            background-color: rgba(255, 255, 255, 0.1);
+        .nav-icon:hover {
+            background: var(--light-gray);
+        }
+
+        .nav-icon.active {
+            color: var(--primary);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: var(--accent);
+            color: white;
+            font-size: 10px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
         }
 
         .user-menu {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .user-menu:hover {
+            background: var(--light);
         }
 
         .user-avatar {
-            width: 45px;
-            height: 45px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            background: linear-gradient(45deg, var(--primary), var(--accent));
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            font-weight: 600;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            border: 3px solid white;
+            font-size: 16px;
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 14px;
         }
 
         /* Main Layout */
-        .app-container {
+        .main-layout {
             display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 30px;
-            padding: 30px 0;
-            min-height: calc(100vh - 80px);
+            grid-template-columns: 280px 1fr 320px;
+            gap: 20px;
+            padding: 20px 0;
+            min-height: calc(100vh - 68px);
         }
 
         /* Sidebar */
         .sidebar {
-            background-color: white;
-            border-radius: var(--border-radius);
-            padding: 25px;
-            box-shadow: var(--shadow);
-            height: fit-content;
             position: sticky;
-            top: 100px;
+            top: 88px;
+            height: calc(100vh - 108px);
+            overflow-y: auto;
         }
 
         .sidebar-section {
-            margin-bottom: 30px;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
         }
 
-        .sidebar-section h3 {
-            font-size: 16px;
-            color: var(--gray);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .sidebar-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--dark);
         }
 
-        .sidebar-menu {
-            list-style-type: none;
-        }
-
-        .sidebar-menu li {
-            margin-bottom: 8px;
-        }
-
-        .sidebar-menu a {
+        .menu-item {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px 15px;
+            padding: 12px;
+            border-radius: var(--border-radius);
             text-decoration: none;
             color: var(--dark);
-            border-radius: 12px;
+            transition: var(--transition);
+            margin-bottom: 4px;
+        }
+
+        .menu-item:hover {
+            background: var(--light);
+        }
+
+        .menu-item.active {
+            background: var(--light);
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .menu-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+        }
+
+        .menu-item.active .menu-icon {
+            background: var(--primary);
+            color: white;
+        }
+
+        .shortcut-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
             transition: var(--transition);
         }
 
-        .sidebar-menu a:hover, .sidebar-menu a.active {
-            background-color: rgba(124, 58, 237, 0.1);
-            color: var(--primary);
+        .shortcut-item:hover {
+            background: var(--light);
+        }
+
+        .shortcut-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
         }
 
         /* Main Content */
         .main-content {
-            display: grid;
-            gap: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        /* Cards */
-        .card {
-            background-color: white;
+        /* Create Post */
+        .create-post {
+            background: white;
             border-radius: var(--border-radius);
-            padding: 25px;
+            padding: 16px;
             box-shadow: var(--shadow);
-            transition: var(--transition);
         }
 
-        .card:hover {
-            box-shadow: var(--shadow-lg);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--light-gray);
-        }
-
-        .card-header h2 {
-            font-size: 24px;
-            color: var(--dark);
+        .post-input {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            margin-bottom: 16px;
         }
 
-        /* Buttons */
-        .btn {
-            padding: 12px 24px;
-            border-radius: var(--border-radius);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
+        .post-input input {
+            flex: 1;
+            padding: 12px 16px;
             border: none;
-            font-family: 'Poppins', sans-serif;
-            font-size: 14px;
-            display: inline-flex;
+            background: var(--light);
+            border-radius: 50px;
+            font-size: 15px;
+            color: var(--dark);
+        }
+
+        .post-input input::placeholder {
+            color: var(--gray);
+        }
+
+        .post-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            border-top: 1px solid var(--light-gray);
+            padding-top: 12px;
+        }
+
+        .post-action {
+            display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            color: var(--gray);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .post-action:hover {
+            background: var(--light);
+        }
+
+        /* Post Feed */
+        .post {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 16px;
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .post-author {
+            flex: 1;
+        }
+
+        .post-author h4 {
+            font-size: 15px;
+            margin-bottom: 2px;
+        }
+
+        .post-time {
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        .post-content {
+            margin-bottom: 16px;
+        }
+
+        .post-text {
+            font-size: 15px;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .post-image {
+            width: 100%;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .post-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .post-stats {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--light-gray);
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .post-actions-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            padding: 8px 0;
+        }
+
+        .post-action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px;
+            border-radius: var(--border-radius);
+            color: var(--gray);
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .post-action-btn:hover {
+            background: var(--light);
+        }
+
+        .post-action-btn.active {
+            color: var(--primary);
+        }
+
+        /* Comments */
+        .comments-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .comment-input {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .comment-input input {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            background: var(--light);
+            border-radius: 50px;
+            font-size: 14px;
+        }
+
+        .comment {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .comment-content {
+            flex: 1;
+            background: var(--light);
+            padding: 12px;
+            border-radius: 18px;
+        }
+
+        .comment-author {
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .comment-text {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .comment-action {
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .comment-action:hover {
+            text-decoration: underline;
+        }
+
+        /* Right Sidebar */
+        .right-sidebar {
+            position: sticky;
+            top: 88px;
+            height: calc(100vh - 108px);
+            overflow-y: auto;
+        }
+
+        /* Friend Requests */
+        .friend-request {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: var(--border-radius);
+            margin-bottom: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .friend-info {
+            flex: 1;
+        }
+
+        .friend-info h4 {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .friend-mutual {
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 8px;
+        }
+
+        .friend-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
         .btn-primary {
-            background-color: var(--primary);
+            background: var(--primary);
             color: white;
         }
 
         .btn-primary:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light-gray);
         }
 
         .btn-success {
-            background-color: var(--success);
+            background: var(--success);
             color: white;
         }
 
         .btn-success:hover {
-            background-color: #0da271;
+            background: #2d8c1b;
         }
 
         .btn-danger {
-            background-color: var(--danger);
+            background: var(--accent);
             color: white;
         }
 
         .btn-danger:hover {
-            background-color: #dc2626;
-            transform: translateY(-2px);
+            background: #d11a3a;
         }
 
-        .btn-outline {
-            background-color: transparent;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-
-        .btn-outline:hover {
-            background-color: rgba(124, 58, 237, 0.1);
-        }
-
-        /* Status Badges */
-        .status-badge {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            display: inline-block;
-        }
-
-        .status-success {
-            background-color: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-        }
-
-        .status-warning {
-            background-color: rgba(245, 158, 11, 0.1);
-            color: var(--accent);
-        }
-
-        .status-danger {
-            background-color: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-        }
-
-        .status-info {
-            background-color: rgba(59, 130, 246, 0.1);
-            color: var(--info);
-        }
-
-        /* Forms */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--dark);
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--light-gray);
+        /* Events */
+        .event-item {
+            background: white;
             border-radius: var(--border-radius);
-            font-family: 'Poppins', sans-serif;
-            font-size: 15px;
-            transition: var(--transition);
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
-        }
-
-        /* Tables */
-        .table-responsive {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        th {
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            color: var(--dark);
-            border-bottom: 2px solid var(--light-gray);
-            background-color: var(--light);
-        }
-
-        td {
-            padding: 15px;
-            border-bottom: 1px solid var(--light-gray);
-            vertical-align: middle;
-        }
-
-        tr:hover {
-            background-color: rgba(124, 58, 237, 0.03);
-        }
-
-        /* Friend List Items */
-        .friend-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px;
-            border-radius: var(--border-radius);
-            background-color: white;
+            padding: 12px;
+            margin-bottom: 12px;
             box-shadow: var(--shadow);
-            transition: var(--transition);
-            cursor: pointer;
-        }
-
-        .friend-item:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .friend-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, var(--primary), var(--accent));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 18px;
-        }
-
-        .friend-info h4 {
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-
-        .friend-info p {
-            color: var(--gray);
-            font-size: 14px;
-        }
-
-        /* Gallery Grid */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .gallery-item {
-            aspect-ratio: 1;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition);
-        }
-
-        .gallery-item:hover img {
-            transform: scale(1.05);
-        }
-
-        /* Event Cards */
-        .event-card {
-            background-color: white;
-            border-radius: var(--border-radius);
-            padding: 20px;
-            box-shadow: var(--shadow);
-            border-left: 4px solid var(--primary);
-            transition: var(--transition);
-        }
-
-        .event-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
         }
 
         .event-date {
             display: inline-block;
-            background-color: var(--primary);
+            background: var(--primary);
             color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        /* Grid Layouts */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .grid-4 {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        /* Payment Cards */
-        .payment-card {
-            background-color: white;
-            border-radius: var(--border-radius);
-            padding: 20px;
-            box-shadow: var(--shadow);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: var(--transition);
-        }
-
-        .payment-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .payment-amount {
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .payment-positive {
-            color: var(--success);
-        }
-
-        .payment-negative {
-            color: var(--danger);
-        }
-
-        /* Map Container */
-        .map-container {
-            height: 300px;
-            background-color: var(--light-gray);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            position: relative;
-        }
-
-        .map-placeholder {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, var(--light-gray), #d1d5db);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--gray);
-        }
-
-        /* Poll-specific styles */
-        .poll-card {
-            background-color: white;
-            border-radius: var(--border-radius);
-            padding: 20px;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-            border-left: 4px solid var(--info);
-            transition: var(--transition);
-        }
-        
-        .poll-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .poll-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-        }
-        
-        .poll-status {
-            font-size: 12px;
             padding: 4px 12px;
-            border-radius: 12px;
-            font-weight: 600;
-        }
-        
-        .poll-status-active {
-            background-color: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-        }
-        
-        .poll-status-closed {
-            background-color: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-        }
-        
-        .poll-options {
-            margin: 20px 0;
-        }
-        
-        .poll-option {
-            background-color: var(--light);
-            border-radius: var(--border-radius);
-            padding: 15px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: var(--transition);
-            border: 2px solid transparent;
-        }
-        
-        .poll-option:hover {
-            background-color: rgba(124, 58, 237, 0.05);
-            border-color: rgba(124, 58, 237, 0.2);
-        }
-        
-        .poll-option.selected {
-            background-color: rgba(124, 58, 237, 0.1);
-            border-color: var(--primary);
-        }
-        
-        .poll-results {
-            margin-top: 20px;
-            display: none;
-        }
-        
-        .poll-result-bar {
-            height: 10px;
-            background-color: var(--light-gray);
-            border-radius: 5px;
-            margin: 10px 0;
-            overflow: hidden;
-        }
-        
-        .poll-result-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
-            border-radius: 5px;
-            transition: width 0.5s ease;
-        }
-        
-        .poll-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid var(--light-gray);
-            font-size: 14px;
-            color: var(--gray);
-        }
-        
-        /* Phone Support Card */
-        .phone-support-card {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            border-radius: var(--border-radius);
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-        
-        .phone-number {
-            font-size: 28px;
-            font-weight: 700;
-            margin: 15px 0;
-            letter-spacing: 1px;
-        }
-        
-        .phone-hours {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-        
-        /* Call button styles */
-        .call-btn {
-            background-color: var(--success);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: var(--border-radius);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 15px;
-        }
-        
-        .call-btn:hover {
-            background-color: #0da271;
-            transform: translateY(-2px);
-        }
-        
-        /* Delete button in polls */
-        .poll-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        /* Action buttons */
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .btn-sm {
-            padding: 8px 16px;
+            border-radius: 16px;
             font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 8px;
         }
-        
-        /* Modal */
+
+        .event-item h4 {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .event-details {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 12px;
+        }
+
+        /* Modals */
         .modal {
             display: none;
             position: fixed;
@@ -683,24 +618,24 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1001;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
             align-items: center;
             justify-content: center;
         }
 
         .modal-content {
-            background-color: white;
+            background: white;
             border-radius: var(--border-radius);
             width: 90%;
-            max-width: 600px;
+            max-width: 500px;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: var(--shadow-lg);
         }
 
         .modal-header {
-            padding: 20px 25px;
+            padding: 20px;
             border-bottom: 1px solid var(--light-gray);
             display: flex;
             justify-content: space-between;
@@ -708,39 +643,93 @@
         }
 
         .modal-body {
-            padding: 25px;
+            padding: 20px;
         }
 
         .modal-footer {
-            padding: 20px 25px;
+            padding: 20px;
             border-top: 1px solid var(--light-gray);
             display: flex;
             justify-content: flex-end;
-            gap: 15px;
+            gap: 12px;
         }
 
         .close-modal {
             background: none;
             border: none;
-            font-size: 20px;
-            cursor: pointer;
+            font-size: 24px;
             color: var(--gray);
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
         }
 
-        /* Notification */
+        .close-modal:hover {
+            background: var(--light);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Notifications */
         .notification {
             position: fixed;
             top: 20px;
             right: 20px;
-            background-color: var(--success);
-            color: white;
-            padding: 15px 25px;
+            background: white;
+            color: var(--dark);
+            padding: 16px;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow-lg);
-            z-index: 1002;
+            z-index: 3000;
             display: none;
             max-width: 400px;
             animation: slideIn 0.3s ease;
+            border-left: 4px solid var(--success);
+        }
+
+        .notification.error {
+            border-left-color: var(--accent);
+        }
+
+        .notification.warning {
+            border-left-color: var(--warning);
         }
 
         @keyframes slideIn {
@@ -754,1736 +743,997 @@
             }
         }
 
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .app-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .sidebar {
-                position: static;
-            }
+        /* Reactions */
+        .reactions {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background: white;
+            border-radius: 24px;
+            padding: 4px;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            z-index: 100;
         }
 
-        @media (max-width: 768px) {
-            .grid-2, .grid-3, .grid-4 {
+        .reaction {
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .reaction:hover {
+            transform: scale(1.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .main-layout {
                 grid-template-columns: 1fr;
             }
             
-            .nav-links {
+            .sidebar, .right-sidebar {
                 display: none;
             }
             
-            .user-menu {
-                margin-left: auto;
+            .nav-icons {
+                display: none;
             }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
+    <!-- Header -->
+    <header class="header">
         <div class="container">
-            <div class="logo">
+            <a href="#" class="logo">
                 <i class="fas fa-user-friends"></i>
-                Friends<span>Circle</span>
+                <span>FriendsConnect</span>
+            </a>
+            
+            <div class="search-bar">
+                <input type="text" placeholder="Search friends, posts, or groups...">
+                <button type="button">
+                    <i class="fas fa-search"></i>
+                </button>
             </div>
             
-            <div class="nav-links">
-                <a href="#" class="active" data-tab="dashboard">
-                    <i class="fas fa-home"></i> Dashboard
+            <div class="nav-icons">
+                <a href="#" class="nav-icon active">
+                    <i class="fas fa-home"></i>
                 </a>
-                <a href="#" data-tab="friends">
-                    <i class="fas fa-users"></i> Friends
+                <a href="#" class="nav-icon" data-tab="friends">
+                    <i class="fas fa-user-friends"></i>
                 </a>
-                <a href="#" data-tab="events">
-                    <i class="fas fa-calendar-alt"></i> Events
+                <a href="#" class="nav-icon" data-tab="messages">
+                    <i class="fas fa-comments"></i>
+                    <span class="notification-badge">3</span>
                 </a>
-                <a href="#" data-tab="payments">
-                    <i class="fas fa-money-bill-wave"></i> Payments
-                </a>
-                <a href="#" data-tab="polls">
-                    <i class="fas fa-poll"></i> Polls
-                </a>
-                <a href="#" data-tab="gallery">
-                    <i class="fas fa-images"></i> Gallery
-                </a>
-                <a href="#" data-tab="locations">
-                    <i class="fas fa-map-marker-alt"></i> Locations
+                <a href="#" class="nav-icon" data-tab="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">5</span>
                 </a>
             </div>
             
-            <div class="user-menu">
-                <div class="user-avatar" id="userAvatar">AD</div>
-                <span style="color: white; font-weight: 500;">Admin User</span>
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar">JS</div>
+                <div class="user-name">John</div>
+                <i class="fas fa-chevron-down"></i>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <!-- Main App Container -->
+    <!-- Main Layout -->
     <div class="container">
-        <div class="app-container">
-            <!-- Sidebar -->
+        <div class="main-layout">
+            <!-- Left Sidebar -->
             <aside class="sidebar">
                 <div class="sidebar-section">
-                    <h3><i class="fas fa-tachometer-alt"></i> Quick Stats</h3>
-                    <div style="display: grid; gap: 15px;">
-                        <div style="background: linear-gradient(45deg, var(--primary), var(--primary-dark)); color: white; padding: 15px; border-radius: var(--border-radius);">
-                            <div style="font-size: 24px; font-weight: 700;" id="totalFriends">12</div>
-                            <div style="font-size: 14px;">Total Friends</div>
+                    <nav>
+                        <a href="#" class="menu-item active">
+                            <div class="menu-icon">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <span>News Feed</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="friends">
+                            <div class="menu-icon">
+                                <i class="fas fa-user-friends"></i>
+                            </div>
+                            <span>Friends</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="messages">
+                            <div class="menu-icon">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <span>Messages</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="events">
+                            <div class="menu-icon">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <span>Events</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="photos">
+                            <div class="menu-icon">
+                                <i class="fas fa-images"></i>
+                            </div>
+                            <span>Photos</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="groups">
+                            <div class="menu-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <span>Groups</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Your Shortcuts</h3>
+                    <div class="shortcut-item">
+                        <div class="shortcut-icon">
+                            <i class="fas fa-gamepad"></i>
                         </div>
-                        <div style="background: linear-gradient(45deg, var(--info), #2563eb); color: white; padding: 15px; border-radius: var(--border-radius);">
-                            <div style="font-size: 24px; font-weight: 700;" id="activePollsCount">2</div>
-                            <div style="font-size: 14px;">Active Polls</div>
+                        <span>Gaming</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <div class="shortcut-icon">
+                            <i class="fas fa-film"></i>
                         </div>
-                        <div style="background: linear-gradient(45deg, var(--accent), #d97706); color: white; padding: 15px; border-radius: var(--border-radius);">
-                            <div style="font-size: 24px; font-weight: 700;" id="totalBalance">$0</div>
-                            <div style="font-size: 14px;">Group Balance</div>
+                        <span>Watch</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <div class="shortcut-icon">
+                            <i class="fas fa-shopping-bag"></i>
                         </div>
+                        <span>Marketplace</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <div class="shortcut-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <span>Memories</span>
                     </div>
                 </div>
 
                 <div class="sidebar-section">
-                    <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
-                    <ul class="sidebar-menu">
-                        <li>
-                            <a href="#" id="quickAddFriend">
-                                <i class="fas fa-user-plus"></i> Add Friend
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" id="quickCreatePoll">
-                                <i class="fas fa-poll-h"></i> Create Poll
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" id="quickCreateEvent">
-                                <i class="fas fa-calendar-plus"></i> Create Event
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" id="quickAddExpense">
-                                <i class="fas fa-receipt"></i> Add Expense
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" id="quickCallSupport">
-                                <i class="fas fa-phone-alt"></i> Call Support
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="sidebar-section">
-                    <h3><i class="fas fa-history"></i> Recent Activity</h3>
-                    <div id="recentActivity" style="font-size: 14px; color: var(--gray);">
-                        <!-- Activity will be loaded here -->
+                    <h3 class="sidebar-title">Friend Requests</h3>
+                    <div id="friendRequestsList">
+                        <!-- Friend requests will be loaded here -->
                     </div>
                 </div>
             </aside>
 
             <!-- Main Content -->
             <main class="main-content">
-                <!-- Dashboard Tab -->
-                <div id="dashboard" class="tab-content active">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2><i class="fas fa-tachometer-alt"></i> Group Dashboard</h2>
-                            <button class="btn btn-primary" id="refreshDashboard">
-                                <i class="fas fa-sync-alt"></i> Refresh
-                            </button>
-                        </div>
-                        
-                        <!-- Phone Support Card on Dashboard -->
-                        <div class="phone-support-card">
-                            <h3><i class="fas fa-phone-alt"></i> Phone Support</h3>
-                            <div class="phone-number">1-800-FRIENDS</div>
-                            <p>24/7 Group Support Hotline</p>
-                            <div class="phone-hours">Available: Monday-Sunday, 24 hours</div>
-                            <button class="call-btn" id="callSupportBtn">
-                                <i class="fas fa-phone"></i> Call Now
-                            </button>
-                        </div>
-                        
-                        <div class="grid-3">
-                            <!-- Active Polls -->
-                            <div class="card">
-                                <h3 style="margin-bottom: 15px;"><i class="fas fa-poll"></i> Active Polls</h3>
-                                <div id="activePollsDashboard">
-                                    <!-- Polls will be loaded here -->
-                                </div>
-                            </div>
-                            
-                            <!-- Upcoming Events -->
-                            <div class="card">
-                                <h3 style="margin-bottom: 15px;"><i class="fas fa-calendar-day"></i> Upcoming Events</h3>
-                                <div id="upcomingEventsList">
-                                    <!-- Events will be loaded here -->
-                                </div>
-                            </div>
-                            
-                            <!-- Recent Expenses -->
-                            <div class="card">
-                                <h3 style="margin-bottom: 15px;"><i class="fas fa-money-bill-wave"></i> Recent Expenses</h3>
-                                <div id="recentExpenses">
-                                    <!-- Expenses will be loaded here -->
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Recent Activity -->
-                        <div class="card" style="margin-top: 20px;">
-                            <div class="card-header">
-                                <h2><i class="fas fa-history"></i> Recent Activity</h2>
-                            </div>
-                            <div id="dashboardActivity">
-                                <!-- Activity will be loaded here -->
-                            </div>
-                        </div>
+                <!-- Create Post -->
+                <div class="create-post">
+                    <div class="post-input">
+                        <div class="user-avatar" style="width: 40px; height: 40px;">JS</div>
+                        <input type="text" id="postText" placeholder="What's on your mind, John?">
+                    </div>
+                    <div class="post-actions">
+                        <a href="#" class="post-action" id="addPhotoBtn">
+                            <i class="fas fa-image" style="color: #45bd62;"></i>
+                            <span>Photo/Video</span>
+                        </a>
+                        <a href="#" class="post-action" id="tagFriendsBtn">
+                            <i class="fas fa-user-tag" style="color: #1877f2;"></i>
+                            <span>Tag Friends</span>
+                        </a>
+                        <a href="#" class="post-action" id="createPostBtn">
+                            <i class="fas fa-feather-alt" style="color: #f7b928;"></i>
+                            <span>Create Post</span>
+                        </a>
                     </div>
                 </div>
 
-                <!-- Friends Tab -->
-                <div id="friends" class="tab-content">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2><i class="fas fa-users"></i> Friends Management</h2>
-                            <button class="btn btn-primary" id="addFriendBtn">
-                                <i class="fas fa-user-plus"></i> Add Friend
-                            </button>
-                        </div>
-                        
-                        <div class="table-responsive">
-                            <table id="friendsTable">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Status</th>
-                                        <th>Role</th>
-                                        <th>Balance</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="friendsTableBody">
-                                    <!-- Friends will be loaded here -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Events Tab -->
-                <div id="events" class="tab-content">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2><i class="fas fa-calendar-alt"></i> Events & Calendar</h2>
-                            <button class="btn btn-primary" id="createEventBtn">
-                                <i class="fas fa-plus"></i> Create Event
-                            </button>
-                        </div>
-                        
-                        <div class="grid-3" id="eventsGrid">
-                            <!-- Events will be loaded here -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Payments Tab -->
-                <div id="payments" class="tab-content">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2><i class="fas fa-money-bill-wave"></i> Payments & Settlements</h2>
-                            <div>
-                                <button class="btn btn-success" id="addExpenseBtn">
-                                    <i class="fas fa-plus"></i> Add Expense
-                                </button>
-                                <button class="btn btn-primary" id="settleUpBtn">
-                                    <i class="fas fa-handshake"></i> Settle Up
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="table-responsive">
-                            <table id="expensesTable">
-                                <thead>
-                                    <tr>
-                                        <th>Description</th>
-                                        <th>Amount</th>
-                                        <th>Paid By</th>
-                                        <th>Split Between</th>
-                                        <th>Date</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="expensesTableBody">
-                                    <!-- Expenses will be loaded here -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Polls Tab -->
-                <div id="polls" class="tab-content">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2><i class="fas fa-poll"></i> Polls & Voting</h2>
-                            <div>
-                                <button class="btn btn-primary" id="createPollBtn">
-                                    <i class="fas fa-plus"></i> Create Poll
-                                </button>
-                                <button class="btn btn-success" id="callSupportFromPolls">
-                                    <i class="fas fa-phone"></i> Call Support
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Phone Support Section -->
-                        <div class="phone-support-card" style="margin-top: 20px;">
-                            <h3><i class="fas fa-headset"></i> Need Help with Polls?</h3>
-                            <p>Call our support team for assistance with creating or managing polls</p>
-                            <div class="phone-number">1-800-POLLHELP</div>
-                            <button class="call-btn" id="callPollSupportBtn">
-                                <i class="fas fa-phone"></i> Call Poll Support
-                            </button>
-                        </div>
-                        
-                        <!-- Active Polls -->
-                        <div style="margin-top: 30px;">
-                            <h3 style="margin-bottom: 20px;"><i class="fas fa-bullhorn"></i> Active Polls</h3>
-                            <div id="pollsList">
-                                <!-- Polls will be loaded here -->
-                            </div>
-                        </div>
-                        
-                        <!-- Past Polls -->
-                        <div style="margin-top: 40px;">
-                            <h3 style="margin-bottom: 20px;"><i class="fas fa-history"></i> Past Polls</h3>
-                            <div id="pastPollsList">
-                                <!-- Past polls will be loaded here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Gallery Tab -->
-                <div id="gallery" class="tab-content">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2><i class="fas fa-images"></i> Photo Gallery</h2>
-                            <button class="btn btn-success" id="uploadPhotoBtn">
-                                <i class="fas fa-upload"></i> Upload Photos
-                            </button>
-                        </div>
-                        
-                        <div class="gallery-grid" id="galleryGrid">
-                            <!-- Gallery photos will be loaded here -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Locations Tab -->
-                <div id="locations" class="tab-content">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2><i class="fas fa-map-marker-alt"></i> Locations & Maps</h2>
-                            <button class="btn btn-primary" id="shareLocationBtn">
-                                <i class="fas fa-share"></i> Share Location
-                            </button>
-                        </div>
-                        
-                        <div class="map-container">
-                            <div class="map-placeholder" id="mapPlaceholder">
-                                <i class="fas fa-map-marked-alt" style="font-size: 60px; margin-bottom: 15px;"></i>
-                                <p>Interactive Map</p>
-                                <small>Showing friend locations</small>
-                            </div>
-                        </div>
-                        
-                        <div style="margin-top: 20px;">
-                            <h3 style="margin-bottom: 15px;"><i class="fas fa-location-dot"></i> Friend Locations</h3>
-                            <div id="friendLocations">
-                                <!-- Friend locations will be loaded here -->
-                            </div>
-                        </div>
-                    </div>
+                <!-- Posts Feed -->
+                <div id="postsFeed">
+                    <!-- Posts will be loaded here -->
                 </div>
             </main>
+
+            <!-- Right Sidebar -->
+            <aside class="right-sidebar">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Birthdays</h3>
+                    <div class="friend-request">
+                        <div class="user-avatar" style="width: 40px; height: 40px;">SK</div>
+                        <div class="friend-info">
+                            <h4>Sarah Kim</h4>
+                            <p class="friend-mutual">Tomorrow</p>
+                            <button class="btn btn-primary btn-sm">Post</button>
+                        </div>
+                    </div>
+                    <div class="friend-request">
+                        <div class="user-avatar" style="width: 40px; height: 40px;">MB</div>
+                        <div class="friend-info">
+                            <h4>Mike Brown</h4>
+                            <p class="friend-mutual">In 3 days</p>
+                            <button class="btn btn-primary btn-sm">Post</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Events</h3>
+                    <div id="eventsList">
+                        <!-- Events will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Online Friends</h3>
+                    <div id="onlineFriends">
+                        <!-- Online friends will be loaded here -->
+                    </div>
+                </div>
+            </aside>
         </div>
     </div>
 
     <!-- Modals -->
-    <!-- Add Friend Modal -->
-    <div id="addFriendModal" class="modal">
+    <!-- Create Post Modal -->
+    <div id="createPostModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-user-plus"></i> Add New Friend</h3>
+                <h3>Create Post</h3>
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="addFriendForm">
-                    <div class="form-group">
-                        <label for="friendName">Full Name *</label>
-                        <input type="text" id="friendName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="friendEmail">Email Address *</label>
-                        <input type="email" id="friendEmail" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="friendPhone">Phone Number</label>
-                        <input type="tel" id="friendPhone">
-                    </div>
-                    <div class="form-group">
-                        <label for="friendRole">Role</label>
-                        <select id="friendRole">
-                            <option value="member">Member</option>
-                            <option value="admin">Admin</option>
-                            <option value="moderator">Moderator</option>
+                <div class="post-input" style="margin-bottom: 20px;">
+                    <div class="user-avatar" style="width: 40px; height: 40px;">JS</div>
+                    <div>
+                        <h4 style="font-size: 14px;">John Smith</h4>
+                        <select class="form-control" style="padding: 4px 8px; font-size: 12px; width: auto;">
+                            <option>🌐 Public</option>
+                            <option>👥 Friends</option>
+                            <option>🔒 Only me</option>
                         </select>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline close-modal">Cancel</button>
-                <button class="btn btn-primary" id="saveFriendBtn">Add Friend</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Create Poll Modal -->
-    <div id="createPollModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-poll-h"></i> Create New Poll</h3>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="createPollForm">
-                    <div class="form-group">
-                        <label for="pollQuestion">Poll Question *</label>
-                        <input type="text" id="pollQuestion" required placeholder="What should we do this weekend?">
-                    </div>
-                    <div class="form-group">
-                        <label for="pollOptions">Options (one per line) *</label>
-                        <textarea id="pollOptions" rows="4" required placeholder="Option 1\nOption 2\nOption 3"></textarea>
-                        <small style="color: var(--gray);">Enter each option on a new line</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="pollDuration">Duration (days)</label>
-                        <select id="pollDuration">
-                            <option value="1">1 Day</option>
-                            <option value="3" selected>3 Days</option>
-                            <option value="7">7 Days</option>
-                            <option value="30">30 Days</option>
-                            <option value="0">No Limit</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="allowMultiple" style="width: auto; display: inline;">
-                            Allow multiple selections
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label for="pollCategory">Category</label>
-                        <select id="pollCategory">
-                            <option value="general">General</option>
-                            <option value="events">Events</option>
-                            <option value="food">Food</option>
-                            <option value="entertainment">Entertainment</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline close-modal">Cancel</button>
-                <button class="btn btn-primary" id="savePollBtn">Create Poll</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Expense Modal -->
-    <div id="addExpenseModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-receipt"></i> Add New Expense</h3>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="addExpenseForm">
-                    <div class="form-group">
-                        <label for="expenseDescription">Description *</label>
-                        <input type="text" id="expenseDescription" required placeholder="Dinner, Movie tickets, etc.">
-                    </div>
-                    <div class="form-group">
-                        <label for="expenseAmount">Amount ($) *</label>
-                        <input type="number" id="expenseAmount" min="0" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="expensePaidBy">Paid By *</label>
-                        <select id="expensePaidBy" required>
-                            <!-- Options will be populated dynamically -->
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Split Between *</label>
-                        <div id="splitBetweenCheckboxes">
-                            <!-- Checkboxes will be populated dynamically -->
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline close-modal">Cancel</button>
-                <button class="btn btn-success" id="saveExpenseBtn">Add Expense</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Create Event Modal -->
-    <div id="createEventModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-calendar-plus"></i> Create New Event</h3>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="createEventForm">
-                    <div class="form-group">
-                        <label for="eventTitle">Event Title *</label>
-                        <input type="text" id="eventTitle" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="eventDate">Date *</label>
-                        <input type="date" id="eventDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="eventTime">Time</label>
-                        <input type="time" id="eventTime">
-                    </div>
-                    <div class="form-group">
-                        <label for="eventLocation">Location</label>
-                        <input type="text" id="eventLocation" placeholder="Address or venue name">
-                    </div>
-                    <div class="form-group">
-                        <label for="eventDescription">Description</label>
-                        <textarea id="eventDescription" rows="4"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline close-modal">Cancel</button>
-                <button class="btn btn-primary" id="saveEventBtn">Create Event</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Upload Photo Modal -->
-    <div id="uploadPhotoModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-upload"></i> Upload Photos</h3>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="uploadArea" style="border: 2px dashed var(--light-gray); border-radius: var(--border-radius); padding: 40px; text-align: center; cursor: pointer; margin-bottom: 20px;">
-                    <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: var(--gray); margin-bottom: 15px;"></i>
-                    <p>Click to select photos</p>
-                    <input type="file" id="photoUpload" multiple accept="image/*" style="display: none;">
                 </div>
                 <div class="form-group">
-                    <label for="photoCaption">Caption</label>
-                    <textarea id="photoCaption" rows="3" placeholder="Add a caption for these photos..."></textarea>
+                    <textarea class="form-control" id="modalPostText" placeholder="What's on your mind?" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <div id="postPreview" style="display: none;">
+                        <img id="postImagePreview" style="width: 100%; border-radius: 8px; margin-bottom: 10px;">
+                        <button class="btn btn-danger btn-sm" onclick="removeImage()">Remove</button>
+                    </div>
+                </div>
+                <div style="border: 2px dashed var(--light-gray); border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 20px;">
+                    <i class="fas fa-plus" style="font-size: 24px; color: var(--gray); margin-bottom: 10px;"></i>
+                    <p style="color: var(--gray); margin-bottom: 10px;">Add to your post</p>
+                    <div style="display: flex; justify-content: center; gap: 20px;">
+                        <button class="btn btn-secondary" onclick="document.getElementById('imageUpload').click()">
+                            <i class="fas fa-image"></i> Photo/Video
+                        </button>
+                        <button class="btn btn-secondary" id="tagFriendsModalBtn">
+                            <i class="fas fa-user-tag"></i> Tag Friends
+                        </button>
+                    </div>
+                    <input type="file" id="imageUpload" accept="image/*" style="display: none;">
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-outline close-modal">Cancel</button>
-                <button class="btn btn-success" id="uploadPhotosBtn">Upload Photos</button>
+                <button class="btn btn-secondary close-modal">Cancel</button>
+                <button class="btn btn-primary" id="publishPostBtn">Publish</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Friend Requests Modal -->
+    <div id="friendRequestsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Friend Requests</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="allFriendRequests">
+                    <!-- All friend requests will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tag Friends Modal -->
+    <div id="tagFriendsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Tag Friends</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search friends...">
+                </div>
+                <div id="friendsToTag">
+                    <!-- Friends list for tagging -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary close-modal">Cancel</button>
+                <button class="btn btn-primary">Done</button>
             </div>
         </div>
     </div>
 
     <!-- Notification -->
     <div id="notification" class="notification">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <i class="fas fa-check-circle" style="font-size: 20px;"></i>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <i class="fas fa-check-circle" style="color: var(--success);"></i>
             <div>
-                <strong id="notificationTitle">Success!</strong>
-                <p id="notificationMessage" style="margin: 5px 0 0 0; font-size: 14px;">Action completed successfully.</p>
+                <h4 id="notificationTitle" style="font-size: 14px; margin-bottom: 4px;">Success</h4>
+                <p id="notificationMessage" style="font-size: 13px; color: var(--gray);">Action completed</p>
             </div>
         </div>
     </div>
 
     <script>
-        // Complete Database
+        // Realistic Database
         const database = {
             currentUser: {
                 id: 1,
-                name: "Admin User",
-                email: "admin@friendscircle.com",
-                phone: "+1-555-123-4567",
-                avatar: "AD",
-                role: "admin"
+                name: "John Smith",
+                avatar: "JS",
+                email: "john@example.com",
+                friends: [2, 3, 4, 5, 6]
             },
-            friends: [
-                { id: 2, name: "John Smith", email: "john@example.com", phone: "+1234567890", status: "online", role: "admin", balance: 0, avatar: "JS" },
-                { id: 3, name: "Sarah Johnson", email: "sarah@example.com", phone: "+1234567891", status: "online", role: "moderator", balance: -45.50, avatar: "SJ" },
-                { id: 4, name: "Mike Williams", email: "mike@example.com", phone: "+1234567892", status: "offline", role: "member", balance: 25.00, avatar: "MW" },
-                { id: 5, name: "Emma Brown", email: "emma@example.com", phone: "+1234567893", status: "online", role: "member", balance: 0, avatar: "EB" },
-                { id: 6, name: "David Miller", email: "david@example.com", phone: "+1234567894", status: "offline", role: "member", balance: 20.50, avatar: "DM" },
-                { id: 7, name: "Lisa Davis", email: "lisa@example.com", phone: "+1234567895", status: "online", role: "member", balance: 0, avatar: "LD" }
-            ],
-            events: [
-                { id: 1, title: "Weekend Hike", date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], time: "09:00", location: "Mountain Trail", description: "Morning hike with picnic", organizer: 2, participants: [1, 2, 3, 4], status: "upcoming" },
-                { id: 2, title: "Birthday Party", date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], time: "19:00", location: "Sarah's House", description: "Sarah's birthday celebration", organizer: 3, participants: [1, 2, 3, 4, 5, 6, 7], status: "upcoming" },
-                { id: 3, title: "Game Night", date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], time: "18:00", location: "Mike's Apartment", description: "Board games and pizza", organizer: 4, participants: [1, 3, 4, 5], status: "upcoming" }
-            ],
-            expenses: [
-                { id: 1, description: "Dinner at Italian Restaurant", amount: 120.50, paidBy: 2, splitBetween: [1, 2, 3, 4], date: "2024-06-10", category: "food", status: "unsettled" },
-                { id: 2, description: "Concert Tickets", amount: 240.00, paidBy: 1, splitBetween: [1, 2, 3, 4, 5, 6], date: "2024-06-05", category: "entertainment", status: "unsettled" },
-                { id: 3, description: "Gas for Road Trip", amount: 60.00, paidBy: 3, splitBetween: [1, 3, 4], date: "2024-05-28", category: "travel", status: "settled" }
-            ],
-            polls: [
-                { 
-                    id: 1, 
-                    question: "Where should we go for dinner this Friday?", 
-                    options: [
-                        { id: 1, text: "Italian Restaurant", votes: 3, voters: [1, 2, 3] },
-                        { id: 2, text: "Mexican Food", votes: 2, voters: [4, 5] },
-                        { id: 3, text: "Chinese Takeout", votes: 1, voters: [6] },
-                        { id: 4, text: "Home Cooked Meal", votes: 2, voters: [7, 8] }
-                    ], 
-                    category: "food",
-                    createdBy: 1,
-                    createdAt: new Date().toISOString().split('T')[0],
-                    endsAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                    status: "active",
-                    allowMultiple: false,
-                    totalVotes: 8
+            posts: [
+                {
+                    id: 1,
+                    userId: 2,
+                    author: "Sarah Johnson",
+                    avatar: "SJ",
+                    time: "2 hours ago",
+                    text: "Had an amazing time at the beach today! The weather was perfect. Can't wait to go back next weekend.",
+                    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=600&fit=crop",
+                    likes: 24,
+                    comments: 5,
+                    shares: 2,
+                    userLiked: false,
+                    privacy: "public",
+                    tagged: [],
+                    commentsList: [
+                        { id: 1, userId: 3, author: "Mike Chen", text: "Looks beautiful! Wish I was there.", time: "1 hour ago", likes: 2 },
+                        { id: 2, userId: 1, author: "John Smith", text: "Great photo Sarah!", time: "45 minutes ago", likes: 0 }
+                    ]
                 },
-                { 
-                    id: 2, 
-                    question: "Which movie should we watch?", 
-                    options: [
-                        { id: 1, text: "Action Movie", votes: 4, voters: [1, 2, 3, 4] },
-                        { id: 2, text: "Comedy", votes: 3, voters: [5, 6, 7] },
-                        { id: 3, text: "Drama", votes: 1, voters: [8] }
-                    ], 
-                    category: "entertainment",
-                    createdBy: 2,
-                    createdAt: new Date().toISOString().split('T')[0],
-                    endsAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                    status: "active",
-                    allowMultiple: true,
-                    totalVotes: 8
+                {
+                    id: 2,
+                    userId: 3,
+                    author: "Mike Chen",
+                    avatar: "MC",
+                    time: "5 hours ago",
+                    text: "Just finished my marathon training for today! 15km in 1 hour 20 minutes. Feeling proud of the progress.",
+                    image: null,
+                    likes: 18,
+                    comments: 3,
+                    shares: 1,
+                    userLiked: true,
+                    privacy: "friends",
+                    tagged: [1],
+                    commentsList: [
+                        { id: 1, userId: 1, author: "John Smith", text: "Amazing time! Keep it up!", time: "4 hours ago", likes: 1 }
+                    ]
                 },
-                { 
-                    id: 3, 
-                    question: "Best day for weekend trip?", 
-                    options: [
-                        { id: 1, text: "Saturday", votes: 5, voters: [1, 2, 3, 4, 5] },
-                        { id: 2, text: "Sunday", votes: 3, voters: [6, 7, 8] }
-                    ], 
-                    category: "events",
-                    createdBy: 3,
-                    createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                    endsAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                    status: "closed",
-                    allowMultiple: false,
-                    totalVotes: 8
+                {
+                    id: 3,
+                    userId: 4,
+                    author: "Emma Wilson",
+                    avatar: "EW",
+                    time: "1 day ago",
+                    text: "Excited to announce I'll be starting my new job at TechCorp next week! Thanks everyone for your support during this journey.",
+                    image: null,
+                    likes: 42,
+                    comments: 12,
+                    shares: 5,
+                    userLiked: false,
+                    privacy: "public",
+                    tagged: [],
+                    commentsList: [
+                        { id: 1, userId: 2, author: "Sarah Johnson", text: "Congratulations Emma! So proud of you!", time: "1 day ago", likes: 3 },
+                        { id: 2, userId: 3, author: "Mike Chen", text: "That's amazing news! Well deserved.", time: "1 day ago", likes: 2 }
+                    ]
                 }
             ],
-            gallery: [
-                { id: 1, url: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=400&fit=crop", caption: "Weekend hike memories", uploadedBy: 2, date: "2024-06-03", likes: [1, 3, 4] },
-                { id: 2, url: "https://images.unsplash.com/photo-1547592180-85f173990554?w=400&h=400&fit=crop", caption: "Birthday celebration", uploadedBy: 1, date: "2024-05-20", likes: [2, 3, 4, 5] },
-                { id: 3, url: "https://images.unsplash.com/photo-1511735111819-9a3f7709049c?w=400&h=400&fit=crop", caption: "Game night fun", uploadedBy: 3, date: "2024-05-15", likes: [1, 2, 4] },
-                { id: 4, url: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=400&h=400&fit=crop", caption: "Beach day", uploadedBy: 4, date: "2024-05-30", likes: [1, 2, 3, 5] }
+            friends: [
+                { id: 2, name: "Sarah Johnson", avatar: "SJ", mutual: 15, status: "online" },
+                { id: 3, name: "Mike Chen", avatar: "MC", mutual: 8, status: "online" },
+                { id: 4, name: "Emma Wilson", avatar: "EW", mutual: 12, status: "offline" },
+                { id: 5, name: "David Brown", avatar: "DB", mutual: 20, status: "online" },
+                { id: 6, name: "Lisa Martinez", avatar: "LM", mutual: 18, status: "offline" }
             ],
-            locations: [
-                { id: 1, friendId: 2, name: "John Smith", location: "Downtown Cafe", lastUpdated: "10 min ago" },
-                { id: 2, friendId: 3, name: "Sarah Johnson", location: "Home", lastUpdated: "1 hour ago" },
-                { id: 3, friendId: 5, name: "Emma Brown", location: "Central Park", lastUpdated: "30 min ago" }
+            friendRequests: [
+                { id: 7, name: "Alex Turner", avatar: "AT", mutual: 3 },
+                { id: 8, name: "Maya Patel", avatar: "MP", mutual: 5 },
+                { id: 9, name: "Chris Evans", avatar: "CE", mutual: 2 }
             ],
-            activityLog: [
-                { id: 1, type: "friend_added", message: "Admin added John to the group", timestamp: "2 hours ago" },
-                { id: 2, type: "poll_created", message: "Admin created a new poll: Where should we go for dinner?", timestamp: "5 hours ago" },
-                { id: 3, type: "expense_added", message: "Mike added a new expense: Dinner - $120.50", timestamp: "1 day ago" },
-                { id: 4, type: "event_created", message: "Emma created a new event: Beach Day", timestamp: "2 days ago" }
+            events: [
+                { id: 1, title: "Weekend BBQ", date: "Jun 15", time: "2:00 PM", location: "Central Park", attendees: 15 },
+                { id: 2, title: "Birthday Party", date: "Jun 20", time: "7:00 PM", location: "Sarah's House", attendees: 25 },
+                { id: 3, title: "Game Night", date: "Jun 22", time: "6:00 PM", location: "Mike's Place", attendees: 10 }
             ]
         };
 
         // State Management
         let currentState = {
-            activeTab: 'dashboard'
+            selectedImage: null,
+            taggedFriends: [],
+            activePostId: null
         };
 
         // Initialize Application
         function initApp() {
-            // Set user avatar
-            document.getElementById('userAvatar').textContent = database.currentUser.avatar;
-            
-            // Load all sections
-            loadDashboard();
-            loadFriendsTable();
+            loadPosts();
+            loadFriendRequests();
             loadEvents();
-            loadExpenses();
-            loadPolls();
-            loadGallery();
-            loadLocations();
-            
-            // Setup event listeners
+            loadOnlineFriends();
             setupEventListeners();
             
             // Show welcome notification
-            showNotification('Welcome!', 'FriendsCircle platform loaded successfully', 'success');
+            setTimeout(() => {
+                showNotification('Welcome back!', 'You have 3 new notifications', 'success');
+            }, 1000);
         }
 
-        // Dashboard Functions
-        function loadDashboard() {
-            // Update stats
-            document.getElementById('totalFriends').textContent = database.friends.length + 1;
-            document.getElementById('activePollsCount').textContent = database.polls.filter(p => p.status === 'active').length;
-            
-            // Calculate total balance
-            const totalBalance = database.friends.reduce((sum, friend) => sum + friend.balance, 0);
-            document.getElementById('totalBalance').textContent = totalBalance >= 0 ? `$${totalBalance.toFixed(2)}` : `-$${Math.abs(totalBalance).toFixed(2)}`;
-            
-            // Load dashboard sections
-            loadActivePollsDashboard();
-            loadUpcomingEvents();
-            loadRecentExpenses();
-            loadDashboardActivity();
-        }
-
-        function loadActivePollsDashboard() {
-            const container = document.getElementById('activePollsDashboard');
+        // Load Posts
+        function loadPosts() {
+            const container = document.getElementById('postsFeed');
             container.innerHTML = '';
             
-            const activePolls = database.polls.filter(p => p.status === 'active').slice(0, 2);
+            database.posts.forEach(post => {
+                const postEl = createPostElement(post);
+                container.appendChild(postEl);
+            });
             
-            if (activePolls.length === 0) {
-                container.innerHTML = '<p style="color: var(--gray); text-align: center;">No active polls</p>';
-                return;
+            if (database.posts.length === 0) {
+                container.innerHTML = '<div class="post"><p style="text-align: center; color: var(--gray); padding: 40px;">No posts yet. Be the first to post!</p></div>';
             }
-            
-            activePolls.forEach(poll => {
-                const pollEl = document.createElement('div');
-                pollEl.className = 'event-card';
-                pollEl.innerHTML = `
-                    <h4 style="margin-bottom: 10px;">${poll.question}</h4>
-                    <p style="color: var(--gray); font-size: 14px; margin-bottom: 10px;">
-                        <i class="fas fa-users"></i> ${poll.totalVotes} votes
-                    </p>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span class="status-badge status-success">Active</span>
-                        <button class="btn btn-outline btn-sm" onclick="viewPoll(${poll.id})">
-                            <i class="fas fa-vote-yea"></i> Vote
-                        </button>
-                    </div>
-                `;
-                container.appendChild(pollEl);
-            });
         }
 
-        function loadUpcomingEvents() {
-            const container = document.getElementById('upcomingEventsList');
-            container.innerHTML = '';
+        function createPostElement(post) {
+            const postEl = document.createElement('div');
+            postEl.className = 'post';
+            postEl.dataset.postId = post.id;
             
-            const upcomingEvents = database.events.filter(e => e.status === 'upcoming').slice(0, 3);
+            // Format likes
+            const likesText = post.likes === 1 ? '1 like' : `${post.likes} likes`;
             
-            if (upcomingEvents.length === 0) {
-                container.innerHTML = '<p style="color: var(--gray); text-align: center;">No upcoming events</p>';
-                return;
-            }
+            // Format comments
+            const commentsText = post.comments === 1 ? '1 comment' : `${post.comments} comments`;
             
-            upcomingEvents.forEach(event => {
-                const organizer = database.friends.find(f => f.id === event.organizer) || database.currentUser;
-                const eventEl = document.createElement('div');
-                eventEl.className = 'event-card';
-                eventEl.innerHTML = `
-                    <div class="event-date">${formatDate(event.date)}</div>
-                    <h4 style="margin-bottom: 10px;">${event.title}</h4>
-                    <p style="color: var(--gray); font-size: 14px; margin-bottom: 10px;">
-                        <i class="fas fa-map-marker-alt"></i> ${event.location}
-                    </p>
-                    <p style="color: var(--gray); font-size: 14px;">
-                        <i class="fas fa-user"></i> ${organizer.name}
-                    </p>
-                `;
-                container.appendChild(eventEl);
-            });
-        }
-
-        function loadRecentExpenses() {
-            const container = document.getElementById('recentExpenses');
-            container.innerHTML = '';
+            // Format shares
+            const sharesText = post.shares === 1 ? '1 share' : `${post.shares} shares`;
             
-            const recentExpenses = database.expenses.slice(0, 3);
-            
-            if (recentExpenses.length === 0) {
-                container.innerHTML = '<p style="color: var(--gray); text-align: center;">No recent expenses</p>';
-                return;
-            }
-            
-            recentExpenses.forEach(expense => {
-                const paidBy = database.friends.find(f => f.id === expense.paidBy) || database.currentUser;
-                const expenseEl = document.createElement('div');
-                expenseEl.className = 'payment-card';
-                expenseEl.innerHTML = `
-                    <div>
-                        <h4 style="margin-bottom: 5px;">${expense.description}</h4>
-                        <p style="color: var(--gray); font-size: 14px;">Paid by ${paidBy.name}</p>
-                    </div>
-                    <div class="payment-amount ${expense.paidBy === database.currentUser.id ? 'payment-positive' : 'payment-negative'}">
-                        ${expense.paidBy === database.currentUser.id ? '+' : '-'}$${expense.amount.toFixed(2)}
-                    </div>
-                `;
-                container.appendChild(expenseEl);
-            });
-        }
-
-        function loadDashboardActivity() {
-            const container = document.getElementById('dashboardActivity');
-            container.innerHTML = '';
-            
-            database.activityLog.forEach(activity => {
-                const activityEl = document.createElement('div');
-                activityEl.style.padding = '10px 0';
-                activityEl.style.borderBottom = '1px solid var(--light-gray)';
-                activityEl.innerHTML = `
-                    <p style="margin-bottom: 5px;">${activity.message}</p>
-                    <small style="color: var(--gray);">${activity.timestamp}</small>
-                `;
-                container.appendChild(activityEl);
-            });
-            
-            // Also update sidebar activity
-            const sidebarActivity = document.getElementById('recentActivity');
-            sidebarActivity.innerHTML = '';
-            
-            database.activityLog.slice(0, 3).forEach(activity => {
-                const activityEl = document.createElement('div');
-                activityEl.style.padding = '10px 0';
-                activityEl.style.borderBottom = '1px solid var(--light-gray)';
-                activityEl.innerHTML = `
-                    <p style="margin-bottom: 5px;">${activity.message}</p>
-                    <small style="color: var(--gray);">${activity.timestamp}</small>
-                `;
-                sidebarActivity.appendChild(activityEl);
-            });
-        }
-
-        // Friends Management Functions
-        function loadFriendsTable() {
-            const tbody = document.getElementById('friendsTableBody');
-            tbody.innerHTML = '';
-            
-            database.friends.forEach(friend => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div class="friend-avatar" style="width: 40px; height: 40px;">${friend.avatar}</div>
-                            <div>
-                                <strong>${friend.name}</strong>
-                                ${friend.role === 'admin' ? '<br><small style="color: var(--primary);">Admin</small>' : ''}
-                            </div>
-                        </div>
-                    </td>
-                    <td>${friend.email}</td>
-                    <td>${friend.phone}</td>
-                    <td>
-                        <span class="status-badge ${friend.status === 'online' ? 'status-success' : 'status-warning'}">
-                            ${friend.status === 'online' ? 'Online' : 'Offline'}
-                        </span>
-                    </td>
-                    <td>${friend.role.charAt(0).toUpperCase() + friend.role.slice(1)}</td>
-                    <td>
-                        <span class="${friend.balance > 0 ? 'payment-positive' : friend.balance < 0 ? 'payment-negative' : ''}">
-                            ${friend.balance > 0 ? '+' : ''}$${friend.balance.toFixed(2)}
-                        </span>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn btn-outline btn-sm" onclick="messageFriend(${friend.id})">
-                                <i class="fas fa-envelope"></i>
-                            </button>
-                            <button class="btn btn-danger btn-sm" onclick="removeFriend(${friend.id})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        function addNewFriend(friendData) {
-            const newId = Math.max(...database.friends.map(f => f.id)) + 1;
-            const avatar = `${friendData.name.split(' ')[0].charAt(0)}${friendData.name.split(' ')[1]?.charAt(0) || friendData.name.charAt(1)}`.toUpperCase();
-            
-            const newFriend = {
-                id: newId,
-                name: friendData.name,
-                email: friendData.email,
-                phone: friendData.phone || '',
-                status: 'offline',
-                role: friendData.role,
-                balance: 0,
-                avatar: avatar
-            };
-            
-            database.friends.push(newFriend);
-            
-            // Add activity log
-            database.activityLog.unshift({
-                id: database.activityLog.length + 1,
-                type: "friend_added",
-                message: `${database.currentUser.name} added ${friendData.name} to the group`,
-                timestamp: "Just now"
-            });
-            
-            closeModal('addFriendModal');
-            loadDashboard();
-            loadFriendsTable();
-            
-            showNotification('Friend Added', `${friendData.name} has been added to the group`, 'success');
-        }
-
-        function removeFriend(friendId) {
-            const friend = database.friends.find(f => f.id === friendId);
-            if (!friend) return;
-            
-            if (confirm(`Are you sure you want to remove ${friend.name} from the group?`)) {
-                const index = database.friends.findIndex(f => f.id === friendId);
-                database.friends.splice(index, 1);
-                
-                // Add activity log
-                database.activityLog.unshift({
-                    id: database.activityLog.length + 1,
-                    type: "friend_removed",
-                    message: `${database.currentUser.name} removed ${friend.name} from the group`,
-                    timestamp: "Just now"
+            // Build tagged text
+            let taggedText = '';
+            if (post.tagged && post.tagged.length > 0) {
+                const taggedUsers = post.tagged.map(id => {
+                    const user = database.friends.find(f => f.id === id) || database.currentUser;
+                    return user.name;
                 });
-                
-                loadDashboard();
-                loadFriendsTable();
-                
-                showNotification('Friend Removed', `${friend.name} has been removed from the group`, 'success');
+                taggedText = `<p style="color: var(--gray); font-size: 14px; margin-bottom: 8px;">
+                    <i class="fas fa-tag"></i> Tagged: ${taggedUsers.join(', ')}
+                </p>`;
             }
-        }
-
-        function messageFriend(friendId) {
-            const friend = database.friends.find(f => f.id === friendId);
-            if (!friend) return;
             
-            showNotification('Message', `Opening chat with ${friend.name}`, 'info');
-        }
-
-        // Events Functions
-        function loadEvents() {
-            const container = document.getElementById('eventsGrid');
-            container.innerHTML = '';
-            
-            database.events.forEach(event => {
-                const organizer = database.friends.find(f => f.id === event.organizer) || database.currentUser;
-                const eventEl = document.createElement('div');
-                eventEl.className = 'event-card';
-                eventEl.innerHTML = `
-                    <div class="event-date">${formatDate(event.date)}</div>
-                    <h4 style="margin-bottom: 10px;">${event.title}</h4>
-                    <p style="color: var(--gray); font-size: 14px; margin-bottom: 10px;">
-                        <i class="fas fa-clock"></i> ${event.time || 'All day'}
-                    </p>
-                    <p style="color: var(--gray); font-size: 14px; margin-bottom: 15px;">
-                        <i class="fas fa-map-marker-alt"></i> ${event.location}
-                    </p>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span class="status-badge status-success">
-                            Upcoming
-                        </span>
-                        <div class="action-buttons">
-                            <button class="btn btn-outline btn-sm" onclick="viewEvent(${event.id})">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteEvent(${event.id})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
+            postEl.innerHTML = `
+                <div class="post-header">
+                    <div class="user-avatar">${post.avatar}</div>
+                    <div class="post-author">
+                        <h4>${post.author}</h4>
+                        <div class="post-time">${post.time} • <i class="fas fa-globe"></i></div>
                     </div>
-                `;
-                container.appendChild(eventEl);
-            });
-        }
-
-        function createNewEvent(eventData) {
-            const newId = Math.max(...database.events.map(e => e.id)) + 1;
-            
-            const newEvent = {
-                id: newId,
-                title: eventData.title,
-                date: eventData.date,
-                time: eventData.time || '',
-                location: eventData.location || '',
-                description: eventData.description || '',
-                organizer: database.currentUser.id,
-                participants: [database.currentUser.id],
-                status: 'upcoming'
-            };
-            
-            database.events.push(newEvent);
-            
-            // Add activity log
-            database.activityLog.unshift({
-                id: database.activityLog.length + 1,
-                type: "event_created",
-                message: `${database.currentUser.name} created a new event: ${eventData.title}`,
-                timestamp: "Just now"
-            });
-            
-            closeModal('createEventModal');
-            loadDashboard();
-            loadEvents();
-            
-            showNotification('Event Created', `${eventData.title} has been scheduled`, 'success');
-        }
-
-        function viewEvent(eventId) {
-            const event = database.events.find(e => e.id === eventId);
-            if (!event) return;
-            
-            const organizer = database.friends.find(f => f.id === event.organizer) || database.currentUser;
-            showNotification('Event Details', 
-                `${event.title} on ${formatDate(event.date)}\nLocation: ${event.location}\nOrganizer: ${organizer.name}`, 
-                'info');
-        }
-
-        function deleteEvent(eventId) {
-            const event = database.events.find(e => e.id === eventId);
-            if (!event) return;
-            
-            if (confirm(`Are you sure you want to delete event: ${event.title}?`)) {
-                const index = database.events.findIndex(e => e.id === eventId);
-                database.events.splice(index, 1);
-                
-                // Add activity log
-                database.activityLog.unshift({
-                    id: database.activityLog.length + 1,
-                    type: "event_deleted",
-                    message: `${database.currentUser.name} deleted event: ${event.title}`,
-                    timestamp: "Just now"
-                });
-                
-                loadDashboard();
-                loadEvents();
-                
-                showNotification('Event Deleted', `${event.title} has been deleted`, 'success');
-            }
-        }
-
-        // Expenses Functions
-        function loadExpenses() {
-            const tbody = document.getElementById('expensesTableBody');
-            tbody.innerHTML = '';
-            
-            database.expenses.forEach(expense => {
-                const paidBy = database.friends.find(f => f.id === expense.paidBy) || database.currentUser;
-                const splitCount = expense.splitBetween.length;
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <strong>${expense.description}</strong>
-                        <br><small style="color: var(--gray);">${expense.category}</small>
-                    </td>
-                    <td><strong>$${expense.amount.toFixed(2)}</strong></td>
-                    <td>${paidBy.name}</td>
-                    <td>${splitCount} people</td>
-                    <td>${formatDate(expense.date)}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn btn-outline btn-sm" onclick="viewExpense(${expense.id})">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteExpense(${expense.id})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        function addNewExpense(expenseData) {
-            const newId = Math.max(...database.expenses.map(e => e.id)) + 1;
-            
-            const newExpense = {
-                id: newId,
-                description: expenseData.description,
-                amount: parseFloat(expenseData.amount),
-                paidBy: parseInt(expenseData.paidBy),
-                splitBetween: expenseData.splitBetween.map(id => parseInt(id)),
-                date: new Date().toISOString().split('T')[0],
-                category: "food",
-                status: 'unsettled'
-            };
-            
-            database.expenses.push(newExpense);
-            
-            // Add activity log
-            const paidBy = database.friends.find(f => f.id === newExpense.paidBy) || database.currentUser;
-            database.activityLog.unshift({
-                id: database.activityLog.length + 1,
-                type: "expense_added",
-                message: `${paidBy.name} added a new expense: ${newExpense.description} - $${newExpense.amount.toFixed(2)}`,
-                timestamp: "Just now"
-            });
-            
-            closeModal('addExpenseModal');
-            loadDashboard();
-            loadExpenses();
-            
-            showNotification('Expense Added', `${newExpense.description} added successfully`, 'success');
-        }
-
-        function viewExpense(expenseId) {
-            const expense = database.expenses.find(e => e.id === expenseId);
-            if (!expense) return;
-            
-            const paidBy = database.friends.find(f => f.id === expense.paidBy) || database.currentUser;
-            showNotification('Expense Details', 
-                `${expense.description}\nAmount: $${expense.amount.toFixed(2)}\nPaid by: ${paidBy.name}\nDate: ${formatDate(expense.date)}`, 
-                'info');
-        }
-
-        function deleteExpense(expenseId) {
-            const expense = database.expenses.find(e => e.id === expenseId);
-            if (!expense) return;
-            
-            if (confirm(`Are you sure you want to delete expense: ${expense.description}?`)) {
-                const index = database.expenses.findIndex(e => e.id === expenseId);
-                database.expenses.splice(index, 1);
-                
-                // Add activity log
-                database.activityLog.unshift({
-                    id: database.activityLog.length + 1,
-                    type: "expense_deleted",
-                    message: `${database.currentUser.name} deleted expense: ${expense.description}`,
-                    timestamp: "Just now"
-                });
-                
-                loadDashboard();
-                loadExpenses();
-                
-                showNotification('Expense Deleted', `${expense.description} has been deleted`, 'success');
-            }
-        }
-
-        // Poll Functions
-        function loadPolls() {
-            loadActivePolls();
-            loadPastPolls();
-        }
-
-        function loadActivePolls() {
-            const container = document.getElementById('pollsList');
-            container.innerHTML = '';
-            
-            const activePolls = database.polls.filter(p => p.status === 'active');
-            
-            if (activePolls.length === 0) {
-                container.innerHTML = '<p style="color: var(--gray); text-align: center; padding: 40px;">No active polls. Create one!</p>';
-                return;
-            }
-            
-            activePolls.forEach(poll => {
-                const pollEl = createPollElement(poll);
-                container.appendChild(pollEl);
-            });
-        }
-
-        function loadPastPolls() {
-            const container = document.getElementById('pastPollsList');
-            container.innerHTML = '';
-            
-            const pastPolls = database.polls.filter(p => p.status === 'closed');
-            
-            if (pastPolls.length === 0) {
-                container.innerHTML = '<p style="color: var(--gray); text-align: center; padding: 20px;">No past polls</p>';
-                return;
-            }
-            
-            pastPolls.forEach(poll => {
-                const pollEl = createPollElement(poll);
-                container.appendChild(pollEl);
-            });
-        }
-
-        function createPollElement(poll) {
-            const pollEl = document.createElement('div');
-            pollEl.className = 'poll-card';
-            pollEl.dataset.pollId = poll.id;
-            
-            const createdBy = database.friends.find(f => f.id === poll.createdBy) || database.currentUser;
-            const hasVoted = poll.options.some(option => option.voters.includes(database.currentUser.id));
-            const isClosed = poll.status === 'closed';
-            
-            let optionsHtml = '';
-            if (isClosed || hasVoted) {
-                // Show results
-                optionsHtml = `
-                    <div class="poll-results" style="display: block;">
-                        ${poll.options.map(option => {
-                            const percentage = poll.totalVotes > 0 ? (option.votes / poll.totalVotes * 100).toFixed(1) : 0;
-                            return `
-                                <div style="margin-bottom: 15px;">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                        <span>${option.text}</span>
-                                        <span>${option.votes} votes (${percentage}%)</span>
-                                    </div>
-                                    <div class="poll-result-bar">
-                                        <div class="poll-result-fill" style="width: ${percentage}%"></div>
-                                    </div>
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                `;
-            } else {
-                // Show voting options
-                optionsHtml = `
-                    <div class="poll-options">
-                        ${poll.options.map(option => `
-                            <div class="poll-option" onclick="voteOnPoll(${poll.id}, ${option.id})">
-                                ${option.text}
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            }
-            
-            pollEl.innerHTML = `
-                <div class="poll-header">
-                    <div>
-                        <h3 style="margin-bottom: 5px;">${poll.question}</h3>
-                        <p style="color: var(--gray); font-size: 14px;">
-                            Created by ${createdBy.name} • ${formatDate(poll.createdAt)}
-                        </p>
-                    </div>
-                    <span class="poll-status ${poll.status === 'active' ? 'poll-status-active' : 'poll-status-closed'}">
-                        ${poll.status === 'active' ? 'Active' : 'Closed'}
-                    </span>
+                    <button class="close-modal" style="font-size: 18px; color: var(--gray);">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </button>
                 </div>
-                
-                ${optionsHtml}
-                
-                <div class="poll-meta">
-                    <div>
-                        <i class="fas fa-chart-pie"></i> ${poll.totalVotes} total votes
-                        ${poll.allowMultiple ? ' • <i class="fas fa-check-double"></i> Multiple choices allowed' : ''}
+                <div class="post-content">
+                    <div class="post-text">${post.text}</div>
+                    ${taggedText}
+                    ${post.image ? `
+                        <div class="post-image">
+                            <img src="${post.image}" alt="Post image">
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="post-stats">
+                    <div class="likes-count" style="display: flex; align-items: center; gap: 6px;">
+                        <div style="background: var(--primary); color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px;">
+                            <i class="fas fa-thumbs-up"></i>
+                        </div>
+                        <span>${likesText}</span>
                     </div>
-                    <div class="poll-actions">
-                        <button class="btn btn-danger btn-sm" onclick="deletePoll(${poll.id})">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
+                    <div>
+                        <span>${commentsText} • ${sharesText}</span>
+                    </div>
+                </div>
+                <div class="post-actions-bar">
+                    <div class="post-action-btn ${post.userLiked ? 'active' : ''}" onclick="toggleLike(${post.id})">
+                        <i class="fas fa-thumbs-up"></i>
+                        <span>Like</span>
+                    </div>
+                    <div class="post-action-btn" onclick="focusComment(${post.id})">
+                        <i class="fas fa-comment"></i>
+                        <span>Comment</span>
+                    </div>
+                    <div class="post-action-btn" onclick="sharePost(${post.id})">
+                        <i class="fas fa-share"></i>
+                        <span>Share</span>
+                    </div>
+                </div>
+                <div class="comments-section" id="comments-${post.id}">
+                    ${post.commentsList.map(comment => `
+                        <div class="comment">
+                            <div class="user-avatar" style="width: 32px; height: 32px; font-size: 12px;">${comment.author.charAt(0)}</div>
+                            <div class="comment-content">
+                                <div class="comment-author">${comment.author}</div>
+                                <div class="comment-text">${comment.text}</div>
+                                <div class="comment-actions">
+                                    <span class="comment-action">Like</span>
+                                    <span class="comment-action">Reply</span>
+                                    <span class="comment-time">${comment.time}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                    <div class="comment-input">
+                        <div class="user-avatar" style="width: 32px; height: 32px; font-size: 12px;">${database.currentUser.avatar}</div>
+                        <input type="text" placeholder="Write a comment..." onkeypress="if(event.key === 'Enter') addComment(${post.id}, this)">
+                        <button class="btn btn-primary btn-sm" onclick="addComment(${post.id}, this.previousElementSibling)">Post</button>
                     </div>
                 </div>
             `;
             
-            return pollEl;
+            return postEl;
         }
 
-        function createNewPoll(pollData) {
-            const newId = Math.max(...database.polls.map(p => p.id)) + 1;
-            const options = pollData.options.split('\n').filter(opt => opt.trim() !== '').map((text, index) => ({
-                id: index + 1,
-                text: text.trim(),
-                votes: 0,
-                voters: []
-            }));
+        // Load Friend Requests
+        function loadFriendRequests() {
+            const sidebarList = document.getElementById('friendRequestsList');
+            const modalList = document.getElementById('allFriendRequests');
             
-            // Calculate end date
-            const endsAt = new Date();
-            endsAt.setDate(endsAt.getDate() + parseInt(pollData.duration));
+            sidebarList.innerHTML = '';
+            modalList.innerHTML = '';
             
-            const newPoll = {
-                id: newId,
-                question: pollData.question,
-                options: options,
-                category: pollData.category,
-                createdBy: database.currentUser.id,
-                createdAt: new Date().toISOString().split('T')[0],
-                endsAt: endsAt.toISOString().split('T')[0],
-                status: "active",
-                allowMultiple: pollData.allowMultiple,
-                totalVotes: 0
+            database.friendRequests.slice(0, 2).forEach(request => {
+                const requestEl = createFriendRequestElement(request);
+                sidebarList.appendChild(requestEl.cloneNode(true));
+            });
+            
+            database.friendRequests.forEach(request => {
+                const requestEl = createFriendRequestElement(request);
+                modalList.appendChild(requestEl);
+            });
+            
+            if (database.friendRequests.length === 0) {
+                sidebarList.innerHTML = '<p style="text-align: center; color: var(--gray); padding: 10px;">No pending requests</p>';
+                modalList.innerHTML = '<p style="text-align: center; color: var(--gray); padding: 20px;">No pending friend requests</p>';
+            }
+        }
+
+        function createFriendRequestElement(request) {
+            const requestEl = document.createElement('div');
+            requestEl.className = 'friend-request';
+            requestEl.innerHTML = `
+                <div class="user-avatar">${request.avatar}</div>
+                <div class="friend-info">
+                    <h4>${request.name}</h4>
+                    <p class="friend-mutual">${request.mutual} mutual friends</p>
+                    <div class="friend-actions">
+                        <button class="btn btn-success btn-sm" onclick="acceptFriendRequest(${request.id})">Confirm</button>
+                        <button class="btn btn-secondary btn-sm" onclick="declineFriendRequest(${request.id})">Delete</button>
+                    </div>
+                </div>
+            `;
+            return requestEl;
+        }
+
+        // Load Events
+        function loadEvents() {
+            const container = document.getElementById('eventsList');
+            container.innerHTML = '';
+            
+            database.events.forEach(event => {
+                const eventEl = document.createElement('div');
+                eventEl.className = 'event-item';
+                eventEl.innerHTML = `
+                    <div class="event-date">${event.date}</div>
+                    <h4>${event.title}</h4>
+                    <div class="event-details">
+                        <span><i class="far fa-clock"></i> ${event.time}</span>
+                        <span><i class="fas fa-map-marker-alt"></i> ${event.location}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 12px; color: var(--gray);">
+                            <i class="fas fa-users"></i> ${event.attendees} going
+                        </span>
+                        <button class="btn btn-primary btn-sm" onclick="rsvpToEvent(${event.id})">RSVP</button>
+                    </div>
+                `;
+                container.appendChild(eventEl);
+            });
+        }
+
+        // Load Online Friends
+        function loadOnlineFriends() {
+            const container = document.getElementById('onlineFriends');
+            container.innerHTML = '';
+            
+            const onlineFriends = database.friends.filter(f => f.status === 'online');
+            
+            onlineFriends.forEach(friend => {
+                const friendEl = document.createElement('div');
+                friendEl.className = 'shortcut-item';
+                friendEl.innerHTML = `
+                    <div class="user-avatar" style="width: 36px; height: 36px; position: relative;">
+                        ${friend.avatar}
+                        <div style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; background: var(--success); border: 2px solid white; border-radius: 50%;"></div>
+                    </div>
+                    <span>${friend.name}</span>
+                `;
+                friendEl.onclick = () => startChat(friend.id);
+                container.appendChild(friendEl);
+            });
+        }
+
+        // Post Functions
+        function createPost() {
+            const text = document.getElementById('modalPostText').value.trim();
+            if (!text && !currentState.selectedImage) {
+                showNotification('Error', 'Please add some text or a photo to your post', 'error');
+                return;
+            }
+            
+            const newPost = {
+                id: database.posts.length + 1,
+                userId: database.currentUser.id,
+                author: database.currentUser.name,
+                avatar: database.currentUser.avatar,
+                time: "Just now",
+                text: text,
+                image: currentState.selectedImage,
+                likes: 0,
+                comments: 0,
+                shares: 0,
+                userLiked: false,
+                privacy: "public",
+                tagged: currentState.taggedFriends,
+                commentsList: []
             };
             
-            database.polls.push(newPoll);
+            database.posts.unshift(newPost);
             
-            // Add activity log
-            database.activityLog.unshift({
-                id: database.activityLog.length + 1,
-                type: "poll_created",
-                message: `${database.currentUser.name} created a new poll: ${pollData.question}`,
-                timestamp: "Just now"
-            });
+            // Reset state
+            document.getElementById('modalPostText').value = '';
+            currentState.selectedImage = null;
+            currentState.taggedFriends = [];
             
-            closeModal('createPollModal');
-            loadDashboard();
-            loadPolls();
+            closeModal('createPostModal');
+            loadPosts();
             
-            showNotification('Poll Created', `${pollData.question} has been created`, 'success');
+            showNotification('Post published', 'Your post is now visible to friends', 'success');
         }
 
-        function voteOnPoll(pollId, optionId) {
-            const poll = database.polls.find(p => p.id === pollId);
-            if (!poll || poll.status === 'closed') return;
+        function toggleLike(postId) {
+            const post = database.posts.find(p => p.id === postId);
+            if (!post) return;
             
-            const option = poll.options.find(o => o.id === optionId);
-            if (!option) return;
+            post.userLiked = !post.userLiked;
+            post.likes += post.userLiked ? 1 : -1;
             
-            // Check if user already voted (for single-choice polls)
-            if (!poll.allowMultiple) {
-                const hasVoted = poll.options.some(o => o.voters.includes(database.currentUser.id));
-                if (hasVoted) {
-                    showNotification('Already Voted', 'You have already voted on this poll', 'warning');
-                    return;
-                }
-            }
+            // Update UI
+            const postEl = document.querySelector(`[data-post-id="${postId}"]`);
+            const likeBtn = postEl.querySelector('.post-action-btn');
+            const likesCount = postEl.querySelector('.likes-count span');
             
-            // Check if user already voted for this option
-            if (option.voters.includes(database.currentUser.id)) {
-                // Remove vote
-                option.votes--;
-                option.voters = option.voters.filter(id => id !== database.currentUser.id);
-                poll.totalVotes--;
-            } else {
-                // Add vote
-                option.votes++;
-                option.voters.push(database.currentUser.id);
-                poll.totalVotes++;
-            }
+            likeBtn.classList.toggle('active', post.userLiked);
+            likesCount.textContent = post.likes === 1 ? '1 like' : `${post.likes} likes`;
             
-            // Refresh poll display
-            loadPolls();
-            loadActivePollsDashboard();
-            
-            showNotification('Vote Recorded', 'Your vote has been recorded', 'success');
+            showNotification(post.userLiked ? 'Liked' : 'Unliked', '', 'success');
         }
 
-        function deletePoll(pollId) {
-            const poll = database.polls.find(p => p.id === pollId);
-            if (!poll) return;
+        function addComment(postId, input) {
+            const text = input.value.trim();
+            if (!text) return;
             
-            if (confirm(`Are you sure you want to delete poll: "${poll.question}"?`)) {
-                const index = database.polls.findIndex(p => p.id === pollId);
-                database.polls.splice(index, 1);
-                
-                // Add activity log
-                database.activityLog.unshift({
-                    id: database.activityLog.length + 1,
-                    type: "poll_deleted",
-                    message: `${database.currentUser.name} deleted poll: ${poll.question}`,
-                    timestamp: "Just now"
-                });
-                
-                loadDashboard();
-                loadPolls();
-                
-                showNotification('Poll Deleted', `"${poll.question}" has been deleted`, 'success');
-            }
-        }
-
-        // Gallery Functions
-        function loadGallery() {
-            const container = document.getElementById('galleryGrid');
-            container.innerHTML = '';
+            const post = database.posts.find(p => p.id === postId);
+            if (!post) return;
             
-            database.gallery.forEach(photo => {
-                const photoEl = document.createElement('div');
-                photoEl.className = 'gallery-item';
-                photoEl.innerHTML = `
-                    <img src="${photo.url}" alt="${photo.caption}">
-                    <div class="gallery-overlay">
-                        <p style="font-size: 12px;">${photo.caption}</p>
+            const newComment = {
+                id: post.commentsList.length + 1,
+                userId: database.currentUser.id,
+                author: database.currentUser.name,
+                text: text,
+                time: "Just now",
+                likes: 0
+            };
+            
+            post.commentsList.push(newComment);
+            post.comments = post.commentsList.length;
+            
+            // Update UI
+            const commentsSection = document.getElementById(`comments-${postId}`);
+            const commentInput = commentsSection.querySelector('.comment-input input');
+            
+            const commentEl = document.createElement('div');
+            commentEl.className = 'comment';
+            commentEl.innerHTML = `
+                <div class="user-avatar" style="width: 32px; height: 32px; font-size: 12px;">${database.currentUser.avatar}</div>
+                <div class="comment-content">
+                    <div class="comment-author">${database.currentUser.name}</div>
+                    <div class="comment-text">${text}</div>
+                    <div class="comment-actions">
+                        <span class="comment-action">Like</span>
+                        <span class="comment-action">Reply</span>
+                        <span class="comment-time">Just now</span>
                     </div>
-                `;
-                container.appendChild(photoEl);
-            });
+                </div>
+            `;
+            
+            commentsSection.insertBefore(commentEl, commentInput.parentElement);
+            commentInput.value = '';
+            
+            // Update comments count
+            const stats = document.querySelector(`[data-post-id="${postId}"] .post-stats`);
+            const commentsSpan = stats.querySelectorAll('span')[1];
+            commentsSpan.textContent = `${post.comments} comment${post.comments !== 1 ? 's' : ''} • ${post.shares} share${post.shares !== 1 ? 's' : ''}`;
+            
+            showNotification('Comment added', '', 'success');
         }
 
-        function uploadPhoto() {
-            const caption = document.getElementById('photoCaption').value || 'New photo';
-            const newId = Math.max(...database.gallery.map(p => p.id)) + 1;
-            
-            // Add mock photo
-            database.gallery.unshift({
-                id: newId,
-                url: `https://images.unsplash.com/photo-${1500000000000 + newId}?w=400&h=400&fit=crop`,
-                caption: caption,
-                uploadedBy: database.currentUser.id,
-                date: new Date().toISOString().split('T')[0],
-                likes: []
-            });
-            
-            // Add activity log
-            database.activityLog.unshift({
-                id: database.activityLog.length + 1,
-                type: "photo_uploaded",
-                message: `${database.currentUser.name} uploaded a new photo`,
-                timestamp: "Just now"
-            });
-            
-            closeModal('uploadPhotoModal');
-            loadGallery();
-            
-            showNotification('Photo Uploaded', 'Photo uploaded successfully', 'success');
+        function focusComment(postId) {
+            const commentsSection = document.getElementById(`comments-${postId}`);
+            const input = commentsSection.querySelector('input');
+            input.focus();
         }
 
-        // Locations Functions
-        function loadLocations() {
-            const container = document.getElementById('friendLocations');
-            container.innerHTML = '';
+        function sharePost(postId) {
+            const post = database.posts.find(p => p.id === postId);
+            if (!post) return;
             
-            database.locations.forEach(location => {
-                const locationEl = document.createElement('div');
-                locationEl.className = 'friend-item';
-                locationEl.innerHTML = `
-                    <div class="friend-avatar">${location.name.charAt(0)}${location.name.split(' ')[1]?.charAt(0) || location.name.charAt(1)}</div>
-                    <div class="friend-info">
-                        <h4>${location.name}</h4>
-                        <p style="color: var(--gray); font-size: 14px;">
-                            <i class="fas fa-map-marker-alt"></i> ${location.location}
-                        </p>
-                        <small style="color: var(--gray);">Updated ${location.lastUpdated}</small>
-                    </div>
-                `;
-                container.appendChild(locationEl);
-            });
+            post.shares += 1;
+            
+            // Update UI
+            const postEl = document.querySelector(`[data-post-id="${postId}"]`);
+            const stats = postEl.querySelector('.post-stats');
+            const sharesSpan = stats.querySelectorAll('span')[1];
+            sharesSpan.textContent = `${post.comments} comment${post.comments !== 1 ? 's' : ''} • ${post.shares} share${post.shares !== 1 ? 's' : ''}`;
+            
+            showNotification('Post shared', 'Shared with your friends', 'success');
         }
 
-        function shareLocation() {
-            const location = prompt("Enter your location:");
-            if (location) {
-                // Add to locations
-                database.locations.unshift({
-                    id: database.locations.length + 1,
-                    friendId: database.currentUser.id,
-                    name: database.currentUser.name,
-                    location: location,
-                    lastUpdated: "Just now"
-                });
+        // Friend Request Functions
+        function acceptFriendRequest(requestId) {
+            const requestIndex = database.friendRequests.findIndex(r => r.id === requestId);
+            if (requestIndex === -1) return;
+            
+            const request = database.friendRequests[requestIndex];
+            
+            // Add to friends
+            database.friends.push({
+                id: request.id,
+                name: request.name,
+                avatar: request.avatar,
+                mutual: request.mutual,
+                status: 'online'
+            });
+            
+            // Remove from requests
+            database.friendRequests.splice(requestIndex, 1);
+            
+            // Update UI
+            loadFriendRequests();
+            loadOnlineFriends();
+            
+            showNotification('Friend request accepted', `${request.name} is now your friend`, 'success');
+        }
+
+        function declineFriendRequest(requestId) {
+            const requestIndex = database.friendRequests.findIndex(r => r.id === requestId);
+            if (requestIndex === -1) return;
+            
+            const request = database.friendRequests[requestIndex];
+            database.friendRequests.splice(requestIndex, 1);
+            
+            loadFriendRequests();
+            showNotification('Friend request declined', '', 'success');
+        }
+
+        function sendFriendRequest() {
+            showNotification('Feature', 'Friend request feature would be implemented', 'success');
+        }
+
+        // Event Functions
+        function rsvpToEvent(eventId) {
+            const event = database.events.find(e => e.id === eventId);
+            if (!event) return;
+            
+            event.attendees += 1;
+            
+            // Update UI
+            const eventEl = document.querySelector(`[data-event-id="${eventId}"]`) || document.querySelectorAll('.event-item')[eventId - 1];
+            if (eventEl) {
+                const attendeesSpan = eventEl.querySelector('span');
+                attendeesSpan.innerHTML = `<i class="fas fa-users"></i> ${event.attendees} going`;
                 
-                // Add activity log
-                database.activityLog.unshift({
-                    id: database.activityLog.length + 1,
-                    type: "location_shared",
-                    message: `${database.currentUser.name} shared their location: ${location}`,
-                    timestamp: "Just now"
-                });
-                
-                loadLocations();
-                
-                showNotification('Location Shared', 'Your location has been shared with the group', 'success');
+                const rsvpBtn = eventEl.querySelector('button');
+                rsvpBtn.textContent = 'Going ✓';
+                rsvpBtn.disabled = true;
             }
+            
+            showNotification('RSVP confirmed', `You're going to ${event.title}`, 'success');
         }
 
-        // Phone Support Functions
-        function callSupport() {
-            showNotification('Calling Support', 'Connecting to 1-800-FRIENDS...', 'info');
-            // In a real app, this would initiate a phone call
-            setTimeout(() => {
-                showNotification('Support Connected', 'You are now connected to support', 'success');
-            }, 2000);
+        // Image Upload
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.startsWith('image/')) {
+                showNotification('Error', 'Please select an image file', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentState.selectedImage = e.target.result;
+                
+                // Show preview
+                document.getElementById('postImagePreview').src = e.target.result;
+                document.getElementById('postPreview').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
         }
 
-        function callPollSupport() {
-            showNotification('Calling Poll Support', 'Connecting to 1-800-POLLHELP...', 'info');
-            // In a real app, this would initiate a phone call
-            setTimeout(() => {
-                showNotification('Poll Support Connected', 'Specialized poll support is now available', 'success');
-            }, 2000);
+        function removeImage() {
+            currentState.selectedImage = null;
+            document.getElementById('postPreview').style.display = 'none';
+            document.getElementById('imageUpload').value = '';
+        }
+
+        // Chat Functions
+        function startChat(friendId) {
+            const friend = database.friends.find(f => f.id === friendId);
+            if (!friend) return;
+            
+            showNotification('Chat', `Opening chat with ${friend.name}`, 'success');
         }
 
         // Utility Functions
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        }
-
         function showNotification(title, message, type = 'success') {
             const notification = document.getElementById('notification');
             const titleEl = document.getElementById('notificationTitle');
             const messageEl = document.getElementById('notificationMessage');
+            const icon = notification.querySelector('i');
             
-            notification.style.backgroundColor = 
-                type === 'success' ? 'var(--success)' :
-                type === 'error' ? 'var(--danger)' :
-                type === 'warning' ? 'var(--accent)' :
-                type === 'info' ? 'var(--info)' : 'var(--primary)';
-            
+            notification.className = `notification ${type}`;
             titleEl.textContent = title;
             messageEl.textContent = message;
+            
+            if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle';
+                icon.style.color = 'var(--accent)';
+            } else if (type === 'warning') {
+                icon.className = 'fas fa-exclamation-triangle';
+                icon.style.color = 'var(--warning)';
+            } else {
+                icon.className = 'fas fa-check-circle';
+                icon.style.color = 'var(--success)';
+            }
             
             notification.style.display = 'block';
             
             setTimeout(() => {
                 notification.style.display = 'none';
-            }, 5000);
+            }, 3000);
         }
 
         function openModal(modalId) {
             document.getElementById(modalId).style.display = 'flex';
-            
-            // Populate dropdowns if needed
-            if (modalId === 'addExpenseModal') {
-                populateExpenseModal();
-            } else if (modalId === 'createEventModal') {
-                // Set default date to tomorrow
-                const tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                document.getElementById('eventDate').value = tomorrow.toISOString().split('T')[0];
-                
-                // Set default time to 18:00
-                document.getElementById('eventTime').value = '18:00';
-            }
-        }
-
-        function populateExpenseModal() {
-            // Populate "Paid By" dropdown
-            const paidBySelect = document.getElementById('expensePaidBy');
-            paidBySelect.innerHTML = '';
-            
-            // Add current user
-            const currentUserOption = document.createElement('option');
-            currentUserOption.value = database.currentUser.id;
-            currentUserOption.textContent = `${database.currentUser.name} (You)`;
-            paidBySelect.appendChild(currentUserOption);
-            
-            // Add friends
-            database.friends.forEach(friend => {
-                const option = document.createElement('option');
-                option.value = friend.id;
-                option.textContent = friend.name;
-                paidBySelect.appendChild(option);
-            });
-            
-            // Populate split checkboxes
-            const checkboxesContainer = document.getElementById('splitBetweenCheckboxes');
-            checkboxesContainer.innerHTML = '';
-            
-            // Add current user checkbox (checked by default)
-            const currentUserCheckbox = document.createElement('div');
-            currentUserCheckbox.style.marginBottom = '8px';
-            currentUserCheckbox.innerHTML = `
-                <input type="checkbox" id="split-${database.currentUser.id}" name="split" value="${database.currentUser.id}" checked>
-                <label for="split-${database.currentUser.id}" style="display: inline; margin-left: 8px;">
-                    ${database.currentUser.name} (You)
-                </label>
-            `;
-            checkboxesContainer.appendChild(currentUserCheckbox);
-            
-            // Add friends checkboxes
-            database.friends.forEach(friend => {
-                const checkbox = document.createElement('div');
-                checkbox.style.marginBottom = '8px';
-                checkbox.innerHTML = `
-                    <input type="checkbox" id="split-${friend.id}" name="split" value="${friend.id}" checked>
-                    <label for="split-${friend.id}" style="display: inline; margin-left: 8px;">
-                        ${friend.name}
-                    </label>
-                `;
-                checkboxesContainer.appendChild(checkbox);
-            });
         }
 
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
-            // Clear forms
-            const form = document.getElementById(modalId.replace('Modal', 'Form'));
-            if (form) form.reset();
         }
 
         // Setup Event Listeners
         function setupEventListeners() {
-            // Navigation tab switching
-            document.querySelectorAll('.nav-links a').forEach(link => {
-                link.addEventListener('click', function(e) {
+            // Create post buttons
+            document.getElementById('createPostBtn').addEventListener('click', () => {
+                openModal('createPostModal');
+            });
+            
+            document.getElementById('publishPostBtn').addEventListener('click', createPost);
+            
+            document.getElementById('addPhotoBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal('createPostModal');
+                document.getElementById('imageUpload').click();
+            });
+            
+            document.getElementById('tagFriendsBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal('tagFriendsModal');
+            });
+            
+            document.getElementById('tagFriendsModalBtn').addEventListener('click', () => {
+                closeModal('createPostModal');
+                openModal('tagFriendsModal');
+            });
+            
+            // Image upload
+            document.getElementById('imageUpload').addEventListener('change', handleImageUpload);
+            
+            // Quick post from input
+            document.getElementById('postText').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const text = e.target.value.trim();
+                    if (text) {
+                        const newPost = {
+                            id: database.posts.length + 1,
+                            userId: database.currentUser.id,
+                            author: database.currentUser.name,
+                            avatar: database.currentUser.avatar,
+                            time: "Just now",
+                            text: text,
+                            image: null,
+                            likes: 0,
+                            comments: 0,
+                            shares: 0,
+                            userLiked: false,
+                            privacy: "public",
+                            tagged: [],
+                            commentsList: []
+                        };
+                        
+                        database.posts.unshift(newPost);
+                        e.target.value = '';
+                        loadPosts();
+                        showNotification('Post published', '', 'success');
+                    }
+                }
+            });
+            
+            // Navigation
+            document.querySelectorAll('[data-tab]').forEach(tab => {
+                tab.addEventListener('click', (e) => {
                     e.preventDefault();
-                    
-                    // Update active tab
-                    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Show corresponding tab content
-                    const tabId = this.dataset.tab;
-                    document.querySelectorAll('.tab-content').forEach(content => {
-                        content.classList.remove('active');
-                    });
-                    document.getElementById(tabId).classList.add('active');
-                    
-                    currentState.activeTab = tabId;
+                    const tabId = tab.dataset.tab;
+                    showNotification('Navigation', `Switching to ${tabId}`, 'info');
                 });
             });
-
-            // Call Support Buttons
-            document.getElementById('callSupportBtn').addEventListener('click', callSupport);
-            document.getElementById('callPollSupportBtn').addEventListener('click', callPollSupport);
-            document.getElementById('callSupportFromPolls').addEventListener('click', callSupport);
-            document.getElementById('quickCallSupport').addEventListener('click', (e) => {
-                e.preventDefault();
-                callSupport();
+            
+            // Friend requests modal
+            document.querySelectorAll('.friend-request .btn-success').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const requestId = parseInt(this.closest('.friend-request').dataset.requestId);
+                    if (requestId) acceptFriendRequest(requestId);
+                });
             });
-
-            // Create Poll Button
-            document.getElementById('createPollBtn').addEventListener('click', () => {
-                openModal('createPollModal');
-            });
-
-            document.getElementById('quickCreatePoll').addEventListener('click', (e) => {
-                e.preventDefault();
-                openModal('createPollModal');
-            });
-
-            // Save Poll
-            document.getElementById('savePollBtn').addEventListener('click', () => {
-                const pollData = {
-                    question: document.getElementById('pollQuestion').value,
-                    options: document.getElementById('pollOptions').value,
-                    duration: document.getElementById('pollDuration').value,
-                    allowMultiple: document.getElementById('allowMultiple').checked,
-                    category: document.getElementById('pollCategory').value
-                };
-                
-                if (!pollData.question || !pollData.options) {
-                    showNotification('Error', 'Please fill in all required fields', 'error');
-                    return;
-                }
-                
-                createNewPoll(pollData);
-            });
-
-            // Add Friend Button
-            document.getElementById('addFriendBtn').addEventListener('click', () => {
-                openModal('addFriendModal');
-            });
-
-            document.getElementById('quickAddFriend').addEventListener('click', (e) => {
-                e.preventDefault();
-                openModal('addFriendModal');
-            });
-
-            // Save Friend
-            document.getElementById('saveFriendBtn').addEventListener('click', () => {
-                const friendData = {
-                    name: document.getElementById('friendName').value,
-                    email: document.getElementById('friendEmail').value,
-                    phone: document.getElementById('friendPhone').value,
-                    role: document.getElementById('friendRole').value
-                };
-                
-                if (!friendData.name || !friendData.email) {
-                    showNotification('Error', 'Please fill in all required fields', 'error');
-                    return;
-                }
-                
-                addNewFriend(friendData);
-            });
-
-            // Add Expense Button
-            document.getElementById('addExpenseBtn').addEventListener('click', () => {
-                openModal('addExpenseModal');
-            });
-
-            document.getElementById('quickAddExpense').addEventListener('click', (e) => {
-                e.preventDefault();
-                openModal('addExpenseModal');
-            });
-
-            // Save Expense
-            document.getElementById('saveExpenseBtn').addEventListener('click', () => {
-                const expenseData = {
-                    description: document.getElementById('expenseDescription').value,
-                    amount: document.getElementById('expenseAmount').value,
-                    paidBy: document.getElementById('expensePaidBy').value,
-                    splitBetween: Array.from(document.querySelectorAll('input[name="split"]:checked')).map(cb => cb.value),
-                    date: new Date().toISOString().split('T')[0]
-                };
-                
-                if (!expenseData.description || !expenseData.amount || expenseData.splitBetween.length === 0) {
-                    showNotification('Error', 'Please fill in all required fields', 'error');
-                    return;
-                }
-                
-                addNewExpense(expenseData);
-            });
-
-            // Settle Up Button
-            document.getElementById('settleUpBtn').addEventListener('click', () => {
-                showNotification('Settle Up', 'Processing settlements between friends...', 'info');
-                
-                // In a real app, this would process payments
-                setTimeout(() => {
-                    showNotification('Settlements Complete', 'All balances have been settled', 'success');
-                }, 2000);
-            });
-
-            // Create Event Button
-            document.getElementById('createEventBtn').addEventListener('click', () => {
-                openModal('createEventModal');
-            });
-
-            document.getElementById('quickCreateEvent').addEventListener('click', (e) => {
-                e.preventDefault();
-                openModal('createEventModal');
-            });
-
-            // Save Event
-            document.getElementById('saveEventBtn').addEventListener('click', () => {
-                const eventData = {
-                    title: document.getElementById('eventTitle').value,
-                    date: document.getElementById('eventDate').value,
-                    time: document.getElementById('eventTime').value,
-                    location: document.getElementById('eventLocation').value,
-                    description: document.getElementById('eventDescription').value
-                };
-                
-                if (!eventData.title || !eventData.date) {
-                    showNotification('Error', 'Please fill in all required fields', 'error');
-                    return;
-                }
-                
-                createNewEvent(eventData);
-            });
-
-            // Upload Photo Button
-            document.getElementById('uploadPhotoBtn').addEventListener('click', () => {
-                openModal('uploadPhotoModal');
-            });
-
-            // Photo Upload Area
-            document.getElementById('uploadArea').addEventListener('click', () => {
-                document.getElementById('photoUpload').click();
-            });
-
-            // Upload Photos
-            document.getElementById('uploadPhotosBtn').addEventListener('click', uploadPhoto);
-
-            // Share Location Button
-            document.getElementById('shareLocationBtn').addEventListener('click', shareLocation);
-
-            // Refresh Dashboard
-            document.getElementById('refreshDashboard').addEventListener('click', () => {
-                loadDashboard();
-                showNotification('Dashboard Refreshed', 'All data has been updated', 'success');
-            });
-
+            
             // Close modals
             document.querySelectorAll('.close-modal').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -2493,8 +1743,8 @@
                     }
                 });
             });
-
-            // Close modals when clicking outside
+            
+            // Close modals on outside click
             document.querySelectorAll('.modal').forEach(modal => {
                 modal.addEventListener('click', function(e) {
                     if (e.target === this) {
@@ -2502,9 +1752,27 @@
                     }
                 });
             });
+            
+            // Notification click to close
+            document.getElementById('notification').addEventListener('click', function() {
+                this.style.display = 'none';
+            });
+            
+            // User menu
+            document.getElementById('userMenu').addEventListener('click', () => {
+                showNotification('Profile', 'Opening your profile', 'info');
+            });
+            
+            // Search
+            document.querySelector('.search-bar button').addEventListener('click', () => {
+                const query = document.querySelector('.search-bar input').value;
+                if (query.trim()) {
+                    showNotification('Search', `Searching for "${query}"`, 'info');
+                }
+            });
         }
 
-        // Initialize the app when DOM is loaded
+        // Initialize
         document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
