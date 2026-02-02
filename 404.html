@@ -384,7 +384,8 @@
 
         .post-image img {
             width: 100%;
-            height: auto;
+            height: 300px;
+            object-fit: cover;
             display: block;
         }
 
@@ -545,6 +546,11 @@
             justify-content: center;
             gap: 6px;
             font-family: inherit;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
         }
 
         .btn-primary {
@@ -1132,7 +1138,7 @@
     </div>
 
     <script>
-        // Realistic Database
+        // Enhanced Database with more data
         const database = {
             currentUser: {
                 id: 1,
@@ -1155,7 +1161,7 @@
                     shares: 2,
                     userLiked: false,
                     privacy: "public",
-                    tagged: [],
+                    tagged: [1],
                     commentsList: [
                         { id: 1, userId: 3, author: "Mike Chen", text: "Looks beautiful! Wish I was there.", time: "1 hour ago", likes: 2 },
                         { id: 2, userId: 1, author: "John Smith", text: "Great photo Sarah!", time: "45 minutes ago", likes: 0 }
@@ -1174,595 +1180,129 @@
                     shares: 1,
                     userLiked: true,
                     privacy: "friends",
-                    tagged: [1],
+                    tagged: [1, 4],
                     commentsList: [
-                        { id: 1, userId: 1, author: "John Smith", text: "Amazing time! Keep it up!", time: "4 hours ago", likes: 1 }
+                        { id: 1, userId: 1, author: "John Smith", text: "Amazing time! Keep it up!", time: "4 hours ago", likes: 1 },
+                        { id: 2, userId: 4, author: "Emma Davis", text: "Wow, that's impressive Mike!", time: "3 hours ago", likes: 0 }
+                    ]
+                },
+                {
+                    id: 3,
+                    userId: 4,
+                    author: "Emma Davis",
+                    avatar: "ED",
+                    time: "1 day ago",
+                    text: "Just tried this amazing new restaurant downtown. The food was incredible! Highly recommend it to everyone.",
+                    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=600&fit=crop",
+                    likes: 32,
+                    comments: 7,
+                    shares: 3,
+                    userLiked: false,
+                    privacy: "public",
+                    tagged: [1, 3],
+                    commentsList: [
+                        { id: 1, userId: 1, author: "John Smith", text: "What's the name of the restaurant?", time: "22 hours ago", likes: 1 },
+                        { id: 2, userId: 4, author: "Emma Davis", text: "It's called 'The Gourmet Spot' on Main Street", time: "21 hours ago", likes: 2 }
                     ]
                 }
             ],
             friends: [
-                { id: 2, name: "Sarah Johnson", avatar: "SJ", mutual: 15, status: "online" },
-                { id: 3, name: "Mike Chen", avatar: "MC", mutual: 8, status: "online" },
-                { id: 4, name: "Emma Wilson", avatar: "EW", mutual: 12, status: "offline" },
-                { id: 5, name: "David Brown", avatar: "DB", mutual: 20, status: "online" },
-                { id: 6, name: "Lisa Martinez", avatar: "LM", mutual: 18, status: "offline" }
+                { id: 2, name: "Sarah Johnson", avatar: "SJ", mutual: 12, online: true },
+                { id: 3, name: "Mike Chen", avatar: "MC", mutual: 8, online: true },
+                { id: 4, name: "Emma Davis", avatar: "ED", mutual: 15, online: false },
+                { id: 5, name: "Alex Taylor", avatar: "AT", mutual: 6, online: true },
+                { id: 6, name: "Lisa Wong", avatar: "LW", mutual: 20, online: false }
             ],
             friendRequests: [
-                { id: 7, name: "Alex Turner", avatar: "AT", mutual: 3 },
-                { id: 8, name: "Maya Patel", avatar: "MP", mutual: 5 },
-                { id: 9, name: "Chris Evans", avatar: "CE", mutual: 2 }
+                { id: 7, name: "Robert Garcia", avatar: "RG", mutual: 3 },
+                { id: 8, name: "Jessica Lee", avatar: "JL", mutual: 5 },
+                { id: 9, name: "David Miller", avatar: "DM", mutual: 2 },
+                { id: 10, name: "Sophia Williams", avatar: "SW", mutual: 7 }
             ],
             events: [
-                { id: 1, title: "Weekend BBQ", date: "Jun 15", time: "2:00 PM", location: "Central Park", attendees: 15 },
-                { id: 2, title: "Birthday Party", date: "Jun 20", time: "7:00 PM", location: "Sarah's House", attendees: 25 },
-                { id: 3, title: "Game Night", date: "Jun 22", time: "6:00 PM", location: "Mike's Place", attendees: 10 }
+                { id: 1, title: "Weekend BBQ Party", date: "Tomorrow", time: "3:00 PM", location: "Central Park", creatorId: 2, attendees: [1, 3, 4] },
+                { id: 2, title: "Book Club Meeting", date: "June 15", time: "7:00 PM", location: "City Library", creatorId: 4, attendees: [1, 5] },
+                { id: 3, title: "Tech Conference", date: "June 20", time: "9:00 AM", location: "Convention Center", creatorId: 5, attendees: [1, 2, 3] }
             ],
-            allFriends: [
-                { id: 2, name: "Sarah Johnson", avatar: "SJ", status: "online" },
-                { id: 3, name: "Mike Chen", avatar: "MC", status: "online" },
-                { id: 4, name: "Emma Wilson", avatar: "EW", status: "offline" },
-                { id: 5, name: "David Brown", avatar: "DB", status: "online" },
-                { id: 6, name: "Lisa Martinez", avatar: "LM", status: "offline" },
-                { id: 10, name: "Tom Wilson", avatar: "TW", status: "online" },
-                { id: 11, name: "Anna Taylor", avatar: "AT", status: "offline" }
-            ]
+            notifications: [
+                { id: 1, text: "Sarah liked your post", time: "10 min ago", read: false, type: "like" },
+                { id: 2, text: "Mike commented on your photo", time: "1 hour ago", read: false, type: "comment" },
+                { id: 3, text: "You have 3 new friend requests", time: "2 hours ago", read: true, type: "friend" },
+                { id: 4, text: "Emma shared an event", time: "5 hours ago", read: true, type: "event" },
+                { id: 5, text: "Alex is live now", time: "Just now", read: false, type: "live" }
+            ],
+            taggedFriends: []
         };
 
-        // State Management
-        let currentState = {
-            selectedImage: null,
-            taggedFriends: [],
-            activePostId: null,
-            selectedFriends: []
-        };
+        // DOM Elements
+        const createPostModal = document.getElementById('createPostModal');
+        const friendRequestsModal = document.getElementById('friendRequestsModal');
+        const tagFriendsModal = document.getElementById('tagFriendsModal');
+        const createEventModal = document.getElementById('createEventModal');
+        const notification = document.getElementById('notification');
+        const searchInput = document.getElementById('searchInput');
+        const postText = document.getElementById('postText');
+        const postsFeed = document.getElementById('postsFeed');
+        const friendRequestsList = document.getElementById('friendRequestsList');
+        const eventsList = document.getElementById('eventsList');
+        const onlineFriends = document.getElementById('onlineFriends');
+        const allFriendRequests = document.getElementById('allFriendRequests');
+        const friendsToTag = document.getElementById('friendsToTag');
+        const userAvatar = document.getElementById('userAvatar');
+        const userName = document.querySelector('.user-name');
 
-        // Initialize Application
-        function initApp() {
-            loadPosts();
-            loadFriendRequests();
-            loadEvents();
-            loadOnlineFriends();
-            setupEventListeners();
-            
-            // Show welcome notification
-            setTimeout(() => {
-                showNotification('Welcome back!', 'You have 3 new notifications', 'success');
-            }, 1000);
-        }
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPosts();
+            renderFriendRequests();
+            renderEvents();
+            renderOnlineFriends();
+            updateNotificationBadges();
+            updateUserInfo();
 
-        // Load Posts
-        function loadPosts() {
-            const container = document.getElementById('postsFeed');
-            container.innerHTML = '';
-            
-            database.posts.forEach(post => {
-                const postEl = createPostElement(post);
-                container.appendChild(postEl);
+            // Add click event to post input
+            postText.addEventListener('click', () => {
+                showModal(createPostModal);
             });
-            
-            if (database.posts.length === 0) {
-                container.innerHTML = '<div class="post"><p style="text-align: center; color: var(--gray); padding: 40px;">No posts yet. Be the first to post!</p></div>';
-            }
+
+            // Initialize all event listeners
+            initializeEventListeners();
+        });
+
+        // Update User Info
+        function updateUserInfo() {
+            userAvatar.textContent = database.currentUser.avatar;
+            userName.textContent = database.currentUser.name.split(' ')[0];
         }
 
-        function createPostElement(post) {
-            const postEl = document.createElement('div');
-            postEl.className = 'post';
-            postEl.dataset.postId = post.id;
-            
-            // Format likes
-            const likesText = post.likes === 1 ? '1 like' : `${post.likes} likes`;
-            
-            // Format comments
-            const commentsText = post.comments === 1 ? '1 comment' : `${post.comments} comments`;
-            
-            // Format shares
-            const sharesText = post.shares === 1 ? '1 share' : `${post.shares} shares`;
-            
-            // Build tagged text
-            let taggedText = '';
-            if (post.tagged && post.tagged.length > 0) {
-                const taggedUsers = post.tagged.map(id => {
-                    const user = database.friends.find(f => f.id === id) || database.currentUser;
-                    return user.name;
-                });
-                taggedText = `<p style="color: var(--gray); font-size: 14px; margin-bottom: 8px;">
-                    <i class="fas fa-tag"></i> Tagged: ${taggedUsers.join(', ')}
-                </p>`;
-            }
-            
-            postEl.innerHTML = `
-                <div class="post-header">
-                    <div class="user-avatar">${post.avatar}</div>
-                    <div class="post-author">
-                        <h4>${post.author}</h4>
-                        <div class="post-time">${post.time} • <i class="fas fa-globe"></i></div>
-                    </div>
-                    <button class="close-modal" style="font-size: 18px; color: var(--gray); background: none; border: none; cursor: pointer;">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </button>
-                </div>
-                <div class="post-content">
-                    <div class="post-text">${post.text}</div>
-                    ${taggedText}
-                    ${post.image ? `
-                        <div class="post-image">
-                            <img src="${post.image}" alt="Post image">
-                        </div>
-                    ` : ''}
-                </div>
-                <div class="post-stats">
-                    <div class="likes-count" style="display: flex; align-items: center; gap: 6px;">
-                        <div style="background: var(--primary); color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px;">
-                            <i class="fas fa-thumbs-up"></i>
-                        </div>
-                        <span>${likesText}</span>
-                    </div>
-                    <div>
-                        <span>${commentsText} • ${sharesText}</span>
-                    </div>
-                </div>
-                <div class="post-actions-bar">
-                    <button class="post-action-btn ${post.userLiked ? 'active' : ''}" onclick="toggleLike(${post.id})">
-                        <i class="fas fa-thumbs-up"></i>
-                        <span>Like</span>
-                    </button>
-                    <button class="post-action-btn" onclick="focusComment(${post.id})">
-                        <i class="fas fa-comment"></i>
-                        <span>Comment</span>
-                    </button>
-                    <button class="post-action-btn" onclick="sharePost(${post.id})">
-                        <i class="fas fa-share"></i>
-                        <span>Share</span>
-                    </button>
-                </div>
-                <div class="comments-section" id="comments-${post.id}">
-                    ${post.commentsList.map(comment => `
-                        <div class="comment">
-                            <div class="user-avatar" style="width: 32px; height: 32px; font-size: 12px;">${comment.author.charAt(0)}</div>
-                            <div class="comment-content">
-                                <div class="comment-author">${comment.author}</div>
-                                <div class="comment-text">${comment.text}</div>
-                                <div class="comment-actions">
-                                    <span class="comment-action" onclick="likeComment(${post.id}, ${comment.id})">Like</span>
-                                    <span class="comment-action" onclick="replyToComment(${post.id}, ${comment.id})">Reply</span>
-                                    <span class="comment-time">${comment.time}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                    <div class="comment-input">
-                        <div class="user-avatar" style="width: 32px; height: 32px; font-size: 12px;">${database.currentUser.avatar}</div>
-                        <input type="text" id="comment-input-${post.id}" placeholder="Write a comment..." onkeypress="if(event.key === 'Enter') addComment(${post.id})">
-                        <button class="btn btn-primary btn-sm" onclick="addComment(${post.id})">Post</button>
-                    </div>
-                </div>
-            `;
-            
-            return postEl;
+        // Modal Functions
+        function showModal(modal) {
+            modal.style.display = 'flex';
         }
 
-        // Load Friend Requests
-        function loadFriendRequests() {
-            const sidebarList = document.getElementById('friendRequestsList');
-            const modalList = document.getElementById('allFriendRequests');
-            
-            sidebarList.innerHTML = '';
-            modalList.innerHTML = '';
-            
-            database.friendRequests.slice(0, 2).forEach(request => {
-                const requestEl = createFriendRequestElement(request);
-                sidebarList.appendChild(requestEl);
-            });
-            
-            database.friendRequests.forEach(request => {
-                const requestEl = createFriendRequestElement(request);
-                modalList.appendChild(requestEl);
-            });
-            
-            if (database.friendRequests.length === 0) {
-                sidebarList.innerHTML = '<p style="text-align: center; color: var(--gray); padding: 10px;">No pending requests</p>';
-                modalList.innerHTML = '<p style="text-align: center; color: var(--gray); padding: 20px;">No pending friend requests</p>';
-            }
+        function hideModal(modal) {
+            modal.style.display = 'none';
         }
 
-        function createFriendRequestElement(request) {
-            const requestEl = document.createElement('div');
-            requestEl.className = 'friend-request';
-            requestEl.dataset.requestId = request.id;
-            requestEl.innerHTML = `
-                <div class="user-avatar">${request.avatar}</div>
-                <div class="friend-info">
-                    <h4>${request.name}</h4>
-                    <p class="friend-mutual">${request.mutual} mutual friends</p>
-                    <div class="friend-actions">
-                        <button class="btn btn-success btn-sm confirm-btn" data-id="${request.id}">Confirm</button>
-                        <button class="btn btn-secondary btn-sm delete-btn" data-id="${request.id}">Delete</button>
-                    </div>
-                </div>
-            `;
-            return requestEl;
-        }
-
-        // Load Events
-        function loadEvents() {
-            const container = document.getElementById('eventsList');
-            container.innerHTML = '';
-            
-            database.events.forEach((event, index) => {
-                const eventEl = document.createElement('div');
-                eventEl.className = 'event-item';
-                eventEl.dataset.eventId = event.id;
-                eventEl.innerHTML = `
-                    <div class="event-date">${event.date}</div>
-                    <h4>${event.title}</h4>
-                    <div class="event-details">
-                        <span><i class="far fa-clock"></i> ${event.time}</span>
-                        <span><i class="fas fa-map-marker-alt"></i> ${event.location}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 12px; color: var(--gray);">
-                            <i class="fas fa-users"></i> ${event.attendees} going
-                        </span>
-                        <button class="btn btn-primary btn-sm rsvp-btn" data-index="${index}">RSVP</button>
-                    </div>
-                `;
-                container.appendChild(eventEl);
-            });
-        }
-
-        // Load Online Friends
-        function loadOnlineFriends() {
-            const container = document.getElementById('onlineFriends');
-            container.innerHTML = '';
-            
-            const onlineFriends = database.friends.filter(f => f.status === 'online');
-            
-            onlineFriends.forEach(friend => {
-                const friendEl = document.createElement('div');
-                friendEl.className = 'shortcut-item';
-                friendEl.innerHTML = `
-                    <div class="user-avatar" style="width: 36px; height: 36px; position: relative;">
-                        ${friend.avatar}
-                        <div style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; background: var(--success); border: 2px solid white; border-radius: 50%;"></div>
-                    </div>
-                    <span>${friend.name}</span>
-                `;
-                container.appendChild(friendEl);
-            });
-        }
-
-        // Load Friends for Tagging
-        function loadFriendsForTagging() {
-            const container = document.getElementById('friendsToTag');
-            container.innerHTML = '';
-            
-            database.allFriends.forEach(friend => {
-                const friendEl = document.createElement('div');
-                friendEl.className = 'friend-request';
-                friendEl.innerHTML = `
-                    <div class="user-avatar">${friend.avatar}</div>
-                    <div class="friend-info">
-                        <h4>${friend.name}</h4>
-                        <p class="friend-mutual">${friend.status === 'online' ? '🟢 Online' : '⚫ Offline'}</p>
-                    </div>
-                    <input type="checkbox" class="tag-checkbox" data-id="${friend.id}" style="width: 20px; height: 20px;">
-                `;
-                container.appendChild(friendEl);
-            });
-        }
-
-        // Post Functions
-        function createPost() {
-            const text = document.getElementById('modalPostText').value.trim();
-            if (!text && !currentState.selectedImage) {
-                showNotification('Error', 'Please add some text or a photo to your post', 'error');
-                return;
-            }
-            
-            const privacy = document.getElementById('postPrivacy').value;
-            
-            const newPost = {
-                id: database.posts.length + 1,
-                userId: database.currentUser.id,
-                author: database.currentUser.name,
-                avatar: database.currentUser.avatar,
-                time: "Just now",
-                text: text,
-                image: currentState.selectedImage,
-                likes: 0,
-                comments: 0,
-                shares: 0,
-                userLiked: false,
-                privacy: privacy,
-                tagged: currentState.taggedFriends,
-                commentsList: []
-            };
-            
-            database.posts.unshift(newPost);
-            
-            // Reset state
-            document.getElementById('modalPostText').value = '';
-            currentState.selectedImage = null;
-            currentState.taggedFriends = [];
-            document.getElementById('postPreview').style.display = 'none';
-            
-            closeModal('createPostModal');
-            loadPosts();
-            
-            showNotification('Post published', 'Your post is now visible to friends', 'success');
-        }
-
-        function quickCreatePost() {
-            const text = document.getElementById('postText').value.trim();
-            if (!text) {
-                showNotification('Error', 'Please enter some text for your post', 'error');
-                return;
-            }
-            
-            const newPost = {
-                id: database.posts.length + 1,
-                userId: database.currentUser.id,
-                author: database.currentUser.name,
-                avatar: database.currentUser.avatar,
-                time: "Just now",
-                text: text,
-                image: null,
-                likes: 0,
-                comments: 0,
-                shares: 0,
-                userLiked: false,
-                privacy: "public",
-                tagged: [],
-                commentsList: []
-            };
-            
-            database.posts.unshift(newPost);
-            document.getElementById('postText').value = '';
-            loadPosts();
-            
-            showNotification('Post published', '', 'success');
-        }
-
-        function toggleLike(postId) {
-            const post = database.posts.find(p => p.id === postId);
-            if (!post) return;
-            
-            post.userLiked = !post.userLiked;
-            post.likes += post.userLiked ? 1 : -1;
-            
-            // Update UI
-            const postEl = document.querySelector(`[data-post-id="${postId}"]`);
-            const likeBtn = postEl.querySelector('.post-action-btn');
-            const likesCount = postEl.querySelector('.likes-count span');
-            
-            likeBtn.classList.toggle('active', post.userLiked);
-            likesCount.textContent = post.likes === 1 ? '1 like' : `${post.likes} likes`;
-            
-            showNotification(post.userLiked ? 'Liked' : 'Unliked', '', 'success');
-        }
-
-        function addComment(postId) {
-            const input = document.getElementById(`comment-input-${postId}`);
-            const text = input.value.trim();
-            if (!text) return;
-            
-            const post = database.posts.find(p => p.id === postId);
-            if (!post) return;
-            
-            const newComment = {
-                id: post.commentsList.length + 1,
-                userId: database.currentUser.id,
-                author: database.currentUser.name,
-                text: text,
-                time: "Just now",
-                likes: 0
-            };
-            
-            post.commentsList.push(newComment);
-            post.comments = post.commentsList.length;
-            
-            // Update UI
-            const commentsSection = document.getElementById(`comments-${postId}`);
-            
-            const commentEl = document.createElement('div');
-            commentEl.className = 'comment';
-            commentEl.innerHTML = `
-                <div class="user-avatar" style="width: 32px; height: 32px; font-size: 12px;">${database.currentUser.avatar}</div>
-                <div class="comment-content">
-                    <div class="comment-author">${database.currentUser.name}</div>
-                    <div class="comment-text">${text}</div>
-                    <div class="comment-actions">
-                        <span class="comment-action" onclick="likeComment(${postId}, ${newComment.id})">Like</span>
-                        <span class="comment-action" onclick="replyToComment(${postId}, ${newComment.id})">Reply</span>
-                        <span class="comment-time">Just now</span>
-                    </div>
-                </div>
-            `;
-            
-            const commentInput = commentsSection.querySelector('.comment-input');
-            commentsSection.insertBefore(commentEl, commentInput);
-            input.value = '';
-            
-            // Update comments count
-            const stats = document.querySelector(`[data-post-id="${postId}"] .post-stats`);
-            const commentsSpan = stats.querySelectorAll('span')[1];
-            commentsSpan.textContent = `${post.comments} comment${post.comments !== 1 ? 's' : ''} • ${post.shares} share${post.shares !== 1 ? 's' : ''}`;
-            
-            showNotification('Comment added', '', 'success');
-        }
-
-        function likeComment(postId, commentId) {
-            showNotification('Liked', 'Comment liked', 'success');
-        }
-
-        function replyToComment(postId, commentId) {
-            const input = document.getElementById(`comment-input-${postId}`);
-            input.focus();
-            input.value = '@reply ';
-            showNotification('Reply', 'Ready to reply to comment', 'info');
-        }
-
-        function focusComment(postId) {
-            const input = document.getElementById(`comment-input-${postId}`);
-            input.focus();
-        }
-
-        function sharePost(postId) {
-            const post = database.posts.find(p => p.id === postId);
-            if (!post) return;
-            
-            post.shares += 1;
-            
-            // Update UI
-            const postEl = document.querySelector(`[data-post-id="${postId}"]`);
-            const stats = postEl.querySelector('.post-stats');
-            const sharesSpan = stats.querySelectorAll('span')[1];
-            sharesSpan.textContent = `${post.comments} comment${post.comments !== 1 ? 's' : ''} • ${post.shares} share${post.shares !== 1 ? 's' : ''}`;
-            
-            showNotification('Post shared', 'Shared with your friends', 'success');
-        }
-
-        // Friend Request Functions
-        function acceptFriendRequest(requestId) {
-            const requestIndex = database.friendRequests.findIndex(r => r.id === requestId);
-            if (requestIndex === -1) return;
-            
-            const request = database.friendRequests[requestIndex];
-            
-            // Add to friends
-            database.friends.push({
-                id: request.id,
-                name: request.name,
-                avatar: request.avatar,
-                mutual: request.mutual,
-                status: 'online'
-            });
-            
-            // Remove from requests
-            database.friendRequests.splice(requestIndex, 1);
-            
-            // Update UI
-            loadFriendRequests();
-            loadOnlineFriends();
-            
-            showNotification('Friend request accepted', `${request.name} is now your friend`, 'success');
-        }
-
-        function declineFriendRequest(requestId) {
-            const requestIndex = database.friendRequests.findIndex(r => r.id === requestId);
-            if (requestIndex === -1) return;
-            
-            const request = database.friendRequests[requestIndex];
-            database.friendRequests.splice(requestIndex, 1);
-            
-            loadFriendRequests();
-            showNotification('Friend request declined', '', 'success');
-        }
-
-        function sendFriendRequest() {
-            showNotification('Friend Request', 'Friend request sent successfully', 'success');
-        }
-
-        // Event Functions
-        function createNewEvent() {
-            const title = document.getElementById('eventTitle').value.trim();
-            const date = document.getElementById('eventDate').value;
-            const time = document.getElementById('eventTime').value;
-            const location = document.getElementById('eventLocation').value.trim();
-            
-            if (!title || !date || !time || !location) {
-                showNotification('Error', 'Please fill in all required fields', 'error');
-                return;
-            }
-            
-            const newEvent = {
-                id: database.events.length + 1,
-                title: title,
-                date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-                time: time,
-                location: location,
-                attendees: 1
-            };
-            
-            database.events.push(newEvent);
-            
-            // Reset form
-            document.getElementById('eventForm').reset();
-            
-            closeModal('createEventModal');
-            loadEvents();
-            
-            showNotification('Event created', `${title} has been scheduled`, 'success');
-        }
-
-        function rsvpToEvent(eventIndex) {
-            const event = database.events[eventIndex];
-            if (!event) return;
-            
-            event.attendees += 1;
-            
-            // Update UI
-            const eventEl = document.querySelectorAll('.event-item')[eventIndex];
-            if (eventEl) {
-                const attendeesSpan = eventEl.querySelector('span');
-                attendeesSpan.innerHTML = `<i class="fas fa-users"></i> ${event.attendees} going`;
-                
-                const rsvpBtn = eventEl.querySelector('.rsvp-btn');
-                rsvpBtn.textContent = 'Going ✓';
-                rsvpBtn.disabled = true;
-                rsvpBtn.classList.remove('btn-primary');
-                rsvpBtn.classList.add('btn-success');
-            }
-            
-            showNotification('RSVP confirmed', `You're going to ${event.title}`, 'success');
-        }
-
-        // Image Upload
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            if (!file.type.startsWith('image/')) {
-                showNotification('Error', 'Please select an image file', 'error');
-                return;
-            }
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                currentState.selectedImage = e.target.result;
-                
-                // Show preview
-                document.getElementById('postImagePreview').src = e.target.result;
-                document.getElementById('postPreview').style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function removeImage() {
-            currentState.selectedImage = null;
-            document.getElementById('postPreview').style.display = 'none';
-            document.getElementById('imageUpload').value = '';
-        }
-
-        // Utility Functions
+        // Notification System
         function showNotification(title, message, type = 'success') {
-            const notification = document.getElementById('notification');
-            const titleEl = document.getElementById('notificationTitle');
-            const messageEl = document.getElementById('notificationMessage');
             const icon = document.getElementById('notificationIcon');
+            const notificationTitle = document.getElementById('notificationTitle');
+            const notificationMessage = document.getElementById('notificationMessage');
             
-            notification.className = `notification ${type}`;
-            titleEl.textContent = title;
-            messageEl.textContent = message;
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
             
             if (type === 'error') {
+                notification.className = 'notification error';
                 icon.className = 'fas fa-exclamation-circle';
                 icon.style.color = 'var(--accent)';
             } else if (type === 'warning') {
+                notification.className = 'notification warning';
                 icon.className = 'fas fa-exclamation-triangle';
                 icon.style.color = 'var(--warning)';
             } else {
+                notification.className = 'notification';
                 icon.className = 'fas fa-check-circle';
                 icon.style.color = 'var(--success)';
             }
@@ -1774,256 +1314,774 @@
             }, 3000);
         }
 
-        function openModal(modalId) {
-            document.getElementById(modalId).style.display = 'flex';
+        // Render Posts
+        function renderPosts() {
+            postsFeed.innerHTML = '';
             
-            if (modalId === 'createEventModal') {
-                const tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                document.getElementById('eventDate').value = tomorrow.toISOString().split('T')[0];
-                document.getElementById('eventTime').value = '18:00';
-            }
+            database.posts.forEach(post => {
+                const postElement = createPostElement(post);
+                postsFeed.appendChild(postElement);
+            });
+        }
+
+        function createPostElement(post) {
+            const div = document.createElement('div');
+            div.className = 'post';
+            div.id = `post-${post.id}`;
+            div.dataset.postId = post.id;
             
-            if (modalId === 'tagFriendsModal') {
-                loadFriendsForTagging();
+            const privacyIcon = post.privacy === 'public' ? '🌐' : 
+                              post.privacy === 'friends' ? '👥' : '🔒';
+            
+            // Get tagged friends names
+            const taggedNames = post.tagged.map(id => {
+                const friend = database.friends.find(f => f.id === id);
+                return friend ? friend.name : 'Unknown';
+            }).join(', ');
+            
+            div.innerHTML = `
+                <div class="post-header">
+                    <div class="user-avatar">${post.avatar}</div>
+                    <div class="post-author">
+                        <h4>${post.author}</h4>
+                        <div class="post-time">${post.time} • ${privacyIcon}</div>
+                    </div>
+                    <button class="close-modal" onclick="showPostOptions(${post.id})">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                </div>
+                <div class="post-content">
+                    <p class="post-text">${post.text}</p>
+                    ${post.image ? `
+                        <div class="post-image">
+                            <img src="${post.image}" alt="Post image" onclick="viewImage('${post.image}', '${post.author}')">
+                        </div>
+                    ` : ''}
+                    ${post.tagged && post.tagged.length > 0 ? `
+                        <div style="font-size: 13px; color: var(--primary); margin-bottom: 12px;">
+                            <i class="fas fa-user-tag"></i> Tagged: ${taggedNames}
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="post-stats">
+                    <span class="likes-count">${post.likes} likes</span>
+                    <span class="comments-count">${post.comments} comments</span>
+                    <span class="shares-count">${post.shares} shares</span>
+                </div>
+                <div class="post-actions-bar">
+                    <button class="post-action-btn ${post.userLiked ? 'active' : ''}" onclick="likePost(${post.id})">
+                        <i class="fas fa-thumbs-up"></i> Like
+                    </button>
+                    <button class="post-action-btn" onclick="focusComment(${post.id})">
+                        <i class="fas fa-comment"></i> Comment
+                    </button>
+                    <button class="post-action-btn" onclick="sharePost(${post.id})">
+                        <i class="fas fa-share"></i> Share
+                    </button>
+                </div>
+                <div class="comments-section">
+                    <div id="comments-${post.id}">
+                        ${post.commentsList.map(comment => `
+                            <div class="comment" id="comment-${post.id}-${comment.id}">
+                                <div class="user-avatar" style="width: 32px; height: 32px; font-size: 12px;">
+                                    ${database.friends.find(f => f.id === comment.userId)?.avatar || database.currentUser.avatar}
+                                </div>
+                                <div class="comment-content">
+                                    <div class="comment-author">${comment.author}</div>
+                                    <p class="comment-text">${comment.text}</p>
+                                    <div class="comment-actions">
+                                        <span class="comment-time">${comment.time}</span>
+                                        <span class="comment-action" onclick="likeComment(${post.id}, ${comment.id})">
+                                            Like ${comment.likes > 0 ? `(${comment.likes})` : ''}
+                                        </span>
+                                        <span class="comment-action" onclick="replyToComment(${post.id}, ${comment.id})">Reply</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="comment-input">
+                        <div class="user-avatar" style="width: 32px; height: 32px; font-size: 12px;">${database.currentUser.avatar}</div>
+                        <input type="text" id="comment-input-${post.id}" placeholder="Write a comment..." 
+                               onkeypress="if(event.key === 'Enter') addComment(${post.id})">
+                        <button class="btn btn-primary btn-sm" onclick="addComment(${post.id})">Post</button>
+                    </div>
+                </div>
+            `;
+            
+            return div;
+        }
+
+        // Post Interactions
+        function likePost(postId) {
+            const post = database.posts.find(p => p.id === postId);
+            if (post) {
+                post.userLiked = !post.userLiked;
+                post.likes += post.userLiked ? 1 : -1;
+                
+                const likeBtn = document.querySelector(`#post-${postId} .post-action-btn`);
+                if (post.userLiked) {
+                    likeBtn.classList.add('active');
+                    showNotification('Liked!', `You liked ${post.author}'s post`);
+                    
+                    // Add notification
+                    if (post.userId !== database.currentUser.id) {
+                        database.notifications.unshift({
+                            id: database.notifications.length + 1,
+                            text: `${database.currentUser.name} liked your post`,
+                            time: 'Just now',
+                            read: false,
+                            type: 'like'
+                        });
+                        updateNotificationBadges();
+                    }
+                } else {
+                    likeBtn.classList.remove('active');
+                }
+                
+                document.querySelector(`#post-${postId} .likes-count`).textContent = `${post.likes} likes`;
             }
         }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        // Setup Event Listeners
-        function setupEventListeners() {
-            // Create post buttons
-            document.getElementById('createPostBtn').addEventListener('click', () => {
-                openModal('createPostModal');
-            });
+        function addComment(postId) {
+            const input = document.getElementById(`comment-input-${postId}`);
+            const text = input.value.trim();
             
-            document.getElementById('publishPostBtn').addEventListener('click', createPost);
-            
-            document.getElementById('addPhotoBtn').addEventListener('click', () => {
-                openModal('createPostModal');
-                document.getElementById('imageUpload').click();
-            });
-            
-            document.getElementById('addPhotoModalBtn').addEventListener('click', () => {
-                document.getElementById('imageUpload').click();
-            });
-            
-            document.getElementById('tagFriendsBtn').addEventListener('click', () => {
-                openModal('tagFriendsModal');
-            });
-            
-            document.getElementById('tagFriendsModalBtn').addEventListener('click', () => {
-                closeModal('createPostModal');
-                openModal('tagFriendsModal');
-            });
-            
-            // Quick post from input
-            document.getElementById('postText').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    quickCreatePost();
-                }
-            });
-            
-            // Image upload
-            document.getElementById('imageUpload').addEventListener('change', handleImageUpload);
-            document.getElementById('removeImageBtn').addEventListener('click', removeImage);
-            
-            // Friend requests
-            document.getElementById('viewAllRequestsBtn').addEventListener('click', () => {
-                openModal('friendRequestsModal');
-            });
-            
-            // Event listeners for friend request buttons (delegated)
-            document.addEventListener('click', function(e) {
-                if (e.target.classList.contains('confirm-btn')) {
-                    const requestId = parseInt(e.target.dataset.id);
-                    acceptFriendRequest(requestId);
-                } else if (e.target.classList.contains('delete-btn')) {
-                    const requestId = parseInt(e.target.dataset.id);
-                    declineFriendRequest(requestId);
-                } else if (e.target.classList.contains('rsvp-btn')) {
-                    const eventIndex = parseInt(e.target.dataset.index);
-                    rsvpToEvent(eventIndex);
-                }
-            });
-            
-            // Events
-            document.getElementById('createEventBtn').addEventListener('click', () => {
-                openModal('createEventModal');
-            });
-            
-            document.getElementById('saveEventBtn').addEventListener('click', createNewEvent);
-            
-            // Find friends
-            document.getElementById('findFriendsBtn').addEventListener('click', () => {
-                showNotification('Find Friends', 'Searching for friend suggestions...', 'info');
-            });
-            
-            // Birthday posts
-            document.getElementById('birthdayPostBtn1').addEventListener('click', () => {
-                showNotification('Birthday Post', 'Creating birthday post for Sarah', 'success');
-            });
-            
-            document.getElementById('birthdayPostBtn2').addEventListener('click', () => {
-                showNotification('Birthday Post', 'Creating birthday post for Mike', 'success');
-            });
-            
-            // Navigation
-            document.getElementById('homeBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                showNotification('Home', 'Switching to home feed', 'info');
-            });
-            
-            document.getElementById('friendsBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                showNotification('Friends', 'Opening friends list', 'info');
-            });
-            
-            document.getElementById('messagesBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                showNotification('Messages', 'Opening messages', 'info');
-            });
-            
-            document.getElementById('notificationsBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                showNotification('Notifications', 'You have 5 unread notifications', 'info');
-            });
-            
-            // Sidebar menu
-            document.getElementById('newsFeedBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                showNotification('News Feed', 'Loading your feed', 'info');
-            });
-            
-            document.getElementById('friendsMenuBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                showNotification('Friends', 'Opening friends section', 'info');
-            });
-            
-            document.getElementById('messagesMenuBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                showNotification('Messages', 'Opening messages', 'info');
-            });
-            
-            document.getElementById('eventsMenuBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                showNotification('Events', 'Opening events calendar', 'info');
-            });
-            
-            document.getElementById('photosMenuBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                showNotification('Photos', 'Opening photo gallery', 'info');
-            });
-            
-            document.getElementById('groupsMenuBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                showNotification('Groups', 'Opening groups', 'info');
-            });
-            
-            // Shortcuts
-            document.getElementById('gamingShortcut').addEventListener('click', () => {
-                showNotification('Gaming', 'Opening gaming section', 'info');
-            });
-            
-            document.getElementById('watchShortcut').addEventListener('click', () => {
-                showNotification('Watch', 'Opening videos', 'info');
-            });
-            
-            document.getElementById('marketplaceShortcut').addEventListener('click', () => {
-                showNotification('Marketplace', 'Opening marketplace', 'info');
-            });
-            
-            document.getElementById('memoriesShortcut').addEventListener('click', () => {
-                showNotification('Memories', 'Showing your memories', 'info');
-            });
-            
-            // Search
-            document.getElementById('searchButton').addEventListener('click', () => {
-                const query = document.getElementById('searchInput').value;
-                if (query.trim()) {
-                    showNotification('Search', `Searching for "${query}"`, 'info');
-                }
-            });
-            
-            document.getElementById('searchInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    const query = e.target.value;
-                    if (query.trim()) {
-                        showNotification('Search', `Searching for "${query}"`, 'info');
+            if (text) {
+                const post = database.posts.find(p => p.id === postId);
+                if (post) {
+                    const newComment = {
+                        id: post.commentsList.length + 1,
+                        userId: database.currentUser.id,
+                        author: database.currentUser.name,
+                        text: text,
+                        time: 'Just now',
+                        likes: 0
+                    };
+                    
+                    post.commentsList.push(newComment);
+                    post.comments++;
+                    
+                    const commentsContainer = document.getElementById(`comments-${postId}`);
+                    const commentDiv = document.createElement('div');
+                    commentDiv.className = 'comment';
+                    commentDiv.id = `comment-${postId}-${newComment.id}`;
+                    commentDiv.innerHTML = `
+                        <div class="user-avatar" style="width: 32px; height: 32px; font-size: 12px;">${database.currentUser.avatar}</div>
+                        <div class="comment-content">
+                            <div class="comment-author">${newComment.author}</div>
+                            <p class="comment-text">${newComment.text}</p>
+                            <div class="comment-actions">
+                                <span class="comment-time">${newComment.time}</span>
+                                <span class="comment-action" onclick="likeComment(${postId}, ${newComment.id})">Like</span>
+                                <span class="comment-action" onclick="replyToComment(${postId}, ${newComment.id})">Reply</span>
+                            </div>
+                        </div>
+                    `;
+                    commentsContainer.appendChild(commentDiv);
+                    
+                    document.querySelector(`#post-${postId} .comments-count`).textContent = `${post.comments} comments`;
+                    input.value = '';
+                    
+                    showNotification('Comment added!', 'Your comment has been posted');
+                    
+                    // Add notification
+                    if (post.userId !== database.currentUser.id) {
+                        database.notifications.unshift({
+                            id: database.notifications.length + 1,
+                            text: `${database.currentUser.name} commented on your post`,
+                            time: 'Just now',
+                            read: false,
+                            type: 'comment'
+                        });
+                        updateNotificationBadges();
                     }
                 }
-            });
-            
-            // User menu
-            document.getElementById('userMenu').addEventListener('click', () => {
-                showNotification('Profile', 'Opening your profile', 'info');
-            });
-            
-            // Close modals
-            document.getElementById('closePostModal').addEventListener('click', () => {
-                closeModal('createPostModal');
-            });
-            
-            document.getElementById('cancelPostBtn').addEventListener('click', () => {
-                closeModal('createPostModal');
-            });
-            
-            document.getElementById('closeRequestsModal').addEventListener('click', () => {
-                closeModal('friendRequestsModal');
-            });
-            
-            document.getElementById('closeRequestsBtn').addEventListener('click', () => {
-                closeModal('friendRequestsModal');
-            });
-            
-            document.getElementById('closeTagModal').addEventListener('click', () => {
-                closeModal('tagFriendsModal');
-            });
-            
-            document.getElementById('cancelTagBtn').addEventListener('click', () => {
-                closeModal('tagFriendsModal');
-            });
-            
-            document.getElementById('doneTagBtn').addEventListener('click', () => {
-                const selected = Array.from(document.querySelectorAll('.tag-checkbox:checked'))
-                    .map(cb => parseInt(cb.dataset.id));
+            }
+        }
+
+        function focusComment(postId) {
+            const input = document.getElementById(`comment-input-${postId}`);
+            input.focus();
+        }
+
+        function sharePost(postId) {
+            const post = database.posts.find(p => p.id === postId);
+            if (post) {
+                post.shares++;
+                document.querySelector(`#post-${postId} .shares-count`).textContent = `${post.shares} shares`;
+                showNotification('Shared!', `You shared ${post.author}'s post`);
                 
-                if (selected.length > 0) {
-                    currentState.taggedFriends = selected;
-                    showNotification('Friends Tagged', `Tagged ${selected.length} friend(s)`, 'success');
+                // Add notification
+                if (post.userId !== database.currentUser.id) {
+                    database.notifications.unshift({
+                        id: database.notifications.length + 1,
+                        text: `${database.currentUser.name} shared your post`,
+                        time: 'Just now',
+                        read: false,
+                        type: 'share'
+                    });
+                    updateNotificationBadges();
+                }
+            }
+        }
+
+        function likeComment(postId, commentId) {
+            const post = database.posts.find(p => p.id === postId);
+            if (post) {
+                const comment = post.commentsList.find(c => c.id === commentId);
+                if (comment) {
+                    comment.likes++;
+                    const likeElement = document.querySelector(`#comment-${postId}-${commentId} .comment-action`);
+                    likeElement.textContent = `Like (${comment.likes})`;
+                    showNotification('Liked!', 'You liked the comment');
+                }
+            }
+        }
+
+        function replyToComment(postId, commentId) {
+            const input = document.getElementById(`comment-input-${postId}`);
+            const post = database.posts.find(p => p.id === postId);
+            if (post) {
+                const comment = post.commentsList.find(c => c.id === commentId);
+                if (comment) {
+                    input.value = `@${comment.author} `;
+                    input.focus();
+                    showNotification('Reply', 'Type your reply after the username');
+                }
+            }
+        }
+
+        function viewImage(imageUrl, author) {
+            showNotification('Image View', `Viewing ${author}'s image`, 'warning');
+        }
+
+        function showPostOptions(postId) {
+            const post = database.posts.find(p => p.id === postId);
+            if (post) {
+                if (post.userId === database.currentUser.id) {
+                    showNotification('Post Options', 'Edit | Delete | Hide', 'warning');
+                } else {
+                    showNotification('Post Options', 'Save | Hide | Report', 'warning');
+                }
+            }
+        }
+
+        // Render Friend Requests
+        function renderFriendRequests() {
+            friendRequestsList.innerHTML = '';
+            
+            database.friendRequests.slice(0, 2).forEach(request => {
+                const div = document.createElement('div');
+                div.className = 'friend-request';
+                div.innerHTML = `
+                    <div class="user-avatar">${request.avatar}</div>
+                    <div class="friend-info">
+                        <h4>${request.name}</h4>
+                        <p class="friend-mutual">${request.mutual} mutual friends</p>
+                        <div class="friend-actions">
+                            <button class="btn btn-success" onclick="acceptFriendRequest(${request.id})">Accept</button>
+                            <button class="btn btn-secondary" onclick="declineFriendRequest(${request.id})">Delete</button>
+                        </div>
+                    </div>
+                `;
+                friendRequestsList.appendChild(div);
+            });
+        }
+
+        function acceptFriendRequest(friendId) {
+            const requestIndex = database.friendRequests.findIndex(r => r.id === friendId);
+            if (requestIndex !== -1) {
+                const newFriend = database.friendRequests[requestIndex];
+                database.friends.push({...newFriend, online: Math.random() > 0.5});
+                database.friendRequests.splice(requestIndex, 1);
+                
+                renderFriendRequests();
+                renderOnlineFriends();
+                showNotification('Friend added!', `You are now friends with ${newFriend.name}`);
+                updateNotificationBadges();
+                
+                // Add notification
+                database.notifications.unshift({
+                    id: database.notifications.length + 1,
+                    text: `You are now friends with ${newFriend.name}`,
+                    time: 'Just now',
+                    read: false,
+                    type: 'friend'
+                });
+            }
+        }
+
+        function declineFriendRequest(friendId) {
+            const requestIndex = database.friendRequests.findIndex(r => r.id === friendId);
+            if (requestIndex !== -1) {
+                const name = database.friendRequests[requestIndex].name;
+                database.friendRequests.splice(requestIndex, 1);
+                
+                renderFriendRequests();
+                showNotification('Request declined', `${name}'s friend request was declined`);
+                updateNotificationBadges();
+            }
+        }
+
+        // Render Events
+        function renderEvents() {
+            eventsList.innerHTML = '';
+            
+            database.events.forEach(event => {
+                const creator = database.friends.find(f => f.id === event.creatorId);
+                const isAttending = event.attendees.includes(database.currentUser.id);
+                const attendeeCount = event.attendees.length;
+                
+                const div = document.createElement('div');
+                div.className = 'event-item';
+                div.innerHTML = `
+                    <div class="event-date">${event.date}</div>
+                    <h4>${event.title}</h4>
+                    <div class="event-details">
+                        <i class="fas fa-clock"></i>
+                        <span>${event.time}</span>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>${event.location}</span>
+                    </div>
+                    <div style="font-size: 12px; color: var(--gray); margin-bottom: 8px;">
+                        Created by ${creator?.name || 'Unknown'} • ${attendeeCount} attending
+                    </div>
+                    <button class="btn ${isAttending ? 'btn-success' : 'btn-primary'}" 
+                            style="width: 100%;" 
+                            onclick="rsvpToEvent(${event.id}, ${!isAttending})">
+                        ${isAttending ? '✓ Attending' : 'RSVP'}
+                    </button>
+                `;
+                eventsList.appendChild(div);
+            });
+        }
+
+        function rsvpToEvent(eventId, attending = true) {
+            const event = database.events.find(e => e.id === eventId);
+            if (event) {
+                const currentUserIndex = event.attendees.indexOf(database.currentUser.id);
+                
+                if (attending && currentUserIndex === -1) {
+                    event.attendees.push(database.currentUser.id);
+                    showNotification('Event RSVP', `You are now attending ${event.title}`, 'success');
+                } else if (!attending && currentUserIndex !== -1) {
+                    event.attendees.splice(currentUserIndex, 1);
+                    showNotification('Event RSVP', `You are no longer attending ${event.title}`);
                 }
                 
-                closeModal('tagFriendsModal');
-            });
+                renderEvents();
+            }
+        }
+
+        // Render Online Friends
+        function renderOnlineFriends() {
+            onlineFriends.innerHTML = '';
             
-            document.getElementById('closeEventModal').addEventListener('click', () => {
-                closeModal('createEventModal');
-            });
+            const onlineFriendsList = database.friends.filter(friend => friend.online);
             
-            document.getElementById('cancelEventBtn').addEventListener('click', () => {
-                closeModal('createEventModal');
-            });
+            if (onlineFriendsList.length === 0) {
+                onlineFriends.innerHTML = '<p style="color: var(--gray); text-align: center; padding: 20px;">No friends online</p>';
+                return;
+            }
             
-            // Close modals on outside click
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === this) {
-                        this.style.display = 'none';
+            onlineFriendsList.forEach(friend => {
+                const div = document.createElement('div');
+                div.className = 'friend-request';
+                div.innerHTML = `
+                    <div class="user-avatar">${friend.avatar}</div>
+                    <div class="friend-info">
+                        <h4>${friend.name}</h4>
+                        <p class="friend-mutual" style="color: var(--success);">
+                            <i class="fas fa-circle" style="font-size: 8px;"></i> Online now
+                        </p>
+                        <div class="friend-actions">
+                            <button class="btn btn-primary btn-sm" onclick="messageFriend(${friend.id})">
+                                <i class="fas fa-comment"></i>
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="callFriend(${friend.id})">
+                                <i class="fas fa-phone"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                onlineFriends.appendChild(div);
+            });
+        }
+
+        function messageFriend(friendId) {
+            const friend = database.friends.find(f => f.id === friendId);
+            if (friend) {
+                showNotification('Messenger', `Opening chat with ${friend.name}...`, 'warning');
+            }
+        }
+
+        function callFriend(friendId) {
+            const friend = database.friends.find(f => f.id === friendId);
+            if (friend) {
+                showNotification('Call', `Calling ${friend.name}...`, 'warning');
+            }
+        }
+
+        // Update Notification Badges
+        function updateNotificationBadges() {
+            const unreadNotifications = database.notifications.filter(n => !n.read).length;
+            const notificationBadge = document.getElementById('notificationBadge');
+            notificationBadge.textContent = unreadNotifications;
+            
+            const messageBadge = document.getElementById('messageBadge');
+            messageBadge.textContent = Math.min(3, database.friendRequests.length);
+        }
+
+        // Create New Post
+        function createNewPost() {
+            const text = document.getElementById('modalPostText').value.trim();
+            const privacy = document.getElementById('postPrivacy').value;
+            
+            if (text) {
+                const newPost = {
+                    id: database.posts.length + 1,
+                    userId: database.currentUser.id,
+                    author: database.currentUser.name,
+                    avatar: database.currentUser.avatar,
+                    time: 'Just now',
+                    text: text,
+                    image: document.getElementById('postImagePreview').src || null,
+                    likes: 0,
+                    comments: 0,
+                    shares: 0,
+                    userLiked: false,
+                    privacy: privacy,
+                    tagged: database.taggedFriends,
+                    commentsList: []
+                };
+                
+                database.posts.unshift(newPost);
+                renderPosts();
+                
+                // Reset modal
+                document.getElementById('modalPostText').value = '';
+                document.getElementById('postImagePreview').src = '';
+                document.getElementById('postPreview').style.display = 'none';
+                database.taggedFriends = [];
+                
+                hideModal(createPostModal);
+                showNotification('Post published!', 'Your post is now visible to your friends');
+            } else {
+                showNotification('Error', 'Please write something to post', 'error');
+            }
+        }
+
+        // Handle Image Upload
+        function handleImageUpload() {
+            document.getElementById('imageUpload').click();
+        }
+
+        // Initialize all event listeners
+        function initializeEventListeners() {
+            // Post creation
+            document.getElementById('createPostBtn').addEventListener('click', () => {
+                showModal(createPostModal);
+            });
+
+            document.getElementById('publishPostBtn').addEventListener('click', createNewPost);
+
+            document.getElementById('addPhotoModalBtn').addEventListener('click', handleImageUpload);
+
+            document.getElementById('imageUpload').addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('postImagePreview').src = e.target.result;
+                        document.getElementById('postPreview').style.display = 'block';
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+
+            document.getElementById('removeImageBtn').addEventListener('click', () => {
+                document.getElementById('postImagePreview').src = '';
+                document.getElementById('postPreview').style.display = 'none';
+                document.getElementById('imageUpload').value = '';
+            });
+
+            // Friend Requests Modal
+            document.getElementById('viewAllRequestsBtn').addEventListener('click', () => {
+                allFriendRequests.innerHTML = '';
+                
+                database.friendRequests.forEach(request => {
+                    const div = document.createElement('div');
+                    div.className = 'friend-request';
+                    div.innerHTML = `
+                        <div class="user-avatar">${request.avatar}</div>
+                        <div class="friend-info">
+                            <h4>${request.name}</h4>
+                            <p class="friend-mutual">${request.mutual} mutual friends</p>
+                            <div class="friend-actions">
+                                <button class="btn btn-success" onclick="acceptFriendRequest(${request.id})">Accept</button>
+                                <button class="btn btn-secondary" onclick="declineFriendRequest(${request.id})">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                    allFriendRequests.appendChild(div);
+                });
+                
+                showModal(friendRequestsModal);
+            });
+
+            // Tag Friends
+            document.getElementById('tagFriendsBtn').addEventListener('click', () => {
+                renderFriendsForTagging();
+                showModal(tagFriendsModal);
+            });
+
+            document.getElementById('tagFriendsModalBtn').addEventListener('click', () => {
+                renderFriendsForTagging();
+                showModal(tagFriendsModal);
+            });
+
+            document.getElementById('doneTagBtn').addEventListener('click', () => {
+                // Get selected friends
+                const selectedFriends = [];
+                document.querySelectorAll('#friendsToTag input[type="checkbox"]:checked').forEach(checkbox => {
+                    const friendId = parseInt(checkbox.id.split('-')[2]);
+                    selectedFriends.push(friendId);
+                });
+                
+                database.taggedFriends = selectedFriends;
+                
+                if (selectedFriends.length > 0) {
+                    showNotification('Tag Friends', `Tagged ${selectedFriends.length} friend(s)`);
+                }
+                
+                hideModal(tagFriendsModal);
+            });
+
+            // Friend search in tag modal
+            document.getElementById('friendSearchInput').addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const friendItems = document.querySelectorAll('#friendsToTag .menu-item');
+                
+                friendItems.forEach(item => {
+                    const friendName = item.querySelector('span').textContent.toLowerCase();
+                    if (friendName.includes(searchTerm)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
                     }
                 });
             });
+
+            // Create Event
+            document.getElementById('createEventBtn').addEventListener('click', () => {
+                // Set default date to tomorrow
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const formattedDate = tomorrow.toISOString().split('T')[0];
+                
+                document.getElementById('eventDate').value = formattedDate;
+                document.getElementById('eventTime').value = '19:00';
+                document.getElementById('eventTitle').value = '';
+                document.getElementById('eventLocation').value = '';
+                document.getElementById('eventDescription').value = '';
+                
+                showModal(createEventModal);
+            });
+
+            document.getElementById('saveEventBtn').addEventListener('click', () => {
+                const title = document.getElementById('eventTitle').value;
+                const date = document.getElementById('eventDate').value;
+                const time = document.getElementById('eventTime').value;
+                const location = document.getElementById('eventLocation').value;
+                const description = document.getElementById('eventDescription').value;
+                const privacy = document.getElementById('eventPrivacy').value;
+                
+                if (title && date && time && location) {
+                    const formattedDate = new Date(date).toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric' 
+                    });
+                    
+                    const newEvent = {
+                        id: database.events.length + 1,
+                        title: title,
+                        date: formattedDate,
+                        time: time,
+                        location: location,
+                        description: description,
+                        privacy: privacy,
+                        creatorId: database.currentUser.id,
+                        attendees: [database.currentUser.id]
+                    };
+                    
+                    database.events.unshift(newEvent);
+                    renderEvents();
+                    
+                    // Reset form
+                    document.getElementById('eventForm').reset();
+                    hideModal(createEventModal);
+                    
+                    showNotification('Event created!', `${title} has been scheduled for ${formattedDate}`);
+                } else {
+                    showNotification('Error', 'Please fill all required fields', 'error');
+                }
+            });
+
+            // Navigation
+            document.getElementById('homeBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                updateActiveNavIcon(e.target);
+                showNotification('Home', 'Returned to News Feed');
+            });
+
+            document.getElementById('notificationsBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                updateActiveNavIcon(e.target);
+                
+                // Mark notifications as read
+                database.notifications.forEach(n => n.read = true);
+                updateNotificationBadges();
+                
+                // Show notifications list
+                showNotification('Notifications', 'You have no new notifications');
+            });
+
+            document.getElementById('friendsBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                updateActiveNavIcon(e.target);
+                showNotification('Friends', 'Opening friends list...', 'warning');
+            });
+
+            document.getElementById('messagesBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                updateActiveNavIcon(e.target);
+                showNotification('Messages', 'Opening messenger...', 'warning');
+            });
+
+            // Search Functionality
+            document.getElementById('searchButton').addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') performSearch();
+            });
+
+            function performSearch() {
+                const query = searchInput.value.trim();
+                if (query) {
+                    // Simulate search results
+                    const friendResults = database.friends.filter(friend => 
+                        friend.name.toLowerCase().includes(query.toLowerCase())
+                    );
+                    
+                    const postResults = database.posts.filter(post => 
+                        post.text.toLowerCase().includes(query.toLowerCase())
+                    );
+                    
+                    if (friendResults.length > 0 || postResults.length > 0) {
+                        showNotification('Search Results', 
+                            `Found ${friendResults.length} friends and ${postResults.length} posts`, 
+                            'success');
+                    } else {
+                        showNotification('Search', `No results found for "${query}"`, 'warning');
+                    }
+                }
+            }
+
+            // Modal Close Handlers
+            document.getElementById('closePostModal').addEventListener('click', () => hideModal(createPostModal));
+            document.getElementById('closeRequestsModal').addEventListener('click', () => hideModal(friendRequestsModal));
+            document.getElementById('closeTagModal').addEventListener('click', () => hideModal(tagFriendsModal));
+            document.getElementById('closeEventModal').addEventListener('click', () => hideModal(createEventModal));
             
-            // Notification click to close
-            document.getElementById('notification').addEventListener('click', function() {
-                this.style.display = 'none';
+            document.getElementById('cancelPostBtn').addEventListener('click', () => hideModal(createPostModal));
+            document.getElementById('closeRequestsBtn').addEventListener('click', () => hideModal(friendRequestsModal));
+            document.getElementById('cancelTagBtn').addEventListener('click', () => hideModal(tagFriendsModal));
+            document.getElementById('cancelEventBtn').addEventListener('click', () => hideModal(createEventModal));
+
+            // Close modals when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal')) {
+                    hideModal(createPostModal);
+                    hideModal(friendRequestsModal);
+                    hideModal(tagFriendsModal);
+                    hideModal(createEventModal);
+                }
+            });
+
+            // User Menu
+            document.getElementById('userMenu').addEventListener('click', () => {
+                showNotification('Profile', 'Profile menu would open here', 'warning');
+            });
+
+            // Sidebar Navigation
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    
+                    const text = item.querySelector('span').textContent;
+                    showNotification(text, `Navigating to ${text} page...`, 'warning');
+                });
+            });
+
+            // Shortcuts
+            document.getElementById('gamingShortcut').addEventListener('click', () => {
+                showNotification('Gaming', 'Opening gaming section...', 'warning');
+            });
+
+            document.getElementById('findFriendsBtn').addEventListener('click', () => {
+                showNotification('Find Friends', 'Opening friend suggestions...', 'warning');
+            });
+
+            // Birthday Posts
+            document.getElementById('birthdayPostBtn1').addEventListener('click', () => {
+                showNotification('Birthday', 'Creating birthday post for Sarah Kim...', 'warning');
+            });
+
+            document.getElementById('birthdayPostBtn2').addEventListener('click', () => {
+                showNotification('Birthday', 'Creating birthday post for Mike Brown...', 'warning');
+            });
+
+            // Initialize with some notifications
+            setTimeout(() => {
+                showNotification('Welcome back, John!', 'You have new notifications and friend requests');
+            }, 1000);
+        }
+
+        // Helper Functions
+        function updateActiveNavIcon(clickedElement) {
+            document.querySelectorAll('.nav-icon').forEach(icon => icon.classList.remove('active'));
+            clickedElement.closest('.nav-icon').classList.add('active');
+        }
+
+        function renderFriendsForTagging() {
+            friendsToTag.innerHTML = '';
+            
+            database.friends.forEach(friend => {
+                const isTagged = database.taggedFriends.includes(friend.id);
+                const div = document.createElement('div');
+                div.className = 'menu-item';
+                div.innerHTML = `
+                    <div class="user-avatar" style="width: 32px; height: 32px; font-size: 12px;">${friend.avatar}</div>
+                    <span>${friend.name}</span>
+                    <input type="checkbox" style="margin-left: auto;" 
+                           id="tag-friend-${friend.id}" 
+                           ${isTagged ? 'checked' : ''}>
+                `;
+                friendsToTag.appendChild(div);
             });
         }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', initApp);
+        // Auto-update friend online status every 30 seconds
+        setInterval(() => {
+            // Randomly change online status for demo purposes
+            database.friends.forEach(friend => {
+                if (Math.random() > 0.7) {
+                    friend.online = !friend.online;
+                }
+            });
+            renderOnlineFriends();
+        }, 30000);
     </script>
 </body>
 </html>
