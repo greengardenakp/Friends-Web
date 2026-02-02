@@ -220,6 +220,12 @@
             transition: var(--transition);
             margin-bottom: 4px;
             cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+            font-size: 14px;
         }
 
         .menu-item:hover {
@@ -641,10 +647,14 @@
             background: white;
             border-radius: var(--border-radius);
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: var(--shadow-lg);
+        }
+
+        .modal-large {
+            max-width: 900px;
         }
 
         .modal-header {
@@ -745,6 +755,157 @@
             border-left-color: var(--warning);
         }
 
+        /* Photo Gallery */
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .photo-item {
+            position: relative;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 1;
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .photo-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .photo-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px;
+            font-size: 12px;
+        }
+
+        /* Friends List */
+        .friends-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .friend-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .friend-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .friend-card .user-avatar {
+            width: 80px;
+            height: 80px;
+            font-size: 24px;
+            margin: 0 auto 10px;
+        }
+
+        /* Messages */
+        .messages-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .message-thread {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            font-size: 14px;
+        }
+
+        .message.sent {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+        }
+
+        .message.received {
+            background: var(--light);
+            color: var(--dark);
+            align-self: flex-start;
+        }
+
+        /* Groups */
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .group-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .group-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .group-banner {
+            height: 100px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+        }
+
+        .group-info {
+            padding: 15px;
+        }
+
+        .group-members {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .group-member-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--light-gray);
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         @keyframes slideIn {
             from {
                 transform: translateX(100%);
@@ -787,6 +948,27 @@
 
         ::-webkit-scrollbar-thumb:hover {
             background: #aaa;
+        }
+
+        /* Active Page Content */
+        .page-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -838,42 +1020,42 @@
             <aside class="sidebar">
                 <div class="sidebar-section">
                     <nav>
-                        <a href="#" class="menu-item active" id="newsFeedBtn">
+                        <button class="menu-item active" id="newsFeedBtn" data-page="newsFeed">
                             <div class="menu-icon">
                                 <i class="fas fa-home"></i>
                             </div>
                             <span>News Feed</span>
-                        </a>
-                        <a href="#" class="menu-item" id="friendsMenuBtn">
+                        </button>
+                        <button class="menu-item" id="friendsMenuBtn" data-page="friends">
                             <div class="menu-icon">
                                 <i class="fas fa-user-friends"></i>
                             </div>
                             <span>Friends</span>
-                        </a>
-                        <a href="#" class="menu-item" id="messagesMenuBtn">
+                        </button>
+                        <button class="menu-item" id="messagesMenuBtn" data-page="messages">
                             <div class="menu-icon">
                                 <i class="fas fa-comments"></i>
                             </div>
                             <span>Messages</span>
-                        </a>
-                        <a href="#" class="menu-item" id="eventsMenuBtn">
+                        </button>
+                        <button class="menu-item" id="eventsMenuBtn" data-page="events">
                             <div class="menu-icon">
                                 <i class="fas fa-calendar"></i>
                             </div>
                             <span>Events</span>
-                        </a>
-                        <a href="#" class="menu-item" id="photosMenuBtn">
+                        </button>
+                        <button class="menu-item" id="photosMenuBtn" data-page="photos">
                             <div class="menu-icon">
                                 <i class="fas fa-images"></i>
                             </div>
                             <span>Photos</span>
-                        </a>
-                        <a href="#" class="menu-item" id="groupsMenuBtn">
+                        </button>
+                        <button class="menu-item" id="groupsMenuBtn" data-page="groups">
                             <div class="menu-icon">
                                 <i class="fas fa-users"></i>
                             </div>
                             <span>Groups</span>
-                        </a>
+                        </button>
                     </nav>
                 </div>
 
@@ -918,31 +1100,93 @@
 
             <!-- Main Content -->
             <main class="main-content">
-                <!-- Create Post -->
-                <div class="create-post">
-                    <div class="post-input">
-                        <div class="user-avatar" style="width: 40px; height: 40px;">JS</div>
-                        <input type="text" id="postText" placeholder="What's on your mind, John?">
+                <!-- News Feed Page -->
+                <div id="newsFeedPage" class="page-content active">
+                    <!-- Create Post -->
+                    <div class="create-post">
+                        <div class="post-input">
+                            <div class="user-avatar" style="width: 40px; height: 40px;">JS</div>
+                            <input type="text" id="postText" placeholder="What's on your mind, John?">
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action" id="addPhotoBtn">
+                                <i class="fas fa-image" style="color: #45bd62;"></i>
+                                <span>Photo/Video</span>
+                            </div>
+                            <div class="post-action" id="tagFriendsBtn">
+                                <i class="fas fa-user-tag" style="color: #1877f2;"></i>
+                                <span>Tag Friends</span>
+                            </div>
+                            <div class="post-action" id="createPostBtn">
+                                <i class="fas fa-feather-alt" style="color: #f7b928;"></i>
+                                <span>Create Post</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="post-actions">
-                        <div class="post-action" id="addPhotoBtn">
-                            <i class="fas fa-image" style="color: #45bd62;"></i>
-                            <span>Photo/Video</span>
-                        </div>
-                        <div class="post-action" id="tagFriendsBtn">
-                            <i class="fas fa-user-tag" style="color: #1877f2;"></i>
-                            <span>Tag Friends</span>
-                        </div>
-                        <div class="post-action" id="createPostBtn">
-                            <i class="fas fa-feather-alt" style="color: #f7b928;"></i>
-                            <span>Create Post</span>
+
+                    <!-- Posts Feed -->
+                    <div id="postsFeed">
+                        <!-- Posts will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Friends Page -->
+                <div id="friendsPage" class="page-content">
+                    <div class="sidebar-section">
+                        <h3>My Friends</h3>
+                        <div id="friendsListContent">
+                            <!-- Friends list will be loaded here -->
                         </div>
                     </div>
                 </div>
 
-                <!-- Posts Feed -->
-                <div id="postsFeed">
-                    <!-- Posts will be loaded here -->
+                <!-- Messages Page -->
+                <div id="messagesPage" class="page-content">
+                    <div class="messages-container">
+                        <h3>Messages</h3>
+                        <div id="messagesContent">
+                            <!-- Messages will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Events Page -->
+                <div id="eventsPage" class="page-content">
+                    <div class="sidebar-section">
+                        <h3>My Events</h3>
+                        <div id="eventsPageContent">
+                            <!-- Events will be loaded here -->
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" id="createEventPageBtn">
+                            Create New Event
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Photos Page -->
+                <div id="photosPage" class="page-content">
+                    <div class="sidebar-section">
+                        <h3>Photo Gallery</h3>
+                        <div id="photosContent">
+                            <!-- Photos will be loaded here -->
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" id="uploadPhotoBtn">
+                            Upload Photo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Groups Page -->
+                <div id="groupsPage" class="page-content">
+                    <div class="sidebar-section">
+                        <h3>My Groups</h3>
+                        <div id="groupsContent">
+                            <!-- Groups will be loaded here -->
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" id="createGroupBtn">
+                            Create New Group
+                        </button>
+                    </div>
                 </div>
             </main>
 
@@ -1126,6 +1370,141 @@
         </div>
     </div>
 
+    <!-- Photo Gallery Modal -->
+    <div id="photoGalleryModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>Photo Gallery</h3>
+                <button class="close-modal" id="closePhotoModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="photo-gallery" id="modalPhotoGallery">
+                    <!-- Photos will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="closeGalleryBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Photo Modal -->
+    <div id="uploadPhotoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Upload Photo</h3>
+                <button class="close-modal" id="closeUploadModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div style="border: 2px dashed var(--light-gray); border-radius: 8px; padding: 40px; text-align: center;">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: var(--gray); margin-bottom: 20px;"></i>
+                        <p style="color: var(--gray); margin-bottom: 20px;">Drag and drop your photos here or click to browse</p>
+                        <input type="file" id="photoUpload" accept="image/*" multiple style="display: none;">
+                        <button class="btn btn-primary" id="browsePhotosBtn">Browse Photos</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="photoCaption">Caption (optional)</label>
+                    <textarea class="form-control" id="photoCaption" rows="2" placeholder="Add a caption..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="photoAlbum">Album</label>
+                    <select class="form-control" id="photoAlbum">
+                        <option value="timeline">Timeline Photos</option>
+                        <option value="profile">Profile Pictures</option>
+                        <option value="cover">Cover Photos</option>
+                        <option value="mobile">Mobile Uploads</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="photoPrivacy">Privacy</label>
+                    <select class="form-control" id="photoPrivacy">
+                        <option value="public">Public</option>
+                        <option value="friends">Friends</option>
+                        <option value="onlyme">Only Me</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelUploadBtn">Cancel</button>
+                <button class="btn btn-primary" id="uploadPhotoFinalBtn">Upload</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Photo Modal -->
+    <div id="viewPhotoModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 id="viewPhotoTitle"></h3>
+                <button class="close-modal" id="closeViewPhotoModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+                    <div>
+                        <img id="viewedPhoto" src="" style="width: 100%; border-radius: 8px;">
+                    </div>
+                    <div>
+                        <h4>Photo Details</h4>
+                        <div id="photoDetails"></div>
+                        <div style="margin-top: 20px;">
+                            <button class="btn btn-primary" style="width: 100%; margin-bottom: 10px;" onclick="likePhoto()">
+                                <i class="fas fa-thumbs-up"></i> Like
+                            </button>
+                            <button class="btn btn-secondary" style="width: 100%; margin-bottom: 10px;" onclick="sharePhoto()">
+                                <i class="fas fa-share"></i> Share
+                            </button>
+                            <button class="btn btn-danger" style="width: 100%;" onclick="deletePhoto()">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Group Modal -->
+    <div id="createGroupModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Group</h3>
+                <button class="close-modal" id="closeGroupModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="groupForm">
+                    <div class="form-group">
+                        <label for="groupName">Group Name</label>
+                        <input type="text" class="form-control" id="groupName" placeholder="Enter group name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="groupDescription">Description</label>
+                        <textarea class="form-control" id="groupDescription" rows="3" placeholder="Describe your group..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="groupPrivacy">Privacy</label>
+                        <select class="form-control" id="groupPrivacy">
+                            <option value="public">Public (Anyone can join)</option>
+                            <option value="private">Private (Requires approval)</option>
+                            <option value="secret">Secret (Invite only)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Invite Friends</label>
+                        <div id="groupFriendsList">
+                            <!-- Friends list for group -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelGroupBtn">Cancel</button>
+                <button class="btn btn-primary" id="saveGroupBtn">Create Group</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Notification -->
     <div id="notification" class="notification">
         <div style="display: flex; align-items: center; gap: 12px;">
@@ -1185,25 +1564,6 @@
                         { id: 1, userId: 1, author: "John Smith", text: "Amazing time! Keep it up!", time: "4 hours ago", likes: 1 },
                         { id: 2, userId: 4, author: "Emma Davis", text: "Wow, that's impressive Mike!", time: "3 hours ago", likes: 0 }
                     ]
-                },
-                {
-                    id: 3,
-                    userId: 4,
-                    author: "Emma Davis",
-                    avatar: "ED",
-                    time: "1 day ago",
-                    text: "Just tried this amazing new restaurant downtown. The food was incredible! Highly recommend it to everyone.",
-                    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=600&fit=crop",
-                    likes: 32,
-                    comments: 7,
-                    shares: 3,
-                    userLiked: false,
-                    privacy: "public",
-                    tagged: [1, 3],
-                    commentsList: [
-                        { id: 1, userId: 1, author: "John Smith", text: "What's the name of the restaurant?", time: "22 hours ago", likes: 1 },
-                        { id: 2, userId: 4, author: "Emma Davis", text: "It's called 'The Gourmet Spot' on Main Street", time: "21 hours ago", likes: 2 }
-                    ]
                 }
             ],
             friends: [
@@ -1216,22 +1576,36 @@
             friendRequests: [
                 { id: 7, name: "Robert Garcia", avatar: "RG", mutual: 3 },
                 { id: 8, name: "Jessica Lee", avatar: "JL", mutual: 5 },
-                { id: 9, name: "David Miller", avatar: "DM", mutual: 2 },
-                { id: 10, name: "Sophia Williams", avatar: "SW", mutual: 7 }
+                { id: 9, name: "David Miller", avatar: "DM", mutual: 2 }
             ],
             events: [
                 { id: 1, title: "Weekend BBQ Party", date: "Tomorrow", time: "3:00 PM", location: "Central Park", creatorId: 2, attendees: [1, 3, 4] },
                 { id: 2, title: "Book Club Meeting", date: "June 15", time: "7:00 PM", location: "City Library", creatorId: 4, attendees: [1, 5] },
                 { id: 3, title: "Tech Conference", date: "June 20", time: "9:00 AM", location: "Convention Center", creatorId: 5, attendees: [1, 2, 3] }
             ],
+            photos: [
+                { id: 1, url: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=400&fit=crop", caption: "Beach day", likes: 24, comments: 5, authorId: 2, authorName: "Sarah Johnson", time: "2 days ago" },
+                { id: 2, url: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=400&fit=crop", caption: "Dinner with friends", likes: 18, comments: 3, authorId: 4, authorName: "Emma Davis", time: "3 days ago" },
+                { id: 3, url: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=400&fit=crop", caption: "Delicious food", likes: 32, comments: 7, authorId: 1, authorName: "John Smith", time: "1 week ago" },
+                { id: 4, url: "https://images.unsplash.com/photo-1511988617509-a57c8a288659?w=400&h=400&fit=crop", caption: "Morning run", likes: 15, comments: 2, authorId: 3, authorName: "Mike Chen", time: "2 weeks ago" },
+                { id: 5, url: "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=400&h=400&fit=crop", caption: "Mountain view", likes: 42, comments: 9, authorId: 2, authorName: "Sarah Johnson", time: "3 weeks ago" },
+                { id: 6, url: "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=400&h=400&fit=crop", caption: "City lights", likes: 28, comments: 4, authorId: 5, authorName: "Alex Taylor", time: "1 month ago" }
+            ],
+            messages: [
+                { id: 1, senderId: 2, senderName: "Sarah Johnson", text: "Hey John, are you coming to the party tonight?", time: "10:30 AM", unread: true },
+                { id: 2, senderId: 3, senderName: "Mike Chen", text: "Did you finish the project?", time: "Yesterday", unread: false },
+                { id: 3, senderId: 4, senderName: "Emma Davis", text: "Thanks for your help yesterday!", time: "2 days ago", unread: true }
+            ],
+            groups: [
+                { id: 1, name: "Tech Enthusiasts", members: 245, description: "For all technology lovers", privacy: "public" },
+                { id: 2, name: "Book Club", members: 56, description: "Monthly book discussions", privacy: "private" },
+                { id: 3, name: "Fitness Buddies", members: 128, description: "Stay fit together", privacy: "public" }
+            ],
             notifications: [
                 { id: 1, text: "Sarah liked your post", time: "10 min ago", read: false, type: "like" },
                 { id: 2, text: "Mike commented on your photo", time: "1 hour ago", read: false, type: "comment" },
-                { id: 3, text: "You have 3 new friend requests", time: "2 hours ago", read: true, type: "friend" },
-                { id: 4, text: "Emma shared an event", time: "5 hours ago", read: true, type: "event" },
-                { id: 5, text: "Alex is live now", time: "Just now", read: false, type: "live" }
-            ],
-            taggedFriends: []
+                { id: 3, text: "You have 3 new friend requests", time: "2 hours ago", read: true, type: "friend" }
+            ]
         };
 
         // DOM Elements
@@ -1239,29 +1613,37 @@
         const friendRequestsModal = document.getElementById('friendRequestsModal');
         const tagFriendsModal = document.getElementById('tagFriendsModal');
         const createEventModal = document.getElementById('createEventModal');
+        const photoGalleryModal = document.getElementById('photoGalleryModal');
+        const uploadPhotoModal = document.getElementById('uploadPhotoModal');
+        const viewPhotoModal = document.getElementById('viewPhotoModal');
+        const createGroupModal = document.getElementById('createGroupModal');
         const notification = document.getElementById('notification');
-        const searchInput = document.getElementById('searchInput');
-        const postText = document.getElementById('postText');
-        const postsFeed = document.getElementById('postsFeed');
-        const friendRequestsList = document.getElementById('friendRequestsList');
-        const eventsList = document.getElementById('eventsList');
-        const onlineFriends = document.getElementById('onlineFriends');
-        const allFriendRequests = document.getElementById('allFriendRequests');
-        const friendsToTag = document.getElementById('friendsToTag');
-        const userAvatar = document.getElementById('userAvatar');
-        const userName = document.querySelector('.user-name');
+
+        // Page elements
+        const pageContents = {
+            newsFeed: document.getElementById('newsFeedPage'),
+            friends: document.getElementById('friendsPage'),
+            messages: document.getElementById('messagesPage'),
+            events: document.getElementById('eventsPage'),
+            photos: document.getElementById('photosPage'),
+            groups: document.getElementById('groupsPage')
+        };
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', () => {
+            // Render initial content
             renderPosts();
             renderFriendRequests();
             renderEvents();
             renderOnlineFriends();
             updateNotificationBadges();
             updateUserInfo();
+            
+            // Load initial page
+            loadPage('newsFeed');
 
             // Add click event to post input
-            postText.addEventListener('click', () => {
+            document.getElementById('postText').addEventListener('click', () => {
                 showModal(createPostModal);
             });
 
@@ -1269,10 +1651,52 @@
             initializeEventListeners();
         });
 
+        // Page Navigation System
+        function loadPage(pageId) {
+            // Hide all pages
+            Object.values(pageContents).forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            if (pageContents[pageId]) {
+                pageContents[pageId].classList.add('active');
+                
+                // Load page-specific content
+                switch(pageId) {
+                    case 'friends':
+                        renderFriendsPage();
+                        break;
+                    case 'messages':
+                        renderMessagesPage();
+                        break;
+                    case 'events':
+                        renderEventsPage();
+                        break;
+                    case 'photos':
+                        renderPhotosPage();
+                        break;
+                    case 'groups':
+                        renderGroupsPage();
+                        break;
+                }
+            }
+        }
+
+        function updateActiveMenuItem(menuItem) {
+            // Remove active class from all menu items
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Add active class to clicked item
+            menuItem.classList.add('active');
+        }
+
         // Update User Info
         function updateUserInfo() {
-            userAvatar.textContent = database.currentUser.avatar;
-            userName.textContent = database.currentUser.name.split(' ')[0];
+            document.getElementById('userAvatar').textContent = database.currentUser.avatar;
+            document.querySelector('.user-name').textContent = database.currentUser.name.split(' ')[0];
         }
 
         // Modal Functions
@@ -1316,6 +1740,7 @@
 
         // Render Posts
         function renderPosts() {
+            const postsFeed = document.getElementById('postsFeed');
             postsFeed.innerHTML = '';
             
             database.posts.forEach(post => {
@@ -1333,7 +1758,6 @@
             const privacyIcon = post.privacy === 'public' ? '🌐' : 
                               post.privacy === 'friends' ? '👥' : '🔒';
             
-            // Get tagged friends names
             const taggedNames = post.tagged.map(id => {
                 const friend = database.friends.find(f => f.id === id);
                 return friend ? friend.name : 'Unknown';
@@ -1423,18 +1847,6 @@
                 if (post.userLiked) {
                     likeBtn.classList.add('active');
                     showNotification('Liked!', `You liked ${post.author}'s post`);
-                    
-                    // Add notification
-                    if (post.userId !== database.currentUser.id) {
-                        database.notifications.unshift({
-                            id: database.notifications.length + 1,
-                            text: `${database.currentUser.name} liked your post`,
-                            time: 'Just now',
-                            read: false,
-                            type: 'like'
-                        });
-                        updateNotificationBadges();
-                    }
                 } else {
                     likeBtn.classList.remove('active');
                 }
@@ -1484,18 +1896,6 @@
                     input.value = '';
                     
                     showNotification('Comment added!', 'Your comment has been posted');
-                    
-                    // Add notification
-                    if (post.userId !== database.currentUser.id) {
-                        database.notifications.unshift({
-                            id: database.notifications.length + 1,
-                            text: `${database.currentUser.name} commented on your post`,
-                            time: 'Just now',
-                            read: false,
-                            type: 'comment'
-                        });
-                        updateNotificationBadges();
-                    }
                 }
             }
         }
@@ -1511,64 +1911,195 @@
                 post.shares++;
                 document.querySelector(`#post-${postId} .shares-count`).textContent = `${post.shares} shares`;
                 showNotification('Shared!', `You shared ${post.author}'s post`);
+            }
+        }
+
+        // Render Friends Page
+        function renderFriendsPage() {
+            const friendsListContent = document.getElementById('friendsListContent');
+            friendsListContent.innerHTML = `
+                <div class="friends-grid">
+                    ${database.friends.map(friend => `
+                        <div class="friend-card">
+                            <div class="user-avatar">${friend.avatar}</div>
+                            <h4>${friend.name}</h4>
+                            <p style="color: var(--gray); font-size: 12px; margin: 5px 0;">${friend.mutual} mutual friends</p>
+                            <div style="margin-top: 10px; display: flex; gap: 5px;">
+                                <button class="btn btn-primary btn-sm" onclick="messageFriend(${friend.id})">
+                                    <i class="fas fa-comment"></i> Message
+                                </button>
+                                <button class="btn btn-secondary btn-sm" onclick="removeFriend(${friend.id})">
+                                    <i class="fas fa-user-minus"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function removeFriend(friendId) {
+            const friendIndex = database.friends.findIndex(f => f.id === friendId);
+            if (friendIndex !== -1) {
+                const friendName = database.friends[friendIndex].name;
+                database.friends.splice(friendIndex, 1);
+                renderFriendsPage();
+                renderOnlineFriends();
+                showNotification('Friend removed', `${friendName} has been removed from your friends list`);
+            }
+        }
+
+        // Render Messages Page
+        function renderMessagesPage() {
+            const messagesContent = document.getElementById('messagesContent');
+            messagesContent.innerHTML = `
+                <div class="message-thread">
+                    ${database.messages.map(message => `
+                        <div class="message ${message.senderId === database.currentUser.id ? 'sent' : 'received'}">
+                            <div style="font-weight: 500; margin-bottom: 5px;">${message.senderName}</div>
+                            <div>${message.text}</div>
+                            <div style="font-size: 11px; margin-top: 5px; opacity: 0.8;">${message.time}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div style="margin-top: 20px;">
+                    <input type="text" id="newMessage" class="form-control" placeholder="Type a message..." style="margin-bottom: 10px;">
+                    <button class="btn btn-primary" onclick="sendMessage()">Send Message</button>
+                </div>
+            `;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('newMessage');
+            const text = input.value.trim();
+            
+            if (text) {
+                const newMessage = {
+                    id: database.messages.length + 1,
+                    senderId: database.currentUser.id,
+                    senderName: database.currentUser.name,
+                    text: text,
+                    time: 'Just now',
+                    unread: false
+                };
                 
-                // Add notification
-                if (post.userId !== database.currentUser.id) {
-                    database.notifications.unshift({
-                        id: database.notifications.length + 1,
-                        text: `${database.currentUser.name} shared your post`,
-                        time: 'Just now',
-                        read: false,
-                        type: 'share'
-                    });
-                    updateNotificationBadges();
-                }
+                database.messages.push(newMessage);
+                renderMessagesPage();
+                input.value = '';
+                showNotification('Message sent', 'Your message has been sent');
             }
         }
 
-        function likeComment(postId, commentId) {
-            const post = database.posts.find(p => p.id === postId);
-            if (post) {
-                const comment = post.commentsList.find(c => c.id === commentId);
-                if (comment) {
-                    comment.likes++;
-                    const likeElement = document.querySelector(`#comment-${postId}-${commentId} .comment-action`);
-                    likeElement.textContent = `Like (${comment.likes})`;
-                    showNotification('Liked!', 'You liked the comment');
-                }
+        // Render Events Page
+        function renderEventsPage() {
+            const eventsPageContent = document.getElementById('eventsPageContent');
+            eventsPageContent.innerHTML = `
+                ${database.events.map(event => {
+                    const creator = database.friends.find(f => f.id === event.creatorId);
+                    const isAttending = event.attendees.includes(database.currentUser.id);
+                    return `
+                        <div class="event-item">
+                            <div class="event-date">${event.date}</div>
+                            <h4>${event.title}</h4>
+                            <div class="event-details">
+                                <i class="fas fa-clock"></i>
+                                <span>${event.time}</span>
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>${event.location}</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--gray); margin-bottom: 8px;">
+                                Created by ${creator?.name || 'Unknown'} • ${event.attendees.length} attending
+                            </div>
+                            <button class="btn ${isAttending ? 'btn-success' : 'btn-primary'}" 
+                                    style="width: 100%;" 
+                                    onclick="rsvpToEvent(${event.id}, ${!isAttending})">
+                                ${isAttending ? '✓ Attending' : 'RSVP'}
+                            </button>
+                        </div>
+                    `;
+                }).join('')}
+            `;
+        }
+
+        // Render Photos Page
+        function renderPhotosPage() {
+            const photosContent = document.getElementById('photosContent');
+            photosContent.innerHTML = `
+                <div class="photo-gallery">
+                    ${database.photos.map(photo => `
+                        <div class="photo-item" onclick="viewPhoto(${photo.id})">
+                            <img src="${photo.url}" alt="${photo.caption}">
+                            <div class="photo-overlay">
+                                <div>${photo.caption}</div>
+                                <div style="font-size: 10px; margin-top: 2px;">
+                                    <i class="fas fa-thumbs-up"></i> ${photo.likes} 
+                                    <i class="fas fa-comment" style="margin-left: 8px;"></i> ${photo.comments}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function viewPhoto(photoId) {
+            const photo = database.photos.find(p => p.id === photoId);
+            if (photo) {
+                document.getElementById('viewedPhoto').src = photo.url;
+                document.getElementById('viewPhotoTitle').textContent = photo.caption;
+                document.getElementById('photoDetails').innerHTML = `
+                    <p><strong>Author:</strong> ${photo.authorName}</p>
+                    <p><strong>Posted:</strong> ${photo.time}</p>
+                    <p><strong>Likes:</strong> ${photo.likes}</p>
+                    <p><strong>Comments:</strong> ${photo.comments}</p>
+                `;
+                showModal(viewPhotoModal);
             }
         }
 
-        function replyToComment(postId, commentId) {
-            const input = document.getElementById(`comment-input-${postId}`);
-            const post = database.posts.find(p => p.id === postId);
-            if (post) {
-                const comment = post.commentsList.find(c => c.id === commentId);
-                if (comment) {
-                    input.value = `@${comment.author} `;
-                    input.focus();
-                    showNotification('Reply', 'Type your reply after the username');
-                }
-            }
+        function likePhoto() {
+            showNotification('Photo liked', 'You liked this photo');
         }
 
-        function viewImage(imageUrl, author) {
-            showNotification('Image View', `Viewing ${author}'s image`, 'warning');
+        function sharePhoto() {
+            showNotification('Photo shared', 'Photo has been shared');
         }
 
-        function showPostOptions(postId) {
-            const post = database.posts.find(p => p.id === postId);
-            if (post) {
-                if (post.userId === database.currentUser.id) {
-                    showNotification('Post Options', 'Edit | Delete | Hide', 'warning');
-                } else {
-                    showNotification('Post Options', 'Save | Hide | Report', 'warning');
-                }
-            }
+        function deletePhoto() {
+            showNotification('Photo deleted', 'Photo has been deleted');
+            hideModal(viewPhotoModal);
+        }
+
+        // Render Groups Page
+        function renderGroupsPage() {
+            const groupsContent = document.getElementById('groupsContent');
+            groupsContent.innerHTML = `
+                <div class="groups-grid">
+                    ${database.groups.map(group => `
+                        <div class="group-card">
+                            <div class="group-banner"></div>
+                            <div class="group-info">
+                                <h4>${group.name}</h4>
+                                <p style="color: var(--gray); font-size: 13px;">${group.description}</p>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                                    <span style="font-size: 12px; color: var(--primary);">
+                                        ${group.privacy === 'public' ? '🌐 Public' : group.privacy === 'private' ? '🔒 Private' : '🔐 Secret'}
+                                    </span>
+                                    <span style="font-size: 12px; color: var(--gray);">
+                                        <i class="fas fa-users"></i> ${group.members}
+                                    </span>
+                                </div>
+                                <button class="btn btn-primary" style="width: 100%; margin-top: 15px;">Join Group</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
         }
 
         // Render Friend Requests
         function renderFriendRequests() {
+            const friendRequestsList = document.getElementById('friendRequestsList');
             friendRequestsList.innerHTML = '';
             
             database.friendRequests.slice(0, 2).forEach(request => {
@@ -1598,17 +2129,11 @@
                 
                 renderFriendRequests();
                 renderOnlineFriends();
+                if (pageContents.friends.classList.contains('active')) {
+                    renderFriendsPage();
+                }
                 showNotification('Friend added!', `You are now friends with ${newFriend.name}`);
                 updateNotificationBadges();
-                
-                // Add notification
-                database.notifications.unshift({
-                    id: database.notifications.length + 1,
-                    text: `You are now friends with ${newFriend.name}`,
-                    time: 'Just now',
-                    read: false,
-                    type: 'friend'
-                });
             }
         }
 
@@ -1626,6 +2151,7 @@
 
         // Render Events
         function renderEvents() {
+            const eventsList = document.getElementById('eventsList');
             eventsList.innerHTML = '';
             
             database.events.forEach(event => {
@@ -1671,11 +2197,15 @@
                 }
                 
                 renderEvents();
+                if (pageContents.events.classList.contains('active')) {
+                    renderEventsPage();
+                }
             }
         }
 
         // Render Online Friends
         function renderOnlineFriends() {
+            const onlineFriends = document.getElementById('onlineFriends');
             onlineFriends.innerHTML = '';
             
             const onlineFriendsList = database.friends.filter(friend => friend.online);
@@ -1712,7 +2242,8 @@
         function messageFriend(friendId) {
             const friend = database.friends.find(f => f.id === friendId);
             if (friend) {
-                showNotification('Messenger', `Opening chat with ${friend.name}...`, 'warning');
+                loadPage('messages');
+                showNotification('Messenger', `Opening chat with ${friend.name}...`);
             }
         }
 
@@ -1730,83 +2261,100 @@
             notificationBadge.textContent = unreadNotifications;
             
             const messageBadge = document.getElementById('messageBadge');
-            messageBadge.textContent = Math.min(3, database.friendRequests.length);
-        }
-
-        // Create New Post
-        function createNewPost() {
-            const text = document.getElementById('modalPostText').value.trim();
-            const privacy = document.getElementById('postPrivacy').value;
-            
-            if (text) {
-                const newPost = {
-                    id: database.posts.length + 1,
-                    userId: database.currentUser.id,
-                    author: database.currentUser.name,
-                    avatar: database.currentUser.avatar,
-                    time: 'Just now',
-                    text: text,
-                    image: document.getElementById('postImagePreview').src || null,
-                    likes: 0,
-                    comments: 0,
-                    shares: 0,
-                    userLiked: false,
-                    privacy: privacy,
-                    tagged: database.taggedFriends,
-                    commentsList: []
-                };
-                
-                database.posts.unshift(newPost);
-                renderPosts();
-                
-                // Reset modal
-                document.getElementById('modalPostText').value = '';
-                document.getElementById('postImagePreview').src = '';
-                document.getElementById('postPreview').style.display = 'none';
-                database.taggedFriends = [];
-                
-                hideModal(createPostModal);
-                showNotification('Post published!', 'Your post is now visible to your friends');
-            } else {
-                showNotification('Error', 'Please write something to post', 'error');
-            }
-        }
-
-        // Handle Image Upload
-        function handleImageUpload() {
-            document.getElementById('imageUpload').click();
+            const unreadMessages = database.messages.filter(m => m.unread).length;
+            messageBadge.textContent = unreadMessages;
         }
 
         // Initialize all event listeners
         function initializeEventListeners() {
+            // Sidebar Navigation
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pageId = item.dataset.page;
+                    updateActiveMenuItem(item);
+                    loadPage(pageId);
+                    showNotification(item.querySelector('span').textContent, `Loading ${item.querySelector('span').textContent}...`);
+                });
+            });
+
+            // Header Navigation
+            document.getElementById('homeBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                updateActiveNavIcon(e.target);
+                loadPage('newsFeed');
+                showNotification('Home', 'Returned to News Feed');
+            });
+
+            document.getElementById('friendsBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                updateActiveNavIcon(e.target);
+                loadPage('friends');
+            });
+
+            document.getElementById('messagesBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                updateActiveNavIcon(e.target);
+                loadPage('messages');
+            });
+
+            document.getElementById('notificationsBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                updateActiveNavIcon(e.target);
+                
+                // Mark notifications as read
+                database.notifications.forEach(n => n.read = true);
+                database.messages.forEach(m => m.unread = false);
+                updateNotificationBadges();
+                
+                showNotification('Notifications', 'You have no new notifications');
+            });
+
             // Post creation
             document.getElementById('createPostBtn').addEventListener('click', () => {
                 showModal(createPostModal);
             });
 
-            document.getElementById('publishPostBtn').addEventListener('click', createNewPost);
-
-            document.getElementById('addPhotoModalBtn').addEventListener('click', handleImageUpload);
-
-            document.getElementById('imageUpload').addEventListener('change', function(e) {
-                if (this.files && this.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        document.getElementById('postImagePreview').src = e.target.result;
-                        document.getElementById('postPreview').style.display = 'block';
-                    }
-                    reader.readAsDataURL(this.files[0]);
+            document.getElementById('publishPostBtn').addEventListener('click', () => {
+                const text = document.getElementById('modalPostText').value.trim();
+                const privacy = document.getElementById('postPrivacy').value;
+                
+                if (text) {
+                    const newPost = {
+                        id: database.posts.length + 1,
+                        userId: database.currentUser.id,
+                        author: database.currentUser.name,
+                        avatar: database.currentUser.avatar,
+                        time: 'Just now',
+                        text: text,
+                        image: document.getElementById('postImagePreview').src || null,
+                        likes: 0,
+                        comments: 0,
+                        shares: 0,
+                        userLiked: false,
+                        privacy: privacy,
+                        tagged: [],
+                        commentsList: []
+                    };
+                    
+                    database.posts.unshift(newPost);
+                    renderPosts();
+                    
+                    // Reset modal
+                    document.getElementById('modalPostText').value = '';
+                    document.getElementById('postImagePreview').src = '';
+                    document.getElementById('postPreview').style.display = 'none';
+                    
+                    hideModal(createPostModal);
+                    showNotification('Post published!', 'Your post is now visible to your friends');
+                } else {
+                    showNotification('Error', 'Please write something to post', 'error');
                 }
-            });
-
-            document.getElementById('removeImageBtn').addEventListener('click', () => {
-                document.getElementById('postImagePreview').src = '';
-                document.getElementById('postPreview').style.display = 'none';
-                document.getElementById('imageUpload').value = '';
             });
 
             // Friend Requests Modal
             document.getElementById('viewAllRequestsBtn').addEventListener('click', () => {
+                const allFriendRequests = document.getElementById('allFriendRequests');
                 allFriendRequests.innerHTML = '';
                 
                 database.friendRequests.forEach(request => {
@@ -1829,62 +2377,34 @@
                 showModal(friendRequestsModal);
             });
 
-            // Tag Friends
-            document.getElementById('tagFriendsBtn').addEventListener('click', () => {
-                renderFriendsForTagging();
-                showModal(tagFriendsModal);
+            // Photo Gallery
+            document.getElementById('photosMenuBtn').addEventListener('click', () => {
+                // Photos page is loaded via page navigation
+                showNotification('Photos', 'Opening photo gallery...');
             });
 
-            document.getElementById('tagFriendsModalBtn').addEventListener('click', () => {
-                renderFriendsForTagging();
-                showModal(tagFriendsModal);
+            document.getElementById('uploadPhotoBtn').addEventListener('click', () => {
+                showModal(uploadPhotoModal);
             });
 
-            document.getElementById('doneTagBtn').addEventListener('click', () => {
-                // Get selected friends
-                const selectedFriends = [];
-                document.querySelectorAll('#friendsToTag input[type="checkbox"]:checked').forEach(checkbox => {
-                    const friendId = parseInt(checkbox.id.split('-')[2]);
-                    selectedFriends.push(friendId);
-                });
-                
-                database.taggedFriends = selectedFriends;
-                
-                if (selectedFriends.length > 0) {
-                    showNotification('Tag Friends', `Tagged ${selectedFriends.length} friend(s)`);
-                }
-                
-                hideModal(tagFriendsModal);
-            });
-
-            // Friend search in tag modal
-            document.getElementById('friendSearchInput').addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase();
-                const friendItems = document.querySelectorAll('#friendsToTag .menu-item');
-                
-                friendItems.forEach(item => {
-                    const friendName = item.querySelector('span').textContent.toLowerCase();
-                    if (friendName.includes(searchTerm)) {
-                        item.style.display = 'flex';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-            });
-
-            // Create Event
+            // Events
             document.getElementById('createEventBtn').addEventListener('click', () => {
-                // Set default date to tomorrow
                 const tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1);
                 const formattedDate = tomorrow.toISOString().split('T')[0];
                 
                 document.getElementById('eventDate').value = formattedDate;
                 document.getElementById('eventTime').value = '19:00';
-                document.getElementById('eventTitle').value = '';
-                document.getElementById('eventLocation').value = '';
-                document.getElementById('eventDescription').value = '';
+                showModal(createEventModal);
+            });
+
+            document.getElementById('createEventPageBtn').addEventListener('click', () => {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const formattedDate = tomorrow.toISOString().split('T')[0];
                 
+                document.getElementById('eventDate').value = formattedDate;
+                document.getElementById('eventTime').value = '19:00';
                 showModal(createEventModal);
             });
 
@@ -1893,8 +2413,6 @@
                 const date = document.getElementById('eventDate').value;
                 const time = document.getElementById('eventTime').value;
                 const location = document.getElementById('eventLocation').value;
-                const description = document.getElementById('eventDescription').value;
-                const privacy = document.getElementById('eventPrivacy').value;
                 
                 if (title && date && time && location) {
                     const formattedDate = new Date(date).toLocaleDateString('en-US', { 
@@ -1908,94 +2426,51 @@
                         date: formattedDate,
                         time: time,
                         location: location,
-                        description: description,
-                        privacy: privacy,
                         creatorId: database.currentUser.id,
                         attendees: [database.currentUser.id]
                     };
                     
                     database.events.unshift(newEvent);
                     renderEvents();
+                    if (pageContents.events.classList.contains('active')) {
+                        renderEventsPage();
+                    }
                     
-                    // Reset form
-                    document.getElementById('eventForm').reset();
                     hideModal(createEventModal);
-                    
                     showNotification('Event created!', `${title} has been scheduled for ${formattedDate}`);
                 } else {
                     showNotification('Error', 'Please fill all required fields', 'error');
                 }
             });
 
-            // Navigation
-            document.getElementById('homeBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                updateActiveNavIcon(e.target);
-                showNotification('Home', 'Returned to News Feed');
-            });
-
-            document.getElementById('notificationsBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                updateActiveNavIcon(e.target);
-                
-                // Mark notifications as read
-                database.notifications.forEach(n => n.read = true);
-                updateNotificationBadges();
-                
-                // Show notifications list
-                showNotification('Notifications', 'You have no new notifications');
-            });
-
-            document.getElementById('friendsBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                updateActiveNavIcon(e.target);
-                showNotification('Friends', 'Opening friends list...', 'warning');
-            });
-
-            document.getElementById('messagesBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                updateActiveNavIcon(e.target);
-                showNotification('Messages', 'Opening messenger...', 'warning');
+            // Groups
+            document.getElementById('createGroupBtn').addEventListener('click', () => {
+                showModal(createGroupModal);
             });
 
             // Search Functionality
             document.getElementById('searchButton').addEventListener('click', performSearch);
-            searchInput.addEventListener('keypress', (e) => {
+            document.getElementById('searchInput').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') performSearch();
             });
-
-            function performSearch() {
-                const query = searchInput.value.trim();
-                if (query) {
-                    // Simulate search results
-                    const friendResults = database.friends.filter(friend => 
-                        friend.name.toLowerCase().includes(query.toLowerCase())
-                    );
-                    
-                    const postResults = database.posts.filter(post => 
-                        post.text.toLowerCase().includes(query.toLowerCase())
-                    );
-                    
-                    if (friendResults.length > 0 || postResults.length > 0) {
-                        showNotification('Search Results', 
-                            `Found ${friendResults.length} friends and ${postResults.length} posts`, 
-                            'success');
-                    } else {
-                        showNotification('Search', `No results found for "${query}"`, 'warning');
-                    }
-                }
-            }
 
             // Modal Close Handlers
             document.getElementById('closePostModal').addEventListener('click', () => hideModal(createPostModal));
             document.getElementById('closeRequestsModal').addEventListener('click', () => hideModal(friendRequestsModal));
             document.getElementById('closeTagModal').addEventListener('click', () => hideModal(tagFriendsModal));
             document.getElementById('closeEventModal').addEventListener('click', () => hideModal(createEventModal));
+            document.getElementById('closePhotoModal').addEventListener('click', () => hideModal(photoGalleryModal));
+            document.getElementById('closeUploadModal').addEventListener('click', () => hideModal(uploadPhotoModal));
+            document.getElementById('closeViewPhotoModal').addEventListener('click', () => hideModal(viewPhotoModal));
+            document.getElementById('closeGroupModal').addEventListener('click', () => hideModal(createGroupModal));
             
             document.getElementById('cancelPostBtn').addEventListener('click', () => hideModal(createPostModal));
             document.getElementById('closeRequestsBtn').addEventListener('click', () => hideModal(friendRequestsModal));
             document.getElementById('cancelTagBtn').addEventListener('click', () => hideModal(tagFriendsModal));
             document.getElementById('cancelEventBtn').addEventListener('click', () => hideModal(createEventModal));
+            document.getElementById('closeGalleryBtn').addEventListener('click', () => hideModal(photoGalleryModal));
+            document.getElementById('cancelUploadBtn').addEventListener('click', () => hideModal(uploadPhotoModal));
+            document.getElementById('cancelGroupBtn').addEventListener('click', () => hideModal(createGroupModal));
 
             // Close modals when clicking outside
             window.addEventListener('click', (e) => {
@@ -2004,6 +2479,10 @@
                     hideModal(friendRequestsModal);
                     hideModal(tagFriendsModal);
                     hideModal(createEventModal);
+                    hideModal(photoGalleryModal);
+                    hideModal(uploadPhotoModal);
+                    hideModal(viewPhotoModal);
+                    hideModal(createGroupModal);
                 }
             });
 
@@ -2012,25 +2491,14 @@
                 showNotification('Profile', 'Profile menu would open here', 'warning');
             });
 
-            // Sidebar Navigation
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-                    item.classList.add('active');
-                    
-                    const text = item.querySelector('span').textContent;
-                    showNotification(text, `Navigating to ${text} page...`, 'warning');
-                });
-            });
-
             // Shortcuts
             document.getElementById('gamingShortcut').addEventListener('click', () => {
                 showNotification('Gaming', 'Opening gaming section...', 'warning');
             });
 
             document.getElementById('findFriendsBtn').addEventListener('click', () => {
-                showNotification('Find Friends', 'Opening friend suggestions...', 'warning');
+                loadPage('friends');
+                showNotification('Find Friends', 'Opening friend suggestions...');
             });
 
             // Birthday Posts
@@ -2042,7 +2510,7 @@
                 showNotification('Birthday', 'Creating birthday post for Mike Brown...', 'warning');
             });
 
-            // Initialize with some notifications
+            // Initialize with welcome notification
             setTimeout(() => {
                 showNotification('Welcome back, John!', 'You have new notifications and friend requests');
             }, 1000);
@@ -2054,27 +2522,29 @@
             clickedElement.closest('.nav-icon').classList.add('active');
         }
 
-        function renderFriendsForTagging() {
-            friendsToTag.innerHTML = '';
-            
-            database.friends.forEach(friend => {
-                const isTagged = database.taggedFriends.includes(friend.id);
-                const div = document.createElement('div');
-                div.className = 'menu-item';
-                div.innerHTML = `
-                    <div class="user-avatar" style="width: 32px; height: 32px; font-size: 12px;">${friend.avatar}</div>
-                    <span>${friend.name}</span>
-                    <input type="checkbox" style="margin-left: auto;" 
-                           id="tag-friend-${friend.id}" 
-                           ${isTagged ? 'checked' : ''}>
-                `;
-                friendsToTag.appendChild(div);
-            });
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (query) {
+                const friendResults = database.friends.filter(friend => 
+                    friend.name.toLowerCase().includes(query.toLowerCase())
+                );
+                
+                const postResults = database.posts.filter(post => 
+                    post.text.toLowerCase().includes(query.toLowerCase())
+                );
+                
+                if (friendResults.length > 0 || postResults.length > 0) {
+                    showNotification('Search Results', 
+                        `Found ${friendResults.length} friends and ${postResults.length} posts`, 
+                        'success');
+                } else {
+                    showNotification('Search', `No results found for "${query}"`, 'warning');
+                }
+            }
         }
 
-        // Auto-update friend online status every 30 seconds
+        // Auto-update friend online status
         setInterval(() => {
-            // Randomly change online status for demo purposes
             database.friends.forEach(friend => {
                 if (Math.random() > 0.7) {
                     friend.online = !friend.online;
