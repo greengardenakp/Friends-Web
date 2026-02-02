@@ -87,7 +87,13 @@ io.on('connection', (socket) => {
     socket.join(`user-${userId}`);
     console.log(`User ${userId} joined room`);
   });
-  
+  // In server.js, update the CORS middleware
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://127.0.0.1:5500', 'http://localhost:5500'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
   // Handle messaging
   socket.on('send-message', async (data) => {
     const { receiverId, message, senderId } = data;
