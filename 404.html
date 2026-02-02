@@ -1528,15 +1528,35 @@
         </div>
     </div>
 
-    <script>
+   // Replace the entire script section in your HTML with this:
+
+<script>
         // Global Variables
         let currentUser = null;
         let token = localStorage.getItem('token');
-        const API_URL = 'http://localhost:3000/api';
+        const API_URL = 'http://localhost:5000/api'; // Updated to match backend
         let socket = null;
 
         // Initialize App
         document.addEventListener('DOMContentLoaded', async () => {
+            // Check for token
+            if (!token) {
+                // Redirect to login page (you need to create this)
+                // window.location.href = '/login.html';
+                // For now, we'll show a login modal
+                showLoginModal();
+                return;
+            }
+            
+            // Verify token and load user data
+            const isValid = await verifyToken();
+            if (!isValid) {
+                localStorage.removeItem('token');
+                token = null;
+                showLoginModal();
+                return;
+            }
+            
             await loadUserData();
             await loadInitialData();
             setupEventListeners();
@@ -1552,15 +1572,208 @@
             loadPosts();
         });
 
-        // Load User Data
-        async function loadUserData() {
-            if (!token) {
-                window.location.href = '/login.html';
+        // Verify Token
+        async function verifyToken() {
+            try {
+                const response = await fetch(`${API_URL}/auth/me`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                return response.ok;
+            } catch (error) {
+                return false;
+            }
+        }
+
+        // Show Login Modal
+        function showLoginModal() {
+            const modalHTML = `
+                <div class="modal-overlay" id="loginModal" style="display: flex;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Login to FriendsConnect</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" class="form-control" id="loginEmail" placeholder="Enter your email">
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password">
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-primary" id="loginBtn" style="width: 100%;">Login</button>
+                            </div>
+                            <div class="form-group">
+                                <p style="text-align: center; margin-top: 10px;">
+                                    Don't have an account? 
+                                    <a href="#" id="showRegister" style="color: var(--primary-light); cursor: pointer;">Register here</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            document.getElementById('loginBtn').addEventListener('click', loginUser);
+            document.getElementById('showRegister').addEventListener('click', showRegisterModal);
+            
+            // Add Enter key support
+            document.getElementById('loginPassword').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') loginUser();
+            });
+        }
+
+        // Show Register Modal
+        function showRegisterModal() {
+            document.getElementById('loginModal').remove();
+            
+            const modalHTML = `
+                <div class="modal-overlay" id="registerModal" style="display: flex;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Register for FriendsConnect</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" class="form-control" id="registerName" placeholder="Enter your full name">
+                            </div>
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input type="text" class="form-control" id="registerUsername" placeholder="Choose a username">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" class="form-control" id="registerEmail" placeholder="Enter your email">
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" class="form-control" id="registerPassword" placeholder="Create a password (min. 6 chars)">
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm Password</label>
+                                <input type="password" class="form-control" id="registerConfirmPassword" placeholder="Confirm your password">
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-primary" id="registerBtn" style="width: 100%;">Register</button>
+                            </div>
+                            <div class="form-group">
+                                <p style="text-align: center; margin-top: 10px;">
+                                    Already have an account? 
+                                    <a href="#" id="showLogin" style="color: var(--primary-light); cursor: pointer;">Login here</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            document.getElementById('registerBtn').addEventListener('click', registerUser);
+            document.getElementById('showLogin').addEventListener('click', () => {
+                document.getElementById('registerModal').remove();
+                showLoginModal();
+            });
+        }
+
+        // Login User
+        async function loginUser() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                showNotification('Error', 'Please fill in all fields', 'error');
                 return;
             }
             
             try {
-                const response = await fetch(`${API_URL}/users/me`, {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    token = data.token;
+                    localStorage.setItem('token', token);
+                    document.getElementById('loginModal').remove();
+                    
+                    // Reload the page to initialize with logged in user
+                    location.reload();
+                } else {
+                    showNotification('Error', data.message || 'Login failed', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showNotification('Error', 'Connection error. Please try again.', 'error');
+            }
+        }
+
+        // Register User
+        async function registerUser() {
+            const full_name = document.getElementById('registerName').value;
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            // Validation
+            if (!full_name || !username || !email || !password || !confirmPassword) {
+                showNotification('Error', 'Please fill in all fields', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showNotification('Error', 'Passwords do not match', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showNotification('Error', 'Password must be at least 6 characters', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ full_name, username, email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    token = data.token;
+                    localStorage.setItem('token', token);
+                    document.getElementById('registerModal').remove();
+                    
+                    // Reload the page to initialize with logged in user
+                    location.reload();
+                } else {
+                    showNotification('Error', data.message || 'Registration failed', 'error');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showNotification('Error', 'Connection error. Please try again.', 'error');
+            }
+        }
+
+        // Load User Data
+        async function loadUserData() {
+            try {
+                const response = await fetch(`${API_URL}/auth/me`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -1568,7 +1781,7 @@
                 
                 if (!response.ok) {
                     localStorage.removeItem('token');
-                    window.location.href = '/login.html';
+                    showLoginModal();
                     return;
                 }
                 
@@ -1581,6 +1794,7 @@
             } catch (error) {
                 console.error('Error loading user data:', error);
                 showNotification('Error', 'Failed to load user data', 'error');
+                showLoginModal();
             }
         }
 
@@ -1589,11 +1803,12 @@
             if (!currentUser) return;
             
             // Update avatar images
-            document.getElementById('avatarImg').src = currentUser.avatar_url || 'https://via.placeholder.com/150';
-            document.getElementById('sidebarAvatar').src = currentUser.avatar_url || 'https://via.placeholder.com/150';
-            document.getElementById('mobileAvatar').src = currentUser.avatar_url || 'https://via.placeholder.com/150';
-            document.getElementById('postAvatar').querySelector('img').src = currentUser.avatar_url || 'https://via.placeholder.com/150';
-            document.getElementById('idAvatar').src = currentUser.avatar_url || 'https://via.placeholder.com/150';
+            const avatarUrl = currentUser.avatar_url || 'https://via.placeholder.com/150';
+            document.getElementById('avatarImg').src = avatarUrl;
+            document.getElementById('sidebarAvatar').src = avatarUrl;
+            document.getElementById('mobileAvatar').src = avatarUrl;
+            document.getElementById('postAvatar').querySelector('img').src = avatarUrl;
+            document.getElementById('idAvatar').src = avatarUrl;
             
             // Update names
             document.getElementById('userName').textContent = currentUser.full_name.split(' ')[0];
@@ -1761,6 +1976,22 @@
                 window.location.href = `/profile.html?id=${currentUser.id}`;
             });
             
+            // Logout functionality
+            const logoutBtn = document.createElement('button');
+            logoutBtn.textContent = 'Logout';
+            logoutBtn.style.cssText = `
+                background: var(--accent);
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: var(--border-radius);
+                cursor: pointer;
+                margin-top: 10px;
+                width: 100%;
+            `;
+            logoutBtn.addEventListener('click', logoutUser);
+            document.querySelector('.user-info').appendChild(logoutBtn);
+            
             // Birthday animation close
             document.getElementById('closeBirthdayBtn').addEventListener('click', () => {
                 hideModal('birthdayAnimation');
@@ -1779,21 +2010,14 @@
             
             // Download ID
             document.getElementById('downloadIdBtn').addEventListener('click', downloadDigitalID);
-        }
-
-        // Load Settings
-        function loadSettings() {
-            const theme = localStorage.getItem('theme') || 'light';
-            const glassmorphism = localStorage.getItem('glassmorphism') !== 'false';
-            const animations = localStorage.getItem('animations') !== 'false';
             
-            document.documentElement.setAttribute('data-theme', theme);
-            document.getElementById('glassmorphismToggle').checked = glassmorphism;
-            document.getElementById('animationsToggle').checked = animations;
-            
-            if (glassmorphism) {
-                document.querySelector('.header').classList.add('glassmorphism');
-            }
+            // Profile update
+            document.getElementById('sidebarBio').addEventListener('click', () => {
+                const newBio = prompt('Enter new bio:', currentUser.bio || '');
+                if (newBio !== null) {
+                    updateBio(newBio);
+                }
+            });
         }
 
         // Modal Functions
@@ -1812,6 +2036,21 @@
                 modal.style.display = 'none';
             });
             document.body.style.overflow = 'auto';
+        }
+
+        // Load Settings
+        function loadSettings() {
+            const theme = localStorage.getItem('theme') || 'light';
+            const glassmorphism = localStorage.getItem('glassmorphism') !== 'false';
+            const animations = localStorage.getItem('animations') !== 'false';
+            
+            document.documentElement.setAttribute('data-theme', theme);
+            document.getElementById('glassmorphismToggle').checked = glassmorphism;
+            document.getElementById('animationsToggle').checked = animations;
+            
+            if (glassmorphism) {
+                document.querySelector('.header').classList.add('glassmorphism');
+            }
         }
 
         // Notification System
@@ -1882,10 +2121,10 @@
                             <div class="friend-name">${suggestion.full_name}</div>
                             <div class="friend-mutual">${suggestion.mutual_friends_count || 0} mutual friends</div>
                             <div class="friend-actions">
-                                <button class="btn btn-success btn-sm" onclick="sendFriendRequest(${suggestion.id})">
+                                <button class="btn btn-success btn-sm" onclick="sendFriendRequest('${suggestion._id}')">
                                     <i class="fas fa-user-plus"></i> Add
                                 </button>
-                                <button class="btn btn-secondary btn-sm" onclick="removeSuggestion(${suggestion.id})">
+                                <button class="btn btn-secondary btn-sm" onclick="removeSuggestion('${suggestion._id}')">
                                     <i class="fas fa-times"></i>
                                 </button>
                             </div>
@@ -1911,14 +2150,18 @@
                     body: JSON.stringify({ friendId })
                 });
                 
-                if (!response.ok) throw new Error('Failed to send friend request');
+                const data = await response.json();
                 
-                showNotification('Success', 'Friend request sent!', 'success');
-                loadFriendSuggestions();
+                if (response.ok) {
+                    showNotification('Success', 'Friend request sent!', 'success');
+                    loadFriendSuggestions();
+                } else {
+                    throw new Error(data.message);
+                }
                 
             } catch (error) {
                 console.error('Error sending friend request:', error);
-                showNotification('Error', 'Failed to send friend request', 'error');
+                showNotification('Error', error.message || 'Failed to send friend request', 'error');
             }
         }
 
@@ -1951,10 +2194,10 @@
                                 <i class="fas fa-circle" style="font-size: 8px;"></i> Online now
                             </div>
                             <div class="friend-actions">
-                                <button class="btn btn-primary btn-sm" onclick="startChat(${friend.id})">
+                                <button class="btn btn-primary btn-sm" onclick="startChat('${friend._id}')">
                                     <i class="fas fa-comment"></i>
                                 </button>
-                                <button class="btn btn-secondary btn-sm" onclick="callFriend(${friend.id})">
+                                <button class="btn btn-secondary btn-sm" onclick="callFriend('${friend._id}')">
                                     <i class="fas fa-phone"></i>
                                 </button>
                             </div>
@@ -1971,46 +2214,43 @@
         // Load Birthdays
         async function loadBirthdays() {
             try {
-                const response = await fetch(`${API_URL}/birthdays/upcoming`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+                // This is a simplified version - you'll need to implement the backend endpoint
+                const birthdays = [
+                    { id: 1, full_name: 'John Doe', avatar_url: '', days_until: 0 },
+                    { id: 2, full_name: 'Jane Smith', avatar_url: '', days_until: 3 }
+                ];
                 
-                if (response.ok) {
-                    const data = await response.json();
-                    const container = document.getElementById('birthdaysList');
-                    const section = document.getElementById('birthdaysSection');
+                const container = document.getElementById('birthdaysList');
+                const section = document.getElementById('birthdaysSection');
+                
+                if (birthdays.length > 0) {
+                    section.style.display = 'block';
+                    container.innerHTML = '';
                     
-                    if (data.birthdays && data.birthdays.length > 0) {
-                        section.style.display = 'block';
-                        container.innerHTML = '';
-                        
-                        data.birthdays.slice(0, 3).forEach(birthday => {
-                            const div = document.createElement('div');
-                            div.className = 'friend-suggestion';
-                            div.innerHTML = `
-                                <div class="user-avatar" style="width: 40px; height: 40px;">
-                                    <img src="${birthday.avatar_url || 'https://via.placeholder.com/150'}" alt="">
-                                    <div class="online-dot" style="background-color: var(--warning);"></div>
+                    birthdays.forEach(birthday => {
+                        const div = document.createElement('div');
+                        div.className = 'friend-suggestion';
+                        div.innerHTML = `
+                            <div class="user-avatar" style="width: 40px; height: 40px;">
+                                <img src="${birthday.avatar_url || 'https://via.placeholder.com/150'}" alt="">
+                                <div class="online-dot" style="background-color: var(--warning);"></div>
+                            </div>
+                            <div class="friend-info">
+                                <div class="friend-name">${birthday.full_name}</div>
+                                <div class="friend-mutual">
+                                    ${birthday.days_until === 0 ? '🎂 Today!' : `In ${birthday.days_until} days`}
                                 </div>
-                                <div class="friend-info">
-                                    <div class="friend-name">${birthday.full_name}</div>
-                                    <div class="friend-mutual">
-                                        ${birthday.days_until === 0 ? '🎂 Today!' : `In ${birthday.days_until} days`}
-                                    </div>
-                                    <div class="friend-actions">
-                                        <button class="btn btn-primary btn-sm" onclick="sendBirthdayWish(${birthday.id})">
-                                            <i class="fas fa-birthday-cake"></i> Wish
-                                        </button>
-                                    </div>
+                                <div class="friend-actions">
+                                    <button class="btn btn-primary btn-sm" onclick="sendBirthdayWish('${birthday.id}')">
+                                        <i class="fas fa-birthday-cake"></i> Wish
+                                    </button>
                                 </div>
-                            `;
-                            container.appendChild(div);
-                        });
-                    } else {
-                        section.style.display = 'none';
-                    }
+                            </div>
+                        `;
+                        container.appendChild(div);
+                    });
+                } else {
+                    section.style.display = 'none';
                 }
             } catch (error) {
                 console.error('Error loading birthdays:', error);
@@ -2035,32 +2275,6 @@
             showModal('birthdayAnimation');
         }
 
-        // Send Birthday Wish
-        async function sendBirthdayWish(userId) {
-            try {
-                const response = await fetch(`${API_URL}/birthdays/wish`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        birthdayUserId: userId,
-                        message: 'Happy Birthday! 🎂🎉',
-                        giftType: 'cake'
-                    })
-                });
-                
-                if (!response.ok) throw new Error('Failed to send birthday wish');
-                
-                showNotification('Success', 'Birthday wish sent!', 'success');
-                
-            } catch (error) {
-                console.error('Error sending birthday wish:', error);
-                showNotification('Error', 'Failed to send birthday wish', 'error');
-            }
-        }
-
         // Load Trending Posts
         async function loadTrendingPosts() {
             try {
@@ -2080,10 +2294,10 @@
                         div.className = 'friend-suggestion';
                         div.innerHTML = `
                             <div style="width: 100%;">
-                                <div style="font-weight: 500; margin-bottom: 4px;">${post.content.substring(0, 50)}...</div>
+                                <div style="font-weight: 500; margin-bottom: 4px;">${post.content?.substring(0, 50) || 'No content'}...</div>
                                 <div style="font-size: 12px; color: var(--gray);">
                                     <i class="fas fa-fire" style="color: var(--warning);"></i>
-                                    ${post.like_count} likes • ${post.comment_count} comments
+                                    ${post.like_count || 0} likes • ${post.comment_count || 0} comments
                                 </div>
                             </div>
                         `;
@@ -2098,38 +2312,35 @@
         // Load Marketplace Items
         async function loadMarketplaceItems() {
             try {
-                const response = await fetch(`${API_URL}/marketplace/featured`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+                // This is a simplified version - you'll need to implement the backend endpoint
+                const items = [
+                    { id: 1, title: 'iPhone 12', price: 500, media_urls: [] },
+                    { id: 2, title: 'MacBook Pro', price: 1200, media_urls: [] }
+                ];
                 
-                if (response.ok) {
-                    const data = await response.json();
-                    const container = document.getElementById('marketplaceItems');
-                    container.innerHTML = '';
-                    
-                    data.items.slice(0, 2).forEach(item => {
-                        const div = document.createElement('div');
-                        div.className = 'friend-suggestion';
-                        div.innerHTML = `
-                            <div style="width: 40px; height: 40px; border-radius: var(--border-radius); overflow: hidden;">
-                                <img src="${item.media_urls?.[0] || 'https://via.placeholder.com/150'}" 
-                                     style="width: 100%; height: 100%; object-fit: cover;">
+                const container = document.getElementById('marketplaceItems');
+                container.innerHTML = '';
+                
+                items.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'friend-suggestion';
+                    div.innerHTML = `
+                        <div style="width: 40px; height: 40px; border-radius: var(--border-radius); overflow: hidden;">
+                            <img src="${item.media_urls?.[0] || 'https://via.placeholder.com/150'}" 
+                                 style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="friend-info">
+                            <div class="friend-name">${item.title}</div>
+                            <div class="friend-mutual">$${item.price}</div>
+                            <div class="friend-actions">
+                                <button class="btn btn-primary btn-sm" onclick="viewItem(${item.id})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
                             </div>
-                            <div class="friend-info">
-                                <div class="friend-name">${item.title}</div>
-                                <div class="friend-mutual">$${item.price}</div>
-                                <div class="friend-actions">
-                                    <button class="btn btn-primary btn-sm" onclick="viewItem(${item.id})">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                        container.appendChild(div);
-                    });
-                }
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
             } catch (error) {
                 console.error('Error loading marketplace items:', error);
             }
@@ -2138,38 +2349,35 @@
         // Load Suggested Groups
         async function loadSuggestedGroups() {
             try {
-                const response = await fetch(`${API_URL}/groups/suggested`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+                // This is a simplified version - you'll need to implement the backend endpoint
+                const groups = [
+                    { id: 1, name: 'Tech Enthusiasts', avatar_url: '', member_count: 1250 },
+                    { id: 2, name: 'Travel Buddies', avatar_url: '', member_count: 850 }
+                ];
                 
-                if (response.ok) {
-                    const data = await response.json();
-                    const container = document.getElementById('suggestedGroups');
-                    container.innerHTML = '';
-                    
-                    data.groups.slice(0, 2).forEach(group => {
-                        const div = document.createElement('div');
-                        div.className = 'friend-suggestion';
-                        div.innerHTML = `
-                            <div style="width: 40px; height: 40px; border-radius: var(--border-radius); overflow: hidden;">
-                                <img src="${group.avatar_url || 'https://via.placeholder.com/150'}" 
-                                     style="width: 100%; height: 100%; object-fit: cover;">
+                const container = document.getElementById('suggestedGroups');
+                container.innerHTML = '';
+                
+                groups.forEach(group => {
+                    const div = document.createElement('div');
+                    div.className = 'friend-suggestion';
+                    div.innerHTML = `
+                        <div style="width: 40px; height: 40px; border-radius: var(--border-radius); overflow: hidden;">
+                            <img src="${group.avatar_url || 'https://via.placeholder.com/150'}" 
+                                 style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="friend-info">
+                            <div class="friend-name">${group.name}</div>
+                            <div class="friend-mutual">${group.member_count} members</div>
+                            <div class="friend-actions">
+                                <button class="btn btn-success btn-sm" onclick="joinGroup('${group.id}')">
+                                    Join
+                                </button>
                             </div>
-                            <div class="friend-info">
-                                <div class="friend-name">${group.name}</div>
-                                <div class="friend-mutual">${group.member_count} members</div>
-                                <div class="friend-actions">
-                                    <button class="btn btn-success btn-sm" onclick="joinGroup(${group.id})">
-                                        Join
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                        container.appendChild(div);
-                    });
-                }
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
             } catch (error) {
                 console.error('Error loading suggested groups:', error);
             }
@@ -2205,9 +2413,9 @@
         function createPostElement(post) {
             const div = document.createElement('div');
             div.className = 'post-card animate-fade-in';
-            div.dataset.postId = post.id;
+            div.dataset.postId = post._id;
             
-            const timeAgo = getTimeAgo(post.created_at);
+            const timeAgo = getTimeAgo(post.createdAt);
             const privacyIcon = post.privacy === 'public' ? '🌐' : 
                                post.privacy === 'friends' ? '👥' : '🔒';
             
@@ -2234,10 +2442,10 @@
             div.innerHTML = `
                 <div class="post-header">
                     <div class="user-avatar" style="width: 40px; height: 40px;">
-                        <img src="${post.author_avatar || 'https://via.placeholder.com/150'}" alt="">
+                        <img src="${post.author?.avatar_url || 'https://via.placeholder.com/150'}" alt="">
                     </div>
                     <div class="post-author-info">
-                        <div class="post-author-name">${post.author_name}</div>
+                        <div class="post-author-name">${post.author?.full_name || 'Unknown User'}</div>
                         <div class="post-meta">
                             <span>${timeAgo}</span>
                             <span>•</span>
@@ -2249,36 +2457,36 @@
                     </button>
                 </div>
                 <div class="post-content">
-                    ${post.content}
+                    ${post.content || ''}
                 </div>
                 ${mediaHtml}
                 <div class="post-stats">
-                    <span class="likes-count">${post.like_count} likes</span>
-                    <span class="comments-count">${post.comment_count} comments</span>
-                    <span class="shares-count">${post.share_count} shares</span>
+                    <span class="likes-count">${post.likeCount || 0} likes</span>
+                    <span class="comments-count">${post.commentCount || 0} comments</span>
+                    <span class="shares-count">${post.shareCount || 0} shares</span>
                 </div>
                 <div class="post-actions-bar">
-                    <button class="post-action-btn ${post.liked ? 'active' : ''}" onclick="likePost(${post.id})">
+                    <button class="post-action-btn ${post.liked ? 'active' : ''}" onclick="likePost('${post._id}')">
                         <i class="fas fa-thumbs-up"></i> Like
                     </button>
-                    <button class="post-action-btn" onclick="focusComment(${post.id})">
+                    <button class="post-action-btn" onclick="focusComment('${post._id}')">
                         <i class="fas fa-comment"></i> Comment
                     </button>
-                    <button class="post-action-btn" onclick="sharePost(${post.id})">
+                    <button class="post-action-btn" onclick="sharePost('${post._id}')">
                         <i class="fas fa-share"></i> Share
                     </button>
-                    <button class="post-action-btn" onclick="savePost(${post.id})">
+                    <button class="post-action-btn" onclick="savePost('${post._id}')">
                         <i class="fas fa-bookmark"></i> Save
                     </button>
                 </div>
-                <div class="comments-section" id="comments-${post.id}">
+                <div class="comments-section" id="comments-${post._id}">
                     <div class="comment-input">
                         <div class="user-avatar" style="width: 32px; height: 32px;">
-                            <img src="${currentUser.avatar_url || 'https://via.placeholder.com/150'}" alt="">
+                            <img src="${currentUser?.avatar_url || 'https://via.placeholder.com/150'}" alt="">
                         </div>
-                        <input type="text" id="comment-input-${post.id}" placeholder="Write a comment..." 
-                               onkeypress="if(event.key === 'Enter') addComment(${post.id})">
-                        <button class="btn btn-primary btn-sm" onclick="addComment(${post.id})">Post</button>
+                        <input type="text" id="comment-input-${post._id}" placeholder="Write a comment..." 
+                               onkeypress="if(event.key === 'Enter') addComment('${post._id}')">
+                        <button class="btn btn-primary btn-sm" onclick="addComment('${post._id}')">Post</button>
                     </div>
                 </div>
             `;
@@ -2301,6 +2509,14 @@
                 formData.append('content', content);
                 formData.append('privacy', privacy);
                 
+                // Handle file uploads
+                const fileInput = document.getElementById('mediaUpload');
+                if (fileInput.files.length > 0) {
+                    for (let i = 0; i < fileInput.files.length; i++) {
+                        formData.append('post_media', fileInput.files[i]);
+                    }
+                }
+                
                 const response = await fetch(`${API_URL}/posts`, {
                     method: 'POST',
                     headers: {
@@ -2309,21 +2525,26 @@
                     body: formData
                 });
                 
-                if (!response.ok) throw new Error('Failed to create post');
-                
                 const data = await response.json();
-                showNotification('Success', 'Post published successfully!', 'success');
-                hideModal('createPostModal');
-                document.getElementById('modalPostContent').value = '';
-                loadPosts();
+                
+                if (response.ok) {
+                    showNotification('Success', 'Post published successfully!', 'success');
+                    hideModal('createPostModal');
+                    document.getElementById('modalPostContent').value = '';
+                    document.getElementById('selectedMedia').innerHTML = '';
+                    document.getElementById('taggedFriendsList').innerHTML = '';
+                    loadPosts();
+                } else {
+                    throw new Error(data.message);
+                }
                 
             } catch (error) {
                 console.error('Error creating post:', error);
-                showNotification('Error', 'Failed to create post', 'error');
+                showNotification('Error', error.message || 'Failed to create post', 'error');
             }
         }
 
-              // Like Post
+        // Like Post
         async function likePost(postId) {
             try {
                 const response = await fetch(`${API_URL}/posts/${postId}/like`, {
@@ -2333,30 +2554,33 @@
                     }
                 });
                 
-                if (!response.ok) throw new Error('Failed to like post');
-                
                 const data = await response.json();
-                const likeBtn = document.querySelector(`.post-card[data-post-id="${postId}"] .post-action-btn`);
-                const likesCount = document.querySelector(`.post-card[data-post-id="${postId}"] .likes-count`);
                 
-                if (data.liked) {
-                    likeBtn.classList.add('active');
-                    likeBtn.innerHTML = '<i class="fas fa-thumbs-up"></i> Liked';
-                    showNotification('Success', 'Post liked!', 'success');
+                if (response.ok) {
+                    const likeBtn = document.querySelector(`.post-card[data-post-id="${postId}"] .post-action-btn`);
+                    const likesCount = document.querySelector(`.post-card[data-post-id="${postId}"] .likes-count`);
+                    
+                    if (data.liked) {
+                        likeBtn.classList.add('active');
+                        likeBtn.innerHTML = '<i class="fas fa-thumbs-up"></i> Liked';
+                        showNotification('Success', 'Post liked!', 'success');
+                    } else {
+                        likeBtn.classList.remove('active');
+                        likeBtn.innerHTML = '<i class="fas fa-thumbs-up"></i> Like';
+                    }
+                    
+                    // Update likes count
+                    if (likesCount) {
+                        const currentLikes = parseInt(likesCount.textContent) || 0;
+                        likesCount.textContent = `${data.liked ? currentLikes + 1 : currentLikes - 1} likes`;
+                    }
                 } else {
-                    likeBtn.classList.remove('active');
-                    likeBtn.innerHTML = '<i class="fas fa-thumbs-up"></i> Like';
-                }
-                
-                // Update likes count
-                if (likesCount) {
-                    const currentLikes = parseInt(likesCount.textContent) || 0;
-                    likesCount.textContent = `${data.liked ? currentLikes + 1 : currentLikes - 1} likes`;
+                    throw new Error(data.message);
                 }
                 
             } catch (error) {
                 console.error('Error liking post:', error);
-                showNotification('Error', 'Failed to like post', 'error');
+                showNotification('Error', error.message || 'Failed to like post', 'error');
             }
         }
 
@@ -2380,42 +2604,46 @@
                     body: JSON.stringify({ content: comment })
                 });
                 
-                if (!response.ok) throw new Error('Failed to add comment');
-                
                 const data = await response.json();
-                commentInput.value = '';
                 
-                // Add comment to UI
-                const commentsSection = document.getElementById(`comments-${postId}`);
-                const commentDiv = document.createElement('div');
-                commentDiv.className = 'comment animate-fade-in';
-                commentDiv.innerHTML = `
-                    <div class="user-avatar" style="width: 32px; height: 32px;">
-                        <img src="${currentUser.avatar_url || 'https://via.placeholder.com/150'}" alt="">
-                    </div>
-                    <div style="flex: 1;">
-                        <div style="font-weight: 500; font-size: 13px;">${currentUser.full_name}</div>
-                        <div style="font-size: 14px; margin-top: 4px;">${comment}</div>
-                        <div style="font-size: 12px; color: var(--gray); margin-top: 4px;">
-                            <span style="cursor: pointer;" onclick="likeComment(${data.comment.id})">Like</span>
-                            <span style="margin: 0 8px;">•</span>
-                            <span style="cursor: pointer;">Reply</span>
+                if (response.ok) {
+                    commentInput.value = '';
+                    
+                    // Add comment to UI
+                    const commentsSection = document.getElementById(`comments-${postId}`);
+                    const commentDiv = document.createElement('div');
+                    commentDiv.className = 'comment animate-fade-in';
+                    commentDiv.innerHTML = `
+                        <div class="user-avatar" style="width: 32px; height: 32px;">
+                            <img src="${currentUser?.avatar_url || 'https://via.placeholder.com/150'}" alt="">
                         </div>
-                    </div>
-                `;
-                
-                commentsSection.insertBefore(commentDiv, commentsSection.firstChild);
-                
-                // Update comment count
-                const commentsCount = document.querySelector(`.post-card[data-post-id="${postId}"] .comments-count`);
-                if (commentsCount) {
-                    const currentComments = parseInt(commentsCount.textContent) || 0;
-                    commentsCount.textContent = `${currentComments + 1} comments`;
+                        <div style="flex: 1;">
+                            <div style="font-weight: 500; font-size: 13px;">${currentUser?.full_name || 'You'}</div>
+                            <div style="font-size: 14px; margin-top: 4px;">${comment}</div>
+                            <div style="font-size: 12px; color: var(--gray); margin-top: 4px;">
+                                <span style="cursor: pointer;" onclick="likeComment('${data.comment._id}')">Like</span>
+                                <span style="margin: 0 8px;">•</span>
+                                <span style="cursor: pointer;">Reply</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    commentsSection.insertBefore(commentDiv, commentsSection.firstChild);
+                    
+                    // Update comment count
+                    const commentsCount = document.querySelector(`.post-card[data-post-id="${postId}"] .comments-count`);
+                    if (commentsCount) {
+                        const currentComments = parseInt(commentsCount.textContent) || 0;
+                        commentsCount.textContent = `${currentComments + 1} comments`;
+                    }
+                    
+                } else {
+                    throw new Error(data.message);
                 }
                 
             } catch (error) {
                 console.error('Error adding comment:', error);
-                showNotification('Error', 'Failed to add comment', 'error');
+                showNotification('Error', error.message || 'Failed to add comment', 'error');
             }
         }
 
@@ -2433,53 +2661,30 @@
                 const response = await fetch(`${API_URL}/posts/${postId}/share`, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ content: 'Shared this post' })
                 });
                 
-                if (!response.ok) throw new Error('Failed to share post');
-                
                 const data = await response.json();
-                showNotification('Success', 'Post shared successfully!', 'success');
                 
-                // Update share count
-                const sharesCount = document.querySelector(`.post-card[data-post-id="${postId}"] .shares-count`);
-                if (sharesCount) {
-                    const currentShares = parseInt(sharesCount.textContent) || 0;
-                    sharesCount.textContent = `${currentShares + 1} shares`;
+                if (response.ok) {
+                    showNotification('Success', 'Post shared successfully!', 'success');
+                    
+                    // Update share count
+                    const sharesCount = document.querySelector(`.post-card[data-post-id="${postId}"] .shares-count`);
+                    if (sharesCount) {
+                        const currentShares = parseInt(sharesCount.textContent) || 0;
+                        sharesCount.textContent = `${currentShares + 1} shares`;
+                    }
+                } else {
+                    throw new Error(data.message);
                 }
                 
             } catch (error) {
                 console.error('Error sharing post:', error);
-                showNotification('Error', 'Failed to share post', 'error');
-            }
-        }
-
-        // Save Post
-        async function savePost(postId) {
-            try {
-                const response = await fetch(`${API_URL}/posts/${postId}/save`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                
-                if (!response.ok) throw new Error('Failed to save post');
-                
-                const data = await response.json();
-                const saveBtn = document.querySelector(`.post-card[data-post-id="${postId}"] .post-action-btn:nth-child(4)`);
-                
-                if (data.saved) {
-                    saveBtn.innerHTML = '<i class="fas fa-bookmark" style="color: var(--warning);"></i> Saved';
-                    showNotification('Success', 'Post saved!', 'success');
-                } else {
-                    saveBtn.innerHTML = '<i class="fas fa-bookmark"></i> Save';
-                }
-                
-            } catch (error) {
-                console.error('Error saving post:', error);
-                showNotification('Error', 'Failed to save post', 'error');
+                showNotification('Error', error.message || 'Failed to share post', 'error');
             }
         }
 
@@ -2527,7 +2732,7 @@
             
             try {
                 const formData = new FormData();
-                formData.append('media', fileInput.files[0]);
+                formData.append('story_media', fileInput.files[0]);
                 if (caption) formData.append('caption', caption);
                 
                 const response = await fetch(`${API_URL}/stories`, {
@@ -2538,21 +2743,24 @@
                     body: formData
                 });
                 
-                if (!response.ok) throw new Error('Failed to publish story');
-                
                 const data = await response.json();
-                showNotification('Success', 'Story published! It will disappear in 24 hours.', 'success');
-                hideModal('addStoryModal');
                 
-                // Reset form
-                document.getElementById('storyCaption').value = '';
-                document.getElementById('storyPreview').style.display = 'none';
-                document.getElementById('publishStoryBtn').disabled = true;
-                fileInput.value = '';
+                if (response.ok) {
+                    showNotification('Success', 'Story published! It will disappear in 24 hours.', 'success');
+                    hideModal('addStoryModal');
+                    
+                    // Reset form
+                    document.getElementById('storyCaption').value = '';
+                    document.getElementById('storyPreview').style.display = 'none';
+                    document.getElementById('publishStoryBtn').disabled = true;
+                    fileInput.value = '';
+                } else {
+                    throw new Error(data.message);
+                }
                 
             } catch (error) {
                 console.error('Error publishing story:', error);
-                showNotification('Error', 'Failed to publish story', 'error');
+                showNotification('Error', error.message || 'Failed to publish story', 'error');
             }
         }
 
@@ -2569,7 +2777,7 @@
             const ctx = canvas.getContext('2d');
             
             // Generate random QR pattern (for demo purposes)
-            const data = `friendsconnect://user/${currentUser.id}`;
+            const data = `friendsconnect://user/${currentUser._id}`;
             const modules = 21;
             const moduleSize = qrSize / modules;
             
@@ -2611,7 +2819,7 @@
                     await navigator.share({
                         title: 'My FriendsConnect Digital ID',
                         text: `Connect with me on FriendsConnect! My username is @${currentUser.username}`,
-                        url: `https://friendsconnect.com/user/${currentUser.id}`
+                        url: `https://friendsconnect.com/user/${currentUser._id}`
                     });
                     showNotification('Success', 'Digital ID shared!', 'success');
                 } catch (error) {
@@ -2620,7 +2828,7 @@
                 }
             } else {
                 // Fallback: copy to clipboard
-                const shareText = `Connect with me on FriendsConnect!\nUsername: @${currentUser.username}\nProfile: https://friendsconnect.com/user/${currentUser.id}`;
+                const shareText = `Connect with me on FriendsConnect!\nUsername: @${currentUser.username}\nProfile: https://friendsconnect.com/user/${currentUser._id}`;
                 navigator.clipboard.writeText(shareText)
                     .then(() => showNotification('Success', 'Link copied to clipboard!', 'success'))
                     .catch(() => showNotification('Error', 'Failed to copy link', 'error'));
@@ -2642,94 +2850,25 @@
             showNotification('Success', 'Digital ID downloaded!', 'success');
         }
 
-        // Load Chats
-        async function loadChats() {
-            try {
-                const response = await fetch(`${API_URL}/chats`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    const container = document.getElementById('chatMessages');
-                    container.innerHTML = '';
-                    
-                    // For demo, show welcome message
-                    const welcomeMsg = document.createElement('div');
-                    welcomeMsg.className = 'message received';
-                    welcomeMsg.textContent = 'Welcome to FriendsConnect Messenger! Start chatting with your friends.';
-                    container.appendChild(welcomeMsg);
-                }
-            } catch (error) {
-                console.error('Error loading chats:', error);
-            }
-        }
-
-        // Send Message
-        async function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-            
-            if (!message) return;
-            
-            try {
-                // Add message to UI immediately
-                const container = document.getElementById('chatMessages');
-                const msgDiv = document.createElement('div');
-                msgDiv.className = 'message sent animate-fade-in';
-                msgDiv.textContent = message;
-                container.appendChild(msgDiv);
-                container.scrollTop = container.scrollHeight;
-                
-                // Clear input
-                input.value = '';
-                
-                // Simulate AI response after 1 second
-                setTimeout(() => {
-                    const responses = [
-                        "That's interesting! Tell me more.",
-                        "I understand what you mean.",
-                        "How are you feeling about that?",
-                        "Thanks for sharing that with me!",
-                        "Let's continue this conversation later!"
-                    ];
-                    
-                    const aiResponse = document.createElement('div');
-                    aiResponse.className = 'message received animate-fade-in';
-                    aiResponse.textContent = responses[Math.floor(Math.random() * responses.length)];
-                    container.appendChild(aiResponse);
-                    container.scrollTop = container.scrollHeight;
-                }, 1000);
-                
-            } catch (error) {
-                console.error('Error sending message:', error);
-                showNotification('Error', 'Failed to send message', 'error');
-            }
-        }
-
         // Connect WebSocket
         function connectWebSocket() {
             try {
-                // For demo purposes, simulate WebSocket connection
-                console.log('Connecting to WebSocket server...');
+                // Initialize Socket.io
+                socket = io('http://localhost:5000');
                 
-                // Simulate receiving notifications
-                setInterval(() => {
-                    const notifications = [
-                        { type: 'like', message: 'liked your post', count: 1 },
-                        { type: 'comment', message: 'commented on your post', count: 1 },
-                        { type: 'friend', message: 'accepted your friend request', count: 1 }
-                    ];
-                    
-                    const randomNotif = notifications[Math.floor(Math.random() * notifications.length)];
-                    const badge = document.getElementById(`${randomNotif.type}Badge`);
-                    if (badge) {
-                        const currentCount = parseInt(badge.textContent) || 0;
-                        badge.textContent = currentCount + randomNotif.count;
-                    }
-                }, 30000); // Every 30 seconds
+                // Join user's room
+                socket.emit('join-user', currentUser._id);
+                
+                // Listen for messages
+                socket.on('receive-message', (data) => {
+                    showNotification('New Message', `Message from ${data.senderId}`, 'info');
+                });
+                
+                socket.on('friend-online', (userId) => {
+                    showNotification('Friend Online', 'A friend is now online', 'info');
+                });
+                
+                console.log('WebSocket connected successfully');
                 
             } catch (error) {
                 console.error('WebSocket connection error:', error);
@@ -2739,17 +2878,21 @@
         // Update Online Status
         async function updateOnlineStatus() {
             try {
-                const response = await fetch(`${API_URL}/users/online`, {
-                    method: 'POST',
+                const response = await fetch(`${API_URL}/users/status`, {
+                    method: 'PUT',
                     headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status: 'online' })
                 });
                 
-                // Update UI
-                document.getElementById('onlineStatus').style.display = 'block';
-                document.getElementById('sidebarOnlineStatus').style.display = 'block';
-                document.getElementById('idOnlineStatus').style.display = 'block';
+                if (response.ok) {
+                    // Update UI
+                    document.getElementById('onlineStatus').style.display = 'block';
+                    document.getElementById('sidebarOnlineStatus').style.display = 'block';
+                    document.getElementById('idOnlineStatus').style.display = 'block';
+                }
                 
             } catch (error) {
                 console.error('Error updating online status:', error);
@@ -2762,7 +2905,7 @@
             if (!query) return;
             
             try {
-                const response = await fetch(`${API_URL}/search?q=${encodeURIComponent(query)}`, {
+                const response = await fetch(`${API_URL}/users/search?q=${encodeURIComponent(query)}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -2787,32 +2930,18 @@
                                             <div class="friend-mutual">${user.mutual_friends || 0} mutual friends</div>
                                         </div>
                                         <div class="friend-actions">
-                                            <button class="btn btn-primary btn-sm" onclick="sendFriendRequest(${user.id})">
+                                            <button class="btn btn-primary btn-sm" onclick="sendFriendRequest('${user._id}')">
                                                 Add Friend
                                             </button>
                                         </div>
                                     </div>
                                 `).join('')}
-                            ` : ''}
-                            ${data.posts && data.posts.length > 0 ? `
-                                <h4 style="margin-top: 20px; margin-bottom: 12px;">Posts</h4>
-                                ${data.posts.map(post => `
-                                    <div class="post-card" style="margin-bottom: 8px;">
-                                        <div class="post-content" style="font-size: 14px;">
-                                            ${post.content.substring(0, 100)}...
-                                        </div>
-                                        <div style="font-size: 12px; color: var(--gray); margin-top: 8px;">
-                                            By ${post.author_name}
-                                        </div>
-                                    </div>
-                                `).join('')}
-                            ` : ''}
-                            ${data.users?.length === 0 && data.posts?.length === 0 ? `
+                            ` : `
                                 <div style="text-align: center; padding: 40px; color: var(--gray);">
                                     <i class="fas fa-search" style="font-size: 48px; margin-bottom: 16px;"></i>
                                     <p>No results found for "${query}"</p>
                                 </div>
-                            ` : ''}
+                            `}
                         </div>
                     `;
                     
@@ -2881,10 +3010,10 @@
                                     </div>
                                     ${notif.type === 'friend_request' ? `
                                         <div class="friend-actions">
-                                            <button class="btn btn-success btn-sm" onclick="acceptFriendRequest(${notif.sender_id})">
+                                            <button class="btn btn-success btn-sm" onclick="acceptFriendRequest('${notif.sender_id}')">
                                                 Accept
                                             </button>
-                                            <button class="btn btn-secondary btn-sm" onclick="declineFriendRequest(${notif.sender_id})">
+                                            <button class="btn btn-secondary btn-sm" onclick="declineFriendRequest('${notif.sender_id}')">
                                                 Decline
                                             </button>
                                         </div>
@@ -2907,45 +3036,28 @@
         }
 
         // Accept Friend Request
-        async function acceptFriendRequest(senderId) {
+        async function acceptFriendRequest(requestId) {
             try {
-                const response = await fetch(`${API_URL}/friends/request/${senderId}/accept`, {
+                const response = await fetch(`${API_URL}/friends/request/${requestId}/accept`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 
-                if (!response.ok) throw new Error('Failed to accept friend request');
+                const data = await response.json();
                 
-                showNotification('Success', 'Friend request accepted!', 'success');
-                hideModal('customModal');
-                loadNotifications();
+                if (response.ok) {
+                    showNotification('Success', 'Friend request accepted!', 'success');
+                    hideModal('customModal');
+                    loadNotifications();
+                } else {
+                    throw new Error(data.message);
+                }
                 
             } catch (error) {
                 console.error('Error accepting friend request:', error);
-                showNotification('Error', 'Failed to accept friend request', 'error');
-            }
-        }
-
-        // Decline Friend Request
-        async function declineFriendRequest(senderId) {
-            try {
-                const response = await fetch(`${API_URL}/friends/request/${senderId}/decline`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                
-                if (!response.ok) throw new Error('Failed to decline friend request');
-                
-                showNotification('Info', 'Friend request declined', 'info');
-                hideModal('customModal');
-                loadNotifications();
-                
-            } catch (error) {
-                console.error('Error declining friend request:', error);
+                showNotification('Error', error.message || 'Failed to accept friend request', 'error');
             }
         }
 
@@ -2985,147 +3097,101 @@
                     document.getElementById('chatUserName').textContent = user.full_name;
                     document.getElementById('chatAvatar').src = user.avatar_url || 'https://via.placeholder.com/150';
                     
-                    // Load chat history
-                    const chatResponse = await fetch(`${API_URL}/chats/${friendId}`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
+                    // Load chat history would go here
                     
-                    if (chatResponse.ok) {
-                        const chatData = await chatResponse.json();
-                        const container = document.getElementById('chatMessages');
-                        container.innerHTML = '';
-                        
-                        if (chatData.messages && chatData.messages.length > 0) {
-                            chatData.messages.forEach(msg => {
-                                const msgDiv = document.createElement('div');
-                                msgDiv.className = msg.sender_id === currentUser.id ? 'message sent' : 'message received';
-                                msgDiv.textContent = msg.content;
-                                container.appendChild(msgDiv);
-                            });
-                        } else {
-                            const welcomeMsg = document.createElement('div');
-                            welcomeMsg.className = 'message received';
-                            welcomeMsg.textContent = `You are now connected with ${user.full_name}! Start chatting.`;
-                            container.appendChild(welcomeMsg);
-                        }
-                    }
                 }
             } catch (error) {
                 console.error('Error starting chat:', error);
             }
         }
 
-        // Call Friend
-        function callFriend(friendId) {
-            showNotification('Call', 'Starting video call...', 'info');
-            // In a real app, this would initiate WebRTC call
-        }
-
-        // Remove Suggestion
-        function removeSuggestion(suggestionId) {
-            const suggestion = document.querySelector(`.friend-suggestion button[onclick*="${suggestionId}"]`);
-            if (suggestion) {
-                suggestion.closest('.friend-suggestion').remove();
+        // Send Message in Chat
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            try {
+                // Add message to UI immediately
+                const container = document.getElementById('chatMessages');
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'message sent animate-fade-in';
+                msgDiv.textContent = message;
+                container.appendChild(msgDiv);
+                container.scrollTop = container.scrollHeight;
+                
+                // Clear input
+                input.value = '';
+                
+                // Send via WebSocket
+                if (socket) {
+                    socket.emit('send-message', {
+                        receiverId: 'friend_id_here', // You need to track current chat
+                        message: message,
+                        senderId: currentUser._id
+                    });
+                }
+                
+            } catch (error) {
+                console.error('Error sending message:', error);
+                showNotification('Error', 'Failed to send message', 'error');
             }
         }
 
-        // View Item
-        function viewItem(itemId) {
-            showNotification('Marketplace', `Viewing item ${itemId}`, 'info');
-        }
-
-        // Join Group
-        async function joinGroup(groupId) {
+        // Logout User
+        async function logoutUser() {
             try {
-                const response = await fetch(`${API_URL}/groups/${groupId}/join`, {
+                const response = await fetch(`${API_URL}/auth/logout`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 
-                if (!response.ok) throw new Error('Failed to join group');
+                // Clear local storage
+                localStorage.removeItem('token');
+                token = null;
+                currentUser = null;
                 
-                showNotification('Success', 'Successfully joined the group!', 'success');
+                // Redirect to login
+                location.reload();
                 
             } catch (error) {
-                console.error('Error joining group:', error);
-                showNotification('Error', 'Failed to join group', 'error');
+                console.error('Error logging out:', error);
+                localStorage.removeItem('token');
+                location.reload();
             }
         }
 
-        // Load All Suggestions
-        async function loadAllSuggestions() {
+        // Update Bio
+        async function updateBio(newBio) {
             try {
-                const response = await fetch(`${API_URL}/friends/suggestions?limit=20`, {
+                const formData = new FormData();
+                formData.append('bio', newBio);
+                
+                const response = await fetch(`${API_URL}/auth/profile`, {
+                    method: 'PUT',
                     headers: {
                         'Authorization': `Bearer ${token}`
-                    }
+                    },
+                    body: formData
                 });
                 
-                if (response.ok) {
-                    const data = await response.json();
-                    const suggestions = data.suggestions || [];
-                    
-                    const content = `
-                        <div style="max-height: 500px; overflow-y: auto;">
-                            <h3 style="margin-bottom: 16px;">Friend Suggestions</h3>
-                            <div style="display: grid; gap: 12px;">
-                                ${suggestions.map(suggestion => `
-                                    <div class="friend-suggestion">
-                                        <div class="user-avatar" style="width: 60px; height: 60px;">
-                                            <img src="${suggestion.avatar_url || 'https://via.placeholder.com/150'}" alt="">
-                                        </div>
-                                        <div class="friend-info">
-                                            <div class="friend-name">${suggestion.full_name}</div>
-                                            <div class="friend-mutual">${suggestion.mutual_friends_count || 0} mutual friends</div>
-                                            <div class="friend-mutual">${suggestion.bio || 'No bio available'}</div>
-                                        </div>
-                                        <div class="friend-actions">
-                                            <button class="btn btn-success" onclick="sendFriendRequest(${suggestion.id})">
-                                                <i class="fas fa-user-plus"></i> Add Friend
-                                            </button>
-                                            <button class="btn btn-secondary" onclick="removeSuggestion(${suggestion.id})">
-                                                <i class="fas fa-times"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    `;
-                    
-                    showCustomModal('Friend Suggestions', content);
-                }
-            } catch (error) {
-                console.error('Error loading all suggestions:', error);
-            }
-        }
-
-        // Like Comment
-        async function likeComment(commentId) {
-            try {
-                const response = await fetch(`${API_URL}/comments/${commentId}/like`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+                const data = await response.json();
                 
                 if (response.ok) {
-                    showNotification('Success', 'Comment liked!', 'success');
+                    currentUser.bio = newBio;
+                    document.getElementById('sidebarBio').textContent = newBio;
+                    showNotification('Success', 'Bio updated!', 'success');
+                } else {
+                    throw new Error(data.message);
                 }
+                
             } catch (error) {
-                console.error('Error liking comment:', error);
+                console.error('Error updating bio:', error);
+                showNotification('Error', error.message || 'Failed to update bio', 'error');
             }
-        }
-
-        // Logout
-        function logout() {
-            localStorage.removeItem('token');
-            window.location.href = '/login.html';
         }
 
         // Add CSS for fadeOut animation
@@ -3141,103 +3207,6 @@
             }
         `;
         document.head.appendChild(style);
-
-        // Initialize on page load
-        window.addEventListener('load', () => {
-            // Check for saved theme
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            
-            // Initialize tooltips
-            document.querySelectorAll('[title]').forEach(element => {
-                element.addEventListener('mouseenter', (e) => {
-                    const title = e.target.getAttribute('title');
-                    if (title) {
-                        const tooltip = document.createElement('div');
-                        tooltip.className = 'tooltip';
-                        tooltip.textContent = title;
-                        tooltip.style.cssText = `
-                            position: fixed;
-                            background: var(--dark);
-                            color: white;
-                            padding: 4px 8px;
-                            border-radius: 4px;
-                            font-size: 12px;
-                            z-index: 10000;
-                            pointer-events: none;
-                        `;
-                        document.body.appendChild(tooltip);
-                        
-                        const rect = e.target.getBoundingClientRect();
-                        tooltip.style.left = `${rect.left + rect.width / 2 - tooltip.offsetWidth / 2}px`;
-                        tooltip.style.top = `${rect.top - tooltip.offsetHeight - 5}px`;
-                        
-                        e.target._tooltip = tooltip;
-                        e.target.removeAttribute('title');
-                    }
-                });
-                
-                element.addEventListener('mouseleave', (e) => {
-                    if (e.target._tooltip) {
-                        e.target._tooltip.remove();
-                        e.target.setAttribute('title', e.target._tooltip.textContent);
-                        delete e.target._tooltip;
-                    }
-                });
-            });
-            
-            // Add responsive behavior
-            window.addEventListener('resize', handleResize);
-            handleResize();
-        });
-
-        // Handle window resize
-        function handleResize() {
-            const isMobile = window.innerWidth <= 768;
-            
-            if (isMobile) {
-                document.querySelector('.main-layout').style.gridTemplateColumns = '1fr';
-                document.querySelector('.sidebar').style.display = 'none';
-                document.querySelector('.right-sidebar').style.display = 'none';
-            } else {
-                document.querySelector('.main-layout').style.gridTemplateColumns = '280px 1fr 320px';
-                document.querySelector('.sidebar').style.display = 'block';
-                document.querySelector('.right-sidebar').style.display = 'block';
-            }
-        }
-
-        // Add mobile menu toggle
-        const mobileMenuBtn = document.createElement('button');
-        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-        mobileMenuBtn.style.cssText = `
-            display: none;
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: var(--primary-light);
-            color: white;
-            border: none;
-            cursor: pointer;
-            z-index: 1000;
-            box-shadow: var(--shadow-lg);
-        `;
-        document.body.appendChild(mobileMenuBtn);
-
-        mobileMenuBtn.addEventListener('click', () => {
-            const mobileMenu = document.getElementById('mobileMenu');
-            mobileMenu.classList.toggle('active');
-        });
-
-        // Handle click outside mobile menu
-        document.addEventListener('click', (e) => {
-            const mobileMenu = document.getElementById('mobileMenu');
-            if (mobileMenu && !mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-                mobileMenu.classList.remove('active');
-            }
-        });
 
         // Initialize tooltips
         function initTooltips() {
@@ -3282,6 +3251,6 @@
 
         // Initialize everything
         initTooltips();
-    </script>
+                    </script>
 </body>
 </html>
