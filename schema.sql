@@ -1,71 +1,61 @@
--- Create Database
-CREATE DATABASE friendsconnect;
+-- Main Database
+CREATE DATABASE IF NOT EXISTS friendsconnect;
 USE friendsconnect;
 
--- 1. Users Table
+-- Users Table
 CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     full_name VARCHAR(100) NOT NULL,
-    avatar_url VARCHAR(500),
-    cover_url VARCHAR(500),
     bio TEXT,
-    location VARCHAR(100),
-    interests JSON,
-    birth_date DATE,
-    gender ENUM('male', 'female', 'other'),
+    profile_pic VARCHAR(500) DEFAULT 'default.jpg',
+    cover_pic VARCHAR(500),
+    birthdate DATE,
+    gender ENUM('male', 'female', 'other') DEFAULT 'other',
     phone VARCHAR(20),
-    
-    -- Security
+    country VARCHAR(50),
+    city VARCHAR(50),
     is_verified BOOLEAN DEFAULT FALSE,
-    is_premium BOOLEAN DEFAULT FALSE,
-    verification_code VARCHAR(10),
-    two_factor_enabled BOOLEAN DEFAULT FALSE,
-    two_factor_secret VARCHAR(255),
-    
-    -- Status
-    online_status ENUM('online', 'offline', 'away') DEFAULT 'offline',
+    is_online BOOLEAN DEFAULT FALSE,
     last_seen TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    active_status ENUM('active', 'suspended', 'banned') DEFAULT 'active',
-    
-    -- Fake Account Detection
-    profile_score INT DEFAULT 100,
-    trust_score INT DEFAULT 50,
-    post_count INT DEFAULT 0,
-    friend_count INT DEFAULT 0,
-    account_age_days INT DEFAULT 0,
-    
-    -- Digital ID
-    qr_code_url VARCHAR(500),
-    profile_url VARCHAR(500),
-    public_id VARCHAR(20) UNIQUE,
-    
+    privacy_level ENUM('public', 'friends', 'private') DEFAULT 'public',
+    friend_privacy ENUM('everyone', 'friends_of_friends', 'no_one') DEFAULT 'everyone',
+    theme_preference ENUM('light', 'dark', 'blue', 'purple', 'gold') DEFAULT 'dark',
+    two_factor_enabled BOOLEAN DEFAULT FALSE,
+    account_status ENUM('active', 'suspended', 'banned') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
-    INDEX idx_email (email),
     INDEX idx_username (username),
-    INDEX idx_location (location),
-    INDEX idx_created_at (created_at)
+    INDEX idx_email (email),
+    INDEX idx_online (is_online)
 );
 
--- 2. Friend System
-CREATE TABLE friendships (
+-- Friends System
+CREATE TABLE friend_requests (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,
-    friend_id INT NOT NULL,
+    sender_id INT NOT NULL,
+    receiver_id INT NOT NULL,
     status ENUM('pending', 'accepted', 'rejected', 'blocked') DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
-    UNIQUE KEY unique_friendship (user_id, friend_id),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (friend_id) REFERENCES users(id) ON DELETE CASCADE,
-    
-    INDEX idx_user_status (user_id, status),
-    INDEX idx_friend_status (friend_id, status)
+    FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_request (sender_id, receiver_id),
+    INDEX idx_sender (sender_id),
+    INDEX idx_receiver (receiver_id)
+);
+
+CREATE TABLE friendships (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user1_id INT NOT NULL,
+    user2_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user1_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (user2_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_friendship (user1_id, user2_id),
+    INDEX idx_user1 (user1_id),
+    INDEX idx_user2 (user2_id)
 );
 
 CREATE TABLE blocked_users (
@@ -74,97 +64,119 @@ CREATE TABLE blocked_users (
     blocked_id INT NOT NULL,
     reason VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
-    UNIQUE KEY unique_block (blocker_id, blocked_id),
     FOREIGN KEY (blocker_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (blocked_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (blocked_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_block (blocker_id, blocked_id)
 );
 
--- 3. Posts System
+-- Posts System
 CREATE TABLE posts (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     content TEXT,
-    media_urls JSON,
-    post_type ENUM('text', 'photo', 'video', 'poll') DEFAULT 'text',
-    privacy ENUM('public', 'friends', 'only_me', 'custom') DEFAULT 'friends',
-    location VARCHAR(100),
+    post_type ENUM('text', 'image', 'video', 'album') DEFAULT 'text',
+    privacy ENUM('public', 'friends', 'only_me', 'custom') DEFAULT 'public',
+    location VARCHAR(255),
+    feeling VARCHAR(100),
     tagged_users JSON,
-    
-    -- Engagement
-    like_count INT DEFAULT 0,
-    comment_count INT DEFAULT 0,
-    share_count INT DEFAULT 0,
     view_count INT DEFAULT 0,
-    save_count INT DEFAULT 0,
-    
-    -- Trending
-    trending_score DECIMAL(10,2) DEFAULT 0,
-    is_trending BOOLEAN DEFAULT FALSE,
-    trending_until TIMESTAMP NULL,
-    
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
+    is_deleted BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    INDEX idx_user_created (user_id, created_at),
-    INDEX idx_trending (trending_score DESC),
+    INDEX idx_user (user_id),
+    INDEX idx_created (created_at),
     FULLTEXT idx_content (content)
 );
 
-CREATE TABLE post_likes (
+CREATE TABLE post_media (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    post_id INT NOT NULL,
+    media_url VARCHAR(500) NOT NULL,
+    media_type ENUM('image', 'video', 'audio') NOT NULL,
+    thumbnail_url VARCHAR(500),
+    order_index INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    INDEX idx_post (post_id)
+);
+
+CREATE TABLE post_reactions (
     id INT PRIMARY KEY AUTO_INCREMENT,
     post_id INT NOT NULL,
     user_id INT NOT NULL,
+    reaction_type ENUM('like', 'love', 'haha', 'wow', 'sad', 'angry') DEFAULT 'like',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
-    UNIQUE KEY unique_like (post_id, user_id),
     FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_reaction (post_id, user_id),
+    INDEX idx_post (post_id)
 );
 
 CREATE TABLE comments (
     id INT PRIMARY KEY AUTO_INCREMENT,
     post_id INT NOT NULL,
     user_id INT NOT NULL,
-    parent_id INT NULL,
     content TEXT NOT NULL,
-    like_count INT DEFAULT 0,
+    parent_id INT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
+    is_deleted BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE,
-    
-    INDEX idx_post_created (post_id, created_at)
+    INDEX idx_post (post_id),
+    INDEX idx_user (user_id)
+);
+
+CREATE TABLE comment_reactions (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    comment_id INT NOT NULL,
+    user_id INT NOT NULL,
+    reaction_type ENUM('like', 'love') DEFAULT 'like',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_comment_reaction (comment_id, user_id)
+);
+
+CREATE TABLE shares (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    post_id INT NOT NULL,
+    user_id INT NOT NULL,
+    content TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_post (post_id),
+    INDEX idx_user (user_id)
 );
 
 CREATE TABLE saved_posts (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     post_id INT NOT NULL,
+    folder VARCHAR(100) DEFAULT 'general',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
-    UNIQUE KEY unique_save (user_id, post_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_save (user_id, post_id)
 );
 
--- 4. Story System
+-- Stories
 CREATE TABLE stories (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     media_url VARCHAR(500) NOT NULL,
-    media_type ENUM('photo', 'video') NOT NULL,
-    caption VARCHAR(255),
+    media_type ENUM('image', 'video') NOT NULL,
+    text_content VARCHAR(500),
+    bg_color VARCHAR(50),
+    font_style VARCHAR(50),
     expires_at TIMESTAMP NOT NULL,
-    view_count INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    INDEX idx_expires (expires_at),
-    INDEX idx_user_created (user_id, created_at DESC)
+    INDEX idx_user (user_id),
+    INDEX idx_expires (expires_at)
 );
 
 CREATE TABLE story_views (
@@ -172,99 +184,102 @@ CREATE TABLE story_views (
     story_id INT NOT NULL,
     viewer_id INT NOT NULL,
     viewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
-    UNIQUE KEY unique_story_view (story_id, viewer_id),
     FOREIGN KEY (story_id) REFERENCES stories(id) ON DELETE CASCADE,
-    FOREIGN KEY (viewer_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (viewer_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_view (story_id, viewer_id)
 );
 
--- 5. Messages System
+-- Chat & Messaging
 CREATE TABLE conversations (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    is_group BOOLEAN DEFAULT FALSE,
-    group_name VARCHAR(100),
-    group_avatar VARCHAR(500),
+    conversation_type ENUM('private', 'group') DEFAULT 'private',
+    name VARCHAR(100),
+    group_photo VARCHAR(500),
+    created_by INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
-    INDEX idx_created (created_at DESC)
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
 );
 
-CREATE TABLE conversation_members (
+CREATE TABLE conversation_participants (
     id INT PRIMARY KEY AUTO_INCREMENT,
     conversation_id INT NOT NULL,
     user_id INT NOT NULL,
+    role ENUM('admin', 'moderator', 'member') DEFAULT 'member',
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    is_admin BOOLEAN DEFAULT FALSE,
-    
-    UNIQUE KEY unique_member (conversation_id, user_id),
+    left_at TIMESTAMP NULL,
     FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_participant (conversation_id, user_id)
 );
 
 CREATE TABLE messages (
     id INT PRIMARY KEY AUTO_INCREMENT,
     conversation_id INT NOT NULL,
     sender_id INT NOT NULL,
-    message_type ENUM('text', 'image', 'video', 'voice', 'file') DEFAULT 'text',
     content TEXT,
+    message_type ENUM('text', 'image', 'video', 'audio', 'file') DEFAULT 'text',
     media_url VARCHAR(500),
-    
-    -- Read receipts
-    is_read BOOLEAN DEFAULT FALSE,
-    read_at TIMESTAMP NULL,
-    
-    -- Typing indicator
-    deleted BOOLEAN DEFAULT FALSE,
-    
+    replied_to INT,
+    is_edited BOOLEAN DEFAULT FALSE,
+    is_deleted BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE,
     FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
-    
-    INDEX idx_conversation_created (conversation_id, created_at DESC),
-    INDEX idx_sender (sender_id),
-    INDEX idx_unread (conversation_id, is_read, created_at)
+    FOREIGN KEY (replied_to) REFERENCES messages(id) ON DELETE SET NULL,
+    INDEX idx_conversation (conversation_id),
+    INDEX idx_sender (sender_id)
 );
 
--- 6. Groups System
+CREATE TABLE message_reads (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    message_id INT NOT NULL,
+    user_id INT NOT NULL,
+    read_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (message_id) REFERENCES messages(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_read (message_id, user_id)
+);
+
+CREATE TABLE typing_indicators (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    conversation_id INT NOT NULL,
+    user_id INT NOT NULL,
+    is_typing BOOLEAN DEFAULT FALSE,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_typing (conversation_id, user_id)
+);
+
+-- Groups System
 CREATE TABLE groups (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
     description TEXT,
-    avatar_url VARCHAR(500),
-    cover_url VARCHAR(500),
+    group_photo VARCHAR(500),
+    cover_photo VARCHAR(500),
     creator_id INT NOT NULL,
-    
-    -- Settings
     privacy ENUM('public', 'private', 'secret') DEFAULT 'public',
-    join_approval BOOLEAN DEFAULT FALSE,
-    post_approval BOOLEAN DEFAULT FALSE,
-    
-    -- Stats
+    rules TEXT,
     member_count INT DEFAULT 1,
     post_count INT DEFAULT 0,
-    
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
     FOREIGN KEY (creator_id) REFERENCES users(id) ON DELETE CASCADE,
-    INDEX idx_privacy (privacy),
-    FULLTEXT idx_group_search (name, description)
+    INDEX idx_creator (creator_id)
 );
 
 CREATE TABLE group_members (
     id INT PRIMARY KEY AUTO_INCREMENT,
     group_id INT NOT NULL,
     user_id INT NOT NULL,
-    role ENUM('member', 'moderator', 'admin') DEFAULT 'member',
-    status ENUM('pending', 'approved', 'rejected') DEFAULT 'approved',
+    role ENUM('admin', 'moderator', 'member') DEFAULT 'member',
+    status ENUM('pending', 'approved', 'banned') DEFAULT 'pending',
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
-    UNIQUE KEY unique_group_member (group_id, user_id),
     FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    
-    INDEX idx_user_groups (user_id, status)
+    UNIQUE KEY unique_membership (group_id, user_id)
 );
 
 CREATE TABLE group_posts (
@@ -272,348 +287,258 @@ CREATE TABLE group_posts (
     group_id INT NOT NULL,
     user_id INT NOT NULL,
     content TEXT,
-    media_urls JSON,
-    status ENUM('pending', 'approved', 'rejected') DEFAULT 'approved',
+    post_type ENUM('text', 'image', 'video', 'poll') DEFAULT 'text',
+    media_url VARCHAR(500),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    
-    INDEX idx_group_status (group_id, status, created_at DESC)
+    INDEX idx_group (group_id)
 );
 
--- 7. Birthday System
-CREATE TABLE birthdays (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,
-    birth_date DATE NOT NULL,
-    is_public BOOLEAN DEFAULT TRUE,
-    receive_wishes BOOLEAN DEFAULT TRUE,
-    last_wished_year INT,
-    
-    UNIQUE KEY unique_user_birthday (user_id),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    
-    INDEX idx_upcoming (MONTH(birth_date), DAY(birth_date))
-);
-
-CREATE TABLE birthday_wishes (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    birthday_user_id INT NOT NULL,
-    wisher_id INT NOT NULL,
-    message TEXT,
-    gift_type ENUM('cake', 'gift', 'balloon', 'heart') DEFAULT 'cake',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
-    FOREIGN KEY (birthday_user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (wisher_id) REFERENCES users(id) ON DELETE CASCADE,
-    
-    INDEX idx_birthday_user (birthday_user_id, created_at DESC)
-);
-
--- 8. Notifications System
+-- Notifications
 CREATE TABLE notifications (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
-    type ENUM(
-        'friend_request',
-        'friend_accepted',
-        'like',
-        'comment',
-        'mention',
-        'share',
-        'birthday',
-        'group_invite',
-        'message',
-        'warning'
-    ) NOT NULL,
-    
-    title VARCHAR(100),
-    message TEXT,
-    related_id INT,
-    related_type VARCHAR(50),
+    type ENUM('friend_request', 'friend_accept', 'like', 'comment', 
+              'mention', 'birthday', 'group_invite', 'message', 'marketplace') NOT NULL,
+    sender_id INT,
+    post_id INT,
+    comment_id INT,
+    group_id INT,
+    conversation_id INT,
+    content TEXT NOT NULL,
     is_read BOOLEAN DEFAULT FALSE,
-    read_at TIMESTAMP NULL,
-    
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    INDEX idx_user_unread (user_id, is_read, created_at DESC),
-    INDEX idx_user_type (user_id, type, created_at DESC)
+    FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_user (user_id),
+    INDEX idx_unread (user_id, is_read)
 );
 
--- 9. Marketplace
+-- Birthdays
+CREATE TABLE birthday_wishes (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    birthday_user_id INT NOT NULL,
+    sender_id INT NOT NULL,
+    message TEXT NOT NULL,
+    gift_type ENUM('cake', 'balloon', 'gift', 'heart') DEFAULT 'cake',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (birthday_user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_birthday_user (birthday_user_id)
+);
+
+-- Fake Account Detection
+CREATE TABLE user_reports (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    reporter_id INT NOT NULL,
+    reported_user_id INT NOT NULL,
+    report_type ENUM('fake', 'spam', 'harassment', 'inappropriate', 'other') NOT NULL,
+    description TEXT,
+    evidence JSON,
+    status ENUM('pending', 'reviewing', 'resolved', 'dismissed') DEFAULT 'pending',
+    resolved_by INT,
+    resolved_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (reported_user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (resolved_by) REFERENCES users(id) ON DELETE SET NULL
+);
+
+CREATE TABLE suspicious_activities (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    activity_type ENUM('multiple_requests', 'spam_messages', 'no_profile', 
+                      'no_posts', 'same_ip', 'unusual_login') NOT NULL,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    details JSON,
+    risk_score INT DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_user (user_id)
+);
+
+-- Marketplace (if needed)
 CREATE TABLE marketplace_items (
     id INT PRIMARY KEY AUTO_INCREMENT,
     seller_id INT NOT NULL,
     title VARCHAR(200) NOT NULL,
     description TEXT,
-    price DECIMAL(10,2) NOT NULL,
-    currency VARCHAR(3) DEFAULT 'USD',
-    category VARCHAR(50),
-    condition ENUM('new', 'like_new', 'good', 'fair') DEFAULT 'good',
-    location VARCHAR(100),
-    media_urls JSON,
-    
-    -- Status
-    status ENUM('active', 'sold', 'reserved', 'expired') DEFAULT 'active',
+    price DECIMAL(10,2),
+    category VARCHAR(100),
+    condition ENUM('new', 'like_new', 'good', 'fair', 'poor') DEFAULT 'good',
+    images JSON,
+    location VARCHAR(255),
+    status ENUM('available', 'pending', 'sold', 'hidden') DEFAULT 'available',
     view_count INT DEFAULT 0,
-    save_count INT DEFAULT 0,
-    
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
     FOREIGN KEY (seller_id) REFERENCES users(id) ON DELETE CASCADE,
-    INDEX idx_category_status (category, status),
-    INDEX idx_seller (seller_id, status),
-    FULLTEXT idx_marketplace_search (title, description, location)
+    INDEX idx_seller (seller_id),
+    FULLTEXT idx_title_description (title, description)
 );
 
-CREATE TABLE marketplace_chats (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    item_id INT NOT NULL,
-    buyer_id INT NOT NULL,
-    seller_id INT NOT NULL,
-    last_message TEXT,
-    last_message_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    unread_count INT DEFAULT 0,
-    
-    UNIQUE KEY unique_marketplace_chat (item_id, buyer_id, seller_id),
-    FOREIGN KEY (item_id) REFERENCES marketplace_items(id) ON DELETE CASCADE,
-    FOREIGN KEY (buyer_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (seller_id) REFERENCES users(id) ON DELETE CASCADE,
-    
-    INDEX idx_user_chats (buyer_id, last_message_at DESC),
-    INDEX idx_seller_chats (seller_id, last_message_at DESC)
-);
-
--- 10. Fake Account Detection & Reports
-CREATE TABLE reports (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    reporter_id INT NOT NULL,
-    reported_user_id INT NULL,
-    reported_post_id INT NULL,
-    reported_group_id INT NULL,
-    reported_item_id INT NULL,
-    
-    report_type ENUM(
-        'fake_account',
-        'harassment',
-        'spam',
-        'inappropriate_content',
-        'scam',
-        'other'
-    ) NOT NULL,
-    
-    reason TEXT,
-    evidence_urls JSON,
-    status ENUM('pending', 'investigating', 'resolved', 'dismissed') DEFAULT 'pending',
-    admin_notes TEXT,
-    
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
-    FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (reported_user_id) REFERENCES users(id) ON DELETE SET NULL,
-    FOREIGN KEY (reported_post_id) REFERENCES posts(id) ON DELETE SET NULL,
-    FOREIGN KEY (reported_group_id) REFERENCES groups(id) ON DELETE SET NULL,
-    FOREIGN KEY (reported_item_id) REFERENCES marketplace_items(id) ON DELETE SET NULL,
-    
-    INDEX idx_status (status, created_at),
-    INDEX idx_reported_user (reported_user_id, status)
-);
-
-CREATE TABLE login_logs (
+-- Account Security
+CREATE TABLE login_history (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
-    ip_address VARCHAR(45),
+    ip_address VARCHAR(45) NOT NULL,
     user_agent TEXT,
     device_type VARCHAR(50),
     location VARCHAR(100),
-    success BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
+    login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    logout_time TIMESTAMP NULL,
+    is_successful BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    INDEX idx_user_logins (user_id, created_at DESC),
-    INDEX idx_suspicious (ip_address, created_at)
+    INDEX idx_user (user_id),
+    INDEX idx_login_time (login_time)
 );
 
--- 11. Admin System
-CREATE TABLE admin_users (
+CREATE TABLE email_verifications (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
+    user_id INT NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    otp_code VARCHAR(6) NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    is_used BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_otp (otp_code),
+    INDEX idx_user (user_id)
+);
+
+CREATE TABLE password_resets (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    is_used BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_token (token),
+    INDEX idx_user (user_id)
+);
+
+CREATE TABLE sessions (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    session_token VARCHAR(255) NOT NULL,
+    device_info TEXT,
+    ip_address VARCHAR(45),
+    expires_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_token (session_token),
+    INDEX idx_user (user_id)
+);
+
+-- Admin System
+CREATE TABLE admins (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
     role ENUM('super_admin', 'admin', 'moderator') DEFAULT 'moderator',
     permissions JSON,
-    is_active BOOLEAN DEFAULT TRUE,
-    last_login TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
-    INDEX idx_role (role)
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_admin (user_id)
 );
 
-CREATE TABLE admin_actions (
+CREATE TABLE admin_logs (
     id INT PRIMARY KEY AUTO_INCREMENT,
     admin_id INT NOT NULL,
-    action_type VARCHAR(50) NOT NULL,
-    target_type VARCHAR(50),
-    target_id INT,
+    action_type VARCHAR(100) NOT NULL,
+    target_type ENUM('user', 'post', 'group', 'comment', 'report') NOT NULL,
+    target_id INT NOT NULL,
     details JSON,
     ip_address VARCHAR(45),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
-    FOREIGN KEY (admin_id) REFERENCES admin_users(id) ON DELETE CASCADE,
-    INDEX idx_admin_actions (admin_id, created_at DESC)
+    FOREIGN KEY (admin_id) REFERENCES admins(id) ON DELETE CASCADE
 );
 
--- 12. Themes & UI Settings
-CREATE TABLE user_settings (
+-- Digital ID Card
+CREATE TABLE user_qr_codes (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
-    
-    -- UI Themes
-    theme ENUM('light', 'dark', 'blue', 'purple', 'gold') DEFAULT 'light',
-    glassmorphism BOOLEAN DEFAULT TRUE,
-    animations BOOLEAN DEFAULT TRUE,
-    
-    -- Privacy
-    show_online_status BOOLEAN DEFAULT TRUE,
-    show_last_seen BOOLEAN DEFAULT TRUE,
-    show_birthday BOOLEAN DEFAULT TRUE,
-    allow_tagging BOOLEAN DEFAULT TRUE,
-    allow_friend_requests BOOLEAN DEFAULT TRUE,
-    
-    -- Notifications
-    email_notifications BOOLEAN DEFAULT TRUE,
-    push_notifications BOOLEAN DEFAULT TRUE,
-    
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
-    UNIQUE KEY unique_user_settings (user_id),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
--- 13. Digital ID Cards
-CREATE TABLE digital_ids (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,
-    qr_code_data TEXT,
-    card_data JSON,
+    qr_code_data VARCHAR(500) NOT NULL,
+    qr_code_image VARCHAR(500),
+    shareable_link VARCHAR(500),
     is_active BOOLEAN DEFAULT TRUE,
-    shares_count INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
-    UNIQUE KEY unique_user_id_card (user_id),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_qr (user_id)
 );
 
--- 14. Analytics & Trends
-CREATE TABLE analytics (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    date DATE NOT NULL,
-    
-    -- User Metrics
-    new_users INT DEFAULT 0,
-    active_users INT DEFAULT 0,
-    total_users INT DEFAULT 0,
-    
-    -- Engagement
-    total_posts INT DEFAULT 0,
-    total_likes INT DEFAULT 0,
-    total_comments INT DEFAULT 0,
-    total_shares INT DEFAULT 0,
-    
-    -- Platform Health
-    fake_accounts_detected INT DEFAULT 0,
-    reports_resolved INT DEFAULT 0,
-    avg_trust_score DECIMAL(5,2) DEFAULT 0,
-    
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
-    UNIQUE KEY unique_date (date)
-);
-
--- Create Stored Procedures for Fake Account Detection
+-- Create stored procedures for common operations
 DELIMITER $$
 
-CREATE PROCEDURE DetectFakeAccounts()
+CREATE PROCEDURE GetMutualFriends(IN user1_id INT, IN user2_id INT)
 BEGIN
-    -- Update trust scores based on various factors
-    UPDATE users u
-    LEFT JOIN (
-        SELECT user_id,
-               COUNT(*) as login_count,
-               COUNT(DISTINCT ip_address) as unique_ips
-        FROM login_logs
-        WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-        GROUP BY user_id
-    ) ll ON u.id = ll.user_id
-    SET u.trust_score = 
-        CASE 
-            WHEN u.avatar_url IS NULL THEN u.trust_score - 10
-            WHEN u.post_count = 0 THEN u.trust_score - 15
-            WHEN u.friend_count > 100 AND u.account_age_days < 7 THEN u.trust_score - 20
-            WHEN ll.unique_ips > 3 THEN u.trust_score - 15
-            WHEN u.profile_score < 30 THEN u.trust_score - 25
-            ELSE u.trust_score + 5
-        END,
-        u.profile_score = 
-            (CASE WHEN u.avatar_url IS NOT NULL THEN 20 ELSE 0 END) +
-            (CASE WHEN u.bio IS NOT NULL THEN 15 ELSE 0 END) +
-            (CASE WHEN u.location IS NOT NULL THEN 15 ELSE 0 END) +
-            (CASE WHEN u.post_count > 5 THEN 25 ELSE u.post_count * 5 END) +
-            (CASE WHEN u.friend_count BETWEEN 5 AND 100 THEN 25 ELSE 0 END);
-    
-    -- Flag suspicious accounts
+    SELECT u.id, u.username, u.full_name, u.profile_pic, u.is_online
+    FROM friendships f1
+    JOIN friendships f2 ON f1.user2_id = f2.user2_id
+    JOIN users u ON f1.user2_id = u.id
+    WHERE f1.user1_id = user1_id 
+      AND f2.user1_id = user2_id
+      AND u.id NOT IN (user1_id, user2_id)
+    UNION
+    SELECT u.id, u.username, u.full_name, u.profile_pic, u.is_online
+    FROM friendships f1
+    JOIN friendships f2 ON f1.user2_id = f2.user1_id
+    JOIN users u ON f1.user2_id = u.id
+    WHERE f1.user1_id = user1_id 
+      AND f2.user2_id = user2_id
+      AND u.id NOT IN (user1_id, user2_id);
+END$$
+
+CREATE PROCEDURE GetFriendsFeed(IN user_id INT, IN offset_val INT, IN limit_val INT)
+BEGIN
+    SELECT p.*, u.username, u.full_name, u.profile_pic,
+           COUNT(DISTINCT pr.id) as reaction_count,
+           COUNT(DISTINCT c.id) as comment_count,
+           EXISTS(SELECT 1 FROM post_reactions WHERE post_id = p.id AND user_id = user_id) as has_reacted,
+           EXISTS(SELECT 1 FROM saved_posts WHERE post_id = p.id AND user_id = user_id) as is_saved
+    FROM posts p
+    JOIN users u ON p.user_id = u.id
+    LEFT JOIN post_reactions pr ON p.id = pr.post_id
+    LEFT JOIN comments c ON p.id = c.post_id AND c.parent_id IS NULL
+    WHERE p.is_deleted = FALSE 
+      AND (p.privacy = 'public' 
+           OR (p.privacy = 'friends' AND EXISTS(
+               SELECT 1 FROM friendships 
+               WHERE (user1_id = user_id AND user2_id = p.user_id) 
+                  OR (user1_id = p.user_id AND user2_id = user_id)
+           ))
+           OR p.user_id = user_id)
+    GROUP BY p.id
+    ORDER BY p.created_at DESC
+    LIMIT limit_val OFFSET offset_val;
+END$$
+
+CREATE PROCEDURE UpdateUserOnlineStatus(IN user_id INT, IN is_online BOOLEAN)
+BEGIN
     UPDATE users 
-    SET active_status = 'suspended'
-    WHERE trust_score < 20 
-      AND account_age_days < 30
-      AND active_status = 'active';
+    SET is_online = is_online, 
+        last_seen = CURRENT_TIMESTAMP 
+    WHERE id = user_id;
+END$$
+
+CREATE PROCEDURE CheckFakeAccount(IN user_id INT)
+BEGIN
+    SELECT 
+        (SELECT COUNT(*) FROM posts WHERE user_id = user_id) = 0 as has_no_posts,
+        (SELECT profile_pic FROM users WHERE id = user_id) = 'default.jpg' as has_default_pic,
+        (SELECT COUNT(*) FROM friend_requests WHERE sender_id = user_id AND created_at > DATE_SUB(NOW(), INTERVAL 1 DAY)) > 50 as many_requests,
+        (SELECT COUNT(DISTINCT ip_address) FROM login_history WHERE user_id = user_id) < 2 as few_ip_addresses,
+        (SELECT COUNT(*) FROM user_reports WHERE reported_user_id = user_id AND status = 'pending') > 0 as has_reports;
 END$$
 
 DELIMITER ;
 
--- Create Event to run fake account detection daily
-CREATE EVENT IF NOT EXISTS daily_fake_account_check
-ON SCHEDULE EVERY 1 DAY
-STARTS CURRENT_TIMESTAMP
-DO
-    CALL DetectFakeAccounts();
+-- Insert default admin user (password: Admin123!)
+INSERT INTO users (username, email, password_hash, full_name, is_verified, is_online) 
+VALUES ('admin', 'admin@friendsconnect.com', '$2b$10$YourHashedPasswordHere', 'System Admin', TRUE, TRUE);
 
--- Create Event to auto-delete expired stories
-CREATE EVENT IF NOT EXISTS delete_expired_stories
-ON SCHEDULE EVERY 1 HOUR
-DO
-    DELETE FROM stories WHERE expires_at < NOW();
-
--- Create Event to check birthdays
-CREATE EVENT IF NOT EXISTS check_birthdays
-ON SCHEDULE EVERY 1 DAY
-STARTS CURRENT_TIMESTAMP
-DO
-BEGIN
-    -- Create birthday notifications
-    INSERT INTO notifications (user_id, type, title, message, related_id, related_type)
-    SELECT 
-        u.id as user_id,
-        'birthday' as type,
-        'Birthday Reminder' as title,
-        CONCAT('Today is ', f.full_name, '''s birthday! Send them a wish.') as message,
-        f.id as related_id,
-        'user' as related_type
-    FROM users u
-    JOIN friendships fr ON u.id = fr.user_id AND fr.status = 'accepted'
-    JOIN users f ON fr.friend_id = f.id
-    JOIN birthdays b ON f.id = b.user_id
-    WHERE DATE_FORMAT(b.birth_date, '%m-%d') = DATE_FORMAT(NOW(), '%m-%d')
-      AND b.is_public = TRUE
-      AND b.receive_wishes = TRUE;
-END;
-
--- Insert default admin user
-INSERT INTO admin_users (username, email, password_hash, role) 
-VALUES ('admin', 'admin@friendsconnect.com', '$2b$10$YourHashedPasswordHere', 'super_admin');
+INSERT INTO admins (user_id, role, permissions) 
+VALUES (LAST_INSERT_ID(), 'super_admin', '["all"]');
