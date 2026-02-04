@@ -2873,6 +2873,1163 @@
                 }
             }
         });
+class FriendsConnectClient {
+    constructor() {
+        // Configuration
+        this.API_BASE = 'http://localhost:5000/api';
+        this.SOCKET_URL = 'http://localhost:5000';
+        
+        // State
+        this.token = localStorage.getItem('friendsconnect_token');
+        this.user = JSON.parse(localStorage.getItem('friendsconnect_user') || 'null');
+        this.socket = null;
+        this.onlineUsers = new Map();
+        
+        // Event listeners
+        this.eventListeners = {
+            'new_message': [],
+            'message_deleted': [],
+            'user_typing': [],
+            'messages_read': [],
+            'new_notification': [],
+            'friend_request_accepted': [],
+            'post_reacted': [],
+            'new_comment': [],
+            'post_shared': [],
+            'birthday_wish': [],
+            'user_online': [],
+            'user_offline': []
+        };
+        
+        // Auto-initialize
+        this.initialize();
+    }
+    
+    // ============ INITIALIZATION ============
+    async initialize() {
+        // Check authentication
+        if (this.token && this.user) {
+            try {
+                await this.verifyToken();
+                this.initializeSocket();
+                this.showApp();
+            } catch (error) {
+                this.logout();
+                this.showAuth();
+            }
+        } else {
+            this.showAuth();
+        }
+    }
+    
+    async verifyToken() {
+        try {
+            const response = await fetch(`${this.API_BASE}/users/me`, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error('Invalid token');
+            }
+            
+            const data = await response.json();
+            this.user = data.data;
+            localStorage.setItem('friendsconnect_user', JSON.stringify(this.user));
+            return true;
+        } catch (error) {
+            throw error;
+        }
+    }
+    
+    // ============ SOCKET.IO CONNECTION ============
+    initializeSocket() {
+        if (!this.token || this.socket) return;
+        
+        this.socket = io(this.SOCKET_URL, {
+            auth: { token: this.token },
+            transports: ['websocket', 'polling']
+        });
+        
+        this.socket.on('connect', () => {
+            console.log('✅ Socket connected');
+            this.emitEvent('socket_connected', {});
+        });
+        
+        this.socket.on('connect_error', (error) => {
+            console.error('❌ Socket connection error:', error);
+            this.emitEvent('socket_error', { error });
+        });
+        
+        // Register all socket event listeners
+        this.registerSocketEvents();
+    }
+    
+    registerSocketEvents() {
+        if (!this.socket) return;
+        
+        // New message
+        this.socket.on('new_message', (message) => {
+            this.emitEvent('new_message', message);
+        });
+        
+        // Message deleted
+        this.socket.on('message_deleted', (data) => {
+            this.emitEvent('message_deleted', data);
+        });
+        
+        // User typing
+        this.socket.on('user_typing', (data) => {
+            this.emitEvent('user_typing', data);
+        });
+        
+        // Messages read
+        this.socket.on('messages_read', (data) => {
+            this.emitEvent('messages_read', data);
+        });
+        
+        // New notification
+        this.socket.on('new_notification', (notification) => {
+            this.emitEvent('new_notification', notification);
+        });
+        
+        // Friend request accepted
+        this.socket.on('friend_request_accepted', (data) => {
+            this.emitEvent('friend_request_accepted', data);
+        });
+        
+        // Post reacted
+        this.socket.on('post_reacted', (data) => {
+            this.emitEvent('post_reacted', data);
+        });
+        
+        // New comment
+        this.socket.on('new_comment', (data) => {
+            this.emitEvent('new_comment', data);
+        });
+        
+        // Post shared
+        this.socket.on('post_shared', (data) => {
+            this.emitEvent('post_shared', data);
+        });
+        
+        // Birthday wish
+        this.socket.on('birthday_wish', (data) => {
+            this.emitEvent('birthday_wish', data);
+        });
+        
+        // User online
+        this.socket.on('user_online', (data) => {
+            this.onlineUsers.set(data.userId, true);
+            this.emitEvent('user_online', data);
+        });
+        
+        // User offline
+        this.socket.on('user_offline', (data) => {
+            this.onlineUsers.set(data.userId, false);
+            this.emitEvent('user_offline', data);
+        });
+    }
+    
+    // ============ EVENT SYSTEM ============
+    on(event, callback) {
+        if (!this.eventListeners[event]) {
+            this.eventListeners[event] = [];
+        }
+        this.eventListeners[event].push(callback);
+    }
+    
+    off(event, callback) {
+        if (!this.eventListeners[event]) return;
+        const index = this.eventListeners[event].indexOf(callback);
+        if (index > -1) {
+            this.eventListeners[event].splice(index, 1);
+        }
+    }
+    
+    emitEvent(event, data) {
+        if (!this.eventListeners[event]) return;
+        this.eventListeners[event].forEach(callback => {
+            try {
+                callback(data);
+            } catch (error) {
+                console.error(`Error in ${event} handler:`, error);
+            }
+        });
+    }
+    
+    // ============ AUTHENTICATION ============
+    async register(userData) {
+        try {
+            const response = await fetch(`${this.API_BASE}/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
+            
+            const data = await response.json();
+            
+            if (data.success && data.token) {
+                this.token = data.token;
+                this.user = data.user;
+                
+                localStorage.setItem('friendsconnect_token', this.token);
+                localStorage.setItem('friendsconnect_user', JSON.stringify(this.user));
+                
+                this.initializeSocket();
+                this.emitEvent('auth_success', data);
+                return { success: true, data };
+            } else {
+                return { success: false, error: data.error || 'Registration failed' };
+            }
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async login(email, password) {
+        try {
+            const response = await fetch(`${this.API_BASE}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email,
+                    password,
+                    device_info: navigator.userAgent,
+                    ip_address: await this.getIPAddress()
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success && data.token) {
+                this.token = data.token;
+                this.user = data.user;
+                
+                localStorage.setItem('friendsconnect_token', this.token);
+                localStorage.setItem('friendsconnect_user', JSON.stringify(this.user));
+                
+                this.initializeSocket();
+                this.emitEvent('auth_success', data);
+                return { success: true, data };
+            } else {
+                return { success: false, error: data.error || 'Login failed' };
+            }
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async logout() {
+        try {
+            if (this.token) {
+                await fetch(`${this.API_BASE}/auth/logout`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${this.token}`
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Logout error:', error);
+        } finally {
+            localStorage.removeItem('friendsconnect_token');
+            localStorage.removeItem('friendsconnect_user');
+            this.token = null;
+            this.user = null;
+            
+            if (this.socket) {
+                this.socket.disconnect();
+                this.socket = null;
+            }
+            
+            this.emitEvent('logout', {});
+        }
+    }
+    
+    // ============ USER MANAGEMENT ============
+    async getCurrentUser() {
+        try {
+            const response = await fetch(`${this.API_BASE}/users/me`, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                this.user = data.data;
+                localStorage.setItem('friendsconnect_user', JSON.stringify(this.user));
+                return { success: true, data: data.data };
+            } else {
+                return { success: false, error: data.error };
+            }
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async updateProfile(profileData) {
+        try {
+            const formData = new FormData();
+            
+            Object.keys(profileData).forEach(key => {
+                if (profileData[key] !== undefined && profileData[key] !== null) {
+                    if (key === 'profile_pic' || key === 'cover_pic') {
+                        if (profileData[key] instanceof File) {
+                            formData.append(key, profileData[key]);
+                        }
+                    } else {
+                        formData.append(key, profileData[key]);
+                    }
+                }
+            });
+            
+            const response = await fetch(`${this.API_BASE}/users/me`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                },
+                body: formData
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async getUser(username) {
+        try {
+            const response = await fetch(`${this.API_BASE}/users/${username}`, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async searchUsers(query, limit = 20, offset = 0) {
+        try {
+            const response = await fetch(
+                `${this.API_BASE}/users/search/${query}?limit=${limit}&offset=${offset}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${this.token}`
+                    }
+                }
+            );
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    // ============ FRIENDS SYSTEM ============
+    async sendFriendRequest(receiverId) {
+        try {
+            const response = await fetch(`${this.API_BASE}/friends/request`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ receiver_id: receiverId })
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async respondToFriendRequest(requestId, action) {
+        try {
+            const response = await fetch(`${this.API_BASE}/friends/request/${requestId}/respond`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ action })
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async getFriends(limit = 50, offset = 0) {
+        try {
+            const response = await fetch(
+                `${this.API_BASE}/friends?limit=${limit}&offset=${offset}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${this.token}`
+                    }
+                }
+            );
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async getPendingRequests() {
+        try {
+            const response = await fetch(`${this.API_BASE}/friends/pending`, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async getMutualFriends(userId) {
+        try {
+            const response = await fetch(`${this.API_BASE}/friends/mutual/${userId}`, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async removeFriend(friendId) {
+        try {
+            const response = await fetch(`${this.API_BASE}/friends/remove/${friendId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async blockUser(userId, reason) {
+        try {
+            const response = await fetch(`${this.API_BASE}/friends/block/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ reason })
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async unblockUser(userId) {
+        try {
+            const response = await fetch(`${this.API_BASE}/friends/unblock/${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    // ============ POSTS SYSTEM ============
+    async createPost(postData, files = []) {
+        try {
+            const formData = new FormData();
+            
+            // Add post data
+            Object.keys(postData).forEach(key => {
+                if (postData[key] !== undefined && postData[key] !== null) {
+                    if (key === 'tagged_users' && Array.isArray(postData[key])) {
+                        formData.append(key, JSON.stringify(postData[key]));
+                    } else {
+                        formData.append(key, postData[key]);
+                    }
+                }
+            });
+            
+            // Add files
+            files.forEach((file, index) => {
+                formData.append('post_media', file);
+            });
+            
+            const response = await fetch(`${this.API_BASE}/posts`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                },
+                body: formData
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async getFeed(page = 1, limit = 20) {
+        try {
+            const response = await fetch(
+                `${this.API_BASE}/posts/feed?page=${page}&limit=${limit}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${this.token}`
+                    }
+                }
+            );
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async getPost(postId) {
+        try {
+            const response = await fetch(`${this.API_BASE}/posts/${postId}`, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async reactToPost(postId, reactionType = 'like') {
+        try {
+            const response = await fetch(`${this.API_BASE}/posts/${postId}/react`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ reaction_type: reactionType })
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async addComment(postId, content, parentId = null) {
+        try {
+            const response = await fetch(`${this.API_BASE}/posts/${postId}/comment`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ content, parent_id: parentId })
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async sharePost(postId, content = '') {
+        try {
+            const response = await fetch(`${this.API_BASE}/posts/${postId}/share`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ content })
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async savePost(postId, folder = 'general') {
+        try {
+            const response = await fetch(`${this.API_BASE}/posts/${postId}/save`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ folder })
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async deletePost(postId) {
+        try {
+            const response = await fetch(`${this.API_BASE}/posts/${postId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async getTrendingPosts(limit = 10) {
+        try {
+            const response = await fetch(
+                `${this.API_BASE}/posts/trending?limit=${limit}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${this.token}`
+                    }
+                }
+            );
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    // ============ MESSAGING SYSTEM ============
+    async getConversations() {
+        try {
+            const response = await fetch(`${this.API_BASE}/conversations`, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async createPrivateConversation(otherUserId) {
+        try {
+            const response = await fetch(`${this.API_BASE}/conversations/private`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ other_user_id: otherUserId })
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async getMessages(conversationId, before = null, limit = 50) {
+        try {
+            let url = `${this.API_BASE}/conversations/${conversationId}/messages?limit=${limit}`;
+            if (before) {
+                url += `&before=${before}`;
+            }
+            
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async sendMessage(conversationId, content, file = null) {
+        try {
+            const formData = new FormData();
+            
+            if (content) {
+                formData.append('content', content);
+            }
+            
+            if (file) {
+                formData.append('message_media', file);
+            }
+            
+            const response = await fetch(`${this.API_BASE}/conversations/${conversationId}/messages`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                },
+                body: formData
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async deleteMessage(messageId) {
+        try {
+            const response = await fetch(`${this.API_BASE}/messages/${messageId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    // Socket-based message functions
+    joinConversation(conversationId) {
+        if (this.socket) {
+            this.socket.emit('join_conversation', conversationId);
+        }
+    }
+    
+    leaveConversation(conversationId) {
+        if (this.socket) {
+            this.socket.emit('leave_conversation', conversationId);
+        }
+    }
+    
+    sendTypingIndicator(conversationId, isTyping) {
+        if (this.socket) {
+            this.socket.emit('typing', { conversationId, isTyping });
+        }
+    }
+    
+    markMessageAsRead(messageId, conversationId) {
+        if (this.socket) {
+            this.socket.emit('message_read', { messageId, conversationId });
+        }
+    }
+    
+    // ============ GROUPS SYSTEM ============
+    async createGroup(groupData) {
+        try {
+            const formData = new FormData();
+            
+            Object.keys(groupData).forEach(key => {
+                if (groupData[key] !== undefined && groupData[key] !== null) {
+                    if (key === 'group_photo' || key === 'cover_photo') {
+                        if (groupData[key] instanceof File) {
+                            formData.append(key, groupData[key]);
+                        }
+                    } else {
+                        formData.append(key, groupData[key]);
+                    }
+                }
+            });
+            
+            const response = await fetch(`${this.API_BASE}/groups`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                },
+                body: formData
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async getGroups(search = '', limit = 20, offset = 0) {
+        try {
+            const response = await fetch(
+                `${this.API_BASE}/groups?search=${search}&limit=${limit}&offset=${offset}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${this.token}`
+                    }
+                }
+            );
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async getGroup(groupId) {
+        try {
+            const response = await fetch(`${this.API_BASE}/groups/${groupId}`, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async joinGroup(groupId) {
+        try {
+            const response = await fetch(`${this.API_BASE}/groups/${groupId}/join`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async createGroupPost(groupId, content, mediaUrl = null) {
+        try {
+            const response = await fetch(`${this.API_BASE}/groups/${groupId}/posts`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ content, media_url: mediaUrl })
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    // ============ NOTIFICATIONS ============
+    async getNotifications(unreadOnly = false, limit = 20, offset = 0) {
+        try {
+            const response = await fetch(
+                `${this.API_BASE}/notifications?unread=${unreadOnly}&limit=${limit}&offset=${offset}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${this.token}`
+                    }
+                }
+            );
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async markNotificationAsRead(notificationId) {
+        try {
+            const response = await fetch(`${this.API_BASE}/notifications/${notificationId}/read`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async markAllNotificationsAsRead() {
+        try {
+            const response = await fetch(`${this.API_BASE}/notifications/read-all`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    // ============ BIRTHDAYS ============
+    async getUpcomingBirthdays() {
+        try {
+            const response = await fetch(`${this.API_BASE}/birthdays/upcoming`, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async sendBirthdayWish(userId, message, giftType = 'cake') {
+        try {
+            const response = await fetch(`${this.API_BASE}/birthdays/${userId}/wish`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message, gift_type: giftType })
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    // ============ STORIES ============
+    async createStory(mediaFile, textContent = '', bgColor = '#000000', fontStyle = 'Arial') {
+        try {
+            const formData = new FormData();
+            formData.append('story_media', mediaFile);
+            formData.append('text_content', textContent);
+            formData.append('bg_color', bgColor);
+            formData.append('font_style', fontStyle);
+            
+            const response = await fetch(`${this.API_BASE}/stories`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                },
+                body: formData
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async getStories() {
+        try {
+            const response = await fetch(`${this.API_BASE}/stories/feed`, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    async viewStory(storyId) {
+        try {
+            const response = await fetch(`${this.API_BASE}/stories/${storyId}/view`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    // ============ REPORTS ============
+    async reportUser(reportedUserId, reportType, description, evidence = null) {
+        try {
+            const response = await fetch(`${this.API_BASE}/reports/user`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    reported_user_id: reportedUserId,
+                    report_type: reportType,
+                    description,
+                    evidence
+                })
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    // ============ QR CODE ============
+    async generateQRCode() {
+        try {
+            const response = await fetch(`${this.API_BASE}/users/me/qrcode`, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            const data = await response.json();
+            return { success: data.success, data: data.data, error: data.error };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+    
+    // ============ UTILITY FUNCTIONS ============
+    async getIPAddress() {
+        try {
+            const response = await fetch('https://api.ipify.org?format=json');
+            const data = await response.json();
+            return data.ip;
+        } catch (error) {
+            return 'unknown';
+        }
+    }
+    
+    isUserOnline(userId) {
+        return this.onlineUsers.get(userId) || false;
+    }
+    
+    // ============ UI FUNCTIONS (Optional) ============
+    showToast(message, type = 'info') {
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
+        
+        // Add to DOM
+        document.body.appendChild(toast);
+        
+        // Show animation
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10);
+        
+        // Remove after delay
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    document.body.removeChild(toast);
+                }
+            }, 300);
+        }, 3000);
+    }
+    
+    showNotification(title, body, icon = null) {
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(title, { body, icon });
+        }
+    }
+    
+    // Request notification permission
+    async requestNotificationPermission() {
+        if ('Notification' in window) {
+            return await Notification.requestPermission();
+        }
+        return 'denied';
+    }
+    
+    // ============ UI RENDERING (Optional) ============
+    showAuth() {
+        this.emitEvent('show_auth', {});
+    }
+    
+    showApp() {
+        this.emitEvent('show_app', { user: this.user });
+    }
+    
+    // ============ ERROR HANDLING ============
+    handleApiError(error) {
+        console.error('API Error:', error);
+        
+        // Auto logout on 401
+        if (error.status === 401) {
+            this.logout();
+        }
+        
+        return error;
+    }
+}
+
+// Create global instance
+window.FriendsConnect = new FriendsConnectClient();
+
     </script>
 </body>
 </html>
