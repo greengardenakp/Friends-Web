@@ -11,8 +11,9 @@ class FriendsConnect {
         this.setupEventListeners();
         this.checkAuth();
     }
-    
-    async initializeSocket() {
+  
+const API_BASE_URL = 'https://friends-web-2ipr.onrender.com';
+
         if (!this.token) return;
         
         this.socket = io('http://localhost:5000', {
